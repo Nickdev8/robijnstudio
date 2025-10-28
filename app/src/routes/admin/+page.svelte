@@ -46,7 +46,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			home: {
 				...content.home,
-				cta: content.home.cta.filter((_, i) => i !== index)
+				cta: content.home.cta.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -68,7 +68,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			about: {
 				...content.about,
-				paragraphs: content.about.paragraphs.filter((_, i) => i !== index)
+				paragraphs: content.about.paragraphs.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -90,7 +90,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			about: {
 				...content.about,
-				stats: content.about.stats.filter((_, i) => i !== index)
+				stats: content.about.stats.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -115,7 +115,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			about: {
 				...content.about,
-				projects: content.about.projects.filter((_, i) => i !== index)
+				projects: content.about.projects.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -140,7 +140,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			portfolio: {
 				...content.portfolio,
-				gallery: content.portfolio.gallery.filter((_, i) => i !== index)
+				gallery: content.portfolio.gallery.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -162,7 +162,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			contact: {
 				...content.contact,
-				bullets: content.contact.bullets.filter((_, i) => i !== index)
+				bullets: content.contact.bullets.filter((_item, i) => i !== index)
 			}
 		};
 	};
@@ -192,7 +192,7 @@ const handleSubmit = (event: Event) => {
 			...content,
 			contact: {
 				...content.contact,
-				packages: content.contact.packages.filter((_, i) => i !== index)
+				packages: content.contact.packages.filter((_item, i) => i !== index)
 			}
 		};
 	};
