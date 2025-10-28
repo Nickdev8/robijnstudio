@@ -1219,15 +1219,12 @@ const sectionNav = [
 					</div>
 				</section>
 
-				<div class="flex flex-wrap items-center justify-between gap-4">
-					<p class="text-xs text-neutral-500">Vergeet niet op te slaan. Wijzigingen worden direct live gezet.</p>
-					<button
-						type="submit"
-						class="font-display inline-flex items-center justify-center rounded-full bg-neutral-900 px-8 py-3 text-xs uppercase tracking-[0.4em] text-white transition hover:bg-neutral-800"
-					>
-						Sla wijzigingen op
-					</button>
-				</div>
+				<button
+					type="submit"
+					class="fixed bottom-6 right-6 z-20 font-display inline-flex items-center justify-center rounded-full bg-neutral-900 px-8 py-3 text-xs uppercase tracking-[0.4em] text-white shadow-[0_18px_45px_rgba(15,23,42,0.18)] transition hover:bg-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/30 md:bottom-10 md:right-10"
+				>
+					Sla wijzigingen op
+				</button>
 			</form>
 		{/if}
 	</div>
