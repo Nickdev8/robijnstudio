@@ -23,16 +23,18 @@
 	};
 </script>
 
-<header class="flex flex-col items-center gap-6 px-6 pt-12">
+<header class="flex flex-col items-center gap-6 px-4 pt-10 sm:px-6 sm:pt-12">
 	<img
 		src="/logo.svg"
 		alt="Logo van Beau Robijn Studios"
-		class="h-24 w-24"
+		class="h-20 w-20 sm:h-24 sm:w-24"
 		loading="lazy"
 		decoding="async"
 	/>
 
-	<nav class="font-lifted flex flex-wrap items-center justify-center gap-10 text-xs uppercase text-neutral-600">
+	<nav
+		class="flex flex-wrap items-center justify-center gap-4 text-[0.68rem] uppercase tracking-[0.32em] text-neutral-600 sm:gap-7 sm:text-[0.72rem] sm:tracking-[0.38em] lg:gap-10 lg:text-xs lg:tracking-[0.42em]"
+	>
 		{#each navItems as nav}
 			{@const active = isActive($page.url, nav)}
 			<a
