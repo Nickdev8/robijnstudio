@@ -4,19 +4,16 @@ import type { SiteContent } from '$lib/types/content';
 import { env } from '$env/dynamic/private';
 
 const DEFAULT_CONTENT_PATH = join(process.cwd(), 'content.json');
-const RESOLVED_CONTENT_PATH = (() => {
-	const customFile = env.CONTENT_FILE;
-	if (customFile?.trim()) {
-		return customFile;
-	}
+const DEFAULT_CONTENT_DIR = dirname(DEFAULT_CONTENT_PATH);
+const CUSTOM_FILE = env.CONTENT_FILE?.trim();
+const CUSTOM_DIR = env.CONTENT_DIR?.trim();
 
-	const customDir = env.CONTENT_DIR;
-	if (customDir?.trim()) {
-		return join(customDir, 'content.json');
-	}
-
-	return DEFAULT_CONTENT_PATH;
-})();
+const RESOLVED_CONTENT_PATH = CUSTOM_FILE
+	? CUSTOM_FILE
+	: join(CUSTOM_DIR ?? DEFAULT_CONTENT_DIR, 'content.json');
+const RESOLVED_CONTENT_DIR = CUSTOM_FILE
+	? dirname(CUSTOM_FILE)
+	: CUSTOM_DIR ?? DEFAULT_CONTENT_DIR;
 
 let ensured = false;
 
@@ -51,4 +48,8 @@ export async function writeContent(content: SiteContent): Promise<void> {
 	const path = await ensureContentFile();
 	const serialized = JSON.stringify(content, null, 2);
 	await writeFile(path, `${serialized}\n`, { encoding: 'utf-8' });
+}
+
+export function getContentDirectory(): string {
+	return RESOLVED_CONTENT_DIR;
 }

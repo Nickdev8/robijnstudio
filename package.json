@@ -11,6 +11,7 @@
 		"lint": "npm --prefix app run lint",
 		"test": "npm --prefix app run test",
 		"test:e2e": "npm --prefix app run test:e2e",
+		"test:unit": "npm --prefix app run test:unit",
 		"prepare": "npm --prefix app run prepare"
 	}
 }

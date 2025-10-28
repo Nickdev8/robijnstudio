@@ -1,14 +1,14 @@
 import { redirect, fail } from '@sveltejs/kit';
 import { readContent, writeContent } from '$lib/server/content';
+import { ADMIN_COOKIE, isAdminAuthenticated } from '$lib/server/admin';
 import type { SiteContent } from '$lib/types/content';
 import type { Actions, PageServerLoad } from './$types';
 import { env } from '$env/dynamic/private';
 
-const ADMIN_COOKIE = 'robijnstudio_admin';
 const ADMIN_PASSWORD = env.ADMIN_PASSWORD ?? 'robijnstudio';
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	const authenticated = cookies.get(ADMIN_COOKIE) === 'true';
+	const authenticated = isAdminAuthenticated(cookies);
 	if (!authenticated) {
 		return { authenticated: false };
 	}
@@ -44,7 +44,7 @@ export const actions: Actions = {
 		throw redirect(303, '/admin');
 	},
 	save: async ({ request, cookies }) => {
-		if (cookies.get(ADMIN_COOKIE) !== 'true') {
+		if (!isAdminAuthenticated(cookies)) {
 			return fail(401, { error: 'Niet geautoriseerd.' });
 		}
 
