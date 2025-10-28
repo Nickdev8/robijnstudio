@@ -40,11 +40,11 @@
 			<a
 				href={nav.href}
 				aria-current={active ? 'page' : undefined}
-				class={`group relative pb-2 transition-colors duration-200 hover:text-black ${active ? 'text-black' : ''}`}
+				class={`group relative pb-2 transition-colors duration-200 hover:text-rose-700 ${active ? 'text-rose-700' : ''}`}
 			>
 				{nav.label}
 				<span
-					class={`pointer-events-none absolute inset-x-0 -bottom-0.5 hidden h-px bg-neutral-800 transition-opacity duration-200 sm:block ${
+					class={`pointer-events-none absolute inset-x-0 -bottom-0.5 hidden h-px bg-rose-600 transition-opacity duration-200 sm:block ${
 						active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
 					}`}
 				></span>

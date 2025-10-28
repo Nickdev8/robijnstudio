@@ -2,8 +2,10 @@
 	import Header from '$lib/components/Header.svelte';
 	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	export let data: PageData;
 	const { home } = data;
+	const primaryCTA = home.cta?.[0];
+	const secondaryCTA = home.cta?.[1];
 </script>
 
 <svelte:head>
@@ -17,73 +19,87 @@
 <div class="flex flex-1 flex-col bg-white" id="home">
 	<Header />
 
-	<main class="flex flex-1 items-center justify-center px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
-		<div class="grid w-full max-w-6xl items-start gap-14 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-20">
-			<figure class="relative">
-				<div
-					class="relative overflow-hidden rounded-[2.5rem] border border-neutral-200 bg-neutral-200/40 shadow-[0_30px_80px_rgba(15,23,42,0.16)] sm:rounded-[3rem]"
-				>
-					<img
-						src={home.heroImage.src}
-						alt={home.heroImage.alt}
-						class="h-full w-full object-cover object-center sm:aspect-[4/5]"
-						loading="lazy"
-						decoding="async"
-					/>
-					<div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent"></div>
-					<span
-						class="font-lifted absolute left-8 bottom-8 text-[0.65rem] uppercase tracking-[0.5em] text-white/80"
-					>
-						{home.heroLabel}
-					</span>
-				</div>
-				<figcaption class="mt-4 font-lifted text-[0.65rem] uppercase tracking-[0.5em] text-neutral-400">
-					{home.heroImage.alt}
-				</figcaption>
-			</figure>
+	<main class="flex flex-1 flex-col items-center px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+		<section class="w-full max-w-6xl">
+			<div class="grid items-center gap-12 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16">
+				<div class="flex flex-col gap-8 md:order-2">
+					<div class="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-[0.7rem] uppercase tracking-[0.32em] text-neutral-500 sm:text-xs sm:tracking-[0.36em]">
+						<img src="/ruby.png" alt="" aria-hidden="true" class="h-4 w-4 object-contain" />
+						{home.tagline}
+					</div>
+					<h1 class="font-display text-[clamp(2.6rem,4vw+1.6rem,4.6rem)] uppercase leading-[0.96] text-neutral-900">
+						<span class="block">{home.title}</span>
+						<span class="mt-1 block text-[clamp(1.4rem,2vw+1rem,2.4rem)] text-neutral-400">{home.subtitle}</span>
+					</h1>
+					<p class="max-w-xl text-base leading-relaxed text-neutral-600 sm:text-lg">{home.description}</p>
 
-			<div class="flex flex-col items-start gap-10">
-				<span class="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-[0.7rem] uppercase tracking-[0.32em] text-neutral-500 sm:text-xs sm:tracking-[0.36em]">
-					<span class="h-2 w-2 rounded-full bg-neutral-900"></span>
-					{home.tagline}
-				</span>
-				<h1
-					class="font-display text-[clamp(2.6rem,5vw+2rem,5.8rem)] uppercase leading-[0.95] text-neutral-900"
-				>
-					<span class="block">{home.title}</span>
-					<span class="block text-[clamp(2rem,3vw+1rem,3.6rem)] text-neutral-400">{home.subtitle}</span>
-				</h1>
-				<p class="max-w-xl text-base leading-relaxed text-neutral-600 sm:text-lg">
-					{home.description}
-				</p>
+					<div class="grid gap-4 text-sm text-neutral-500 sm:grid-cols-2">
+						<div class="rounded-2xl border border-neutral-200/70 bg-white px-5 py-4">
+							<p class="font-display text-xs uppercase tracking-[0.32em] text-neutral-400">Focus</p>
+							<p class="mt-2 font-medium text-neutral-900">{primaryCTA?.title ?? 'Authentieke verhalen'}</p>
+							<p class="text-neutral-500">{primaryCTA?.description ?? 'Filmische fotografie met ruimte voor kwetsbaarheid.'}</p>
+						</div>
+						<div class="rounded-2xl border border-neutral-200/70 bg-white px-5 py-4">
+							<p class="font-display text-xs uppercase tracking-[0.32em] text-neutral-400">Beschikbaarheid</p>
+							<p class="mt-2 text-neutral-600">{home.availability}</p>
+						</div>
+					</div>
 
-				<div class="w-full max-w-xl space-y-6">
-					<p class="font-display text-lg text-neutral-900">Bekijk mijn werk</p>
-					<div class="space-y-4">
-						{#each home.cta as item}
-							<a
-								href={item.href}
-								class="group flex items-center gap-4 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-5 py-4 transition-all hover:border-neutral-900 hover:bg-white sm:px-6 sm:py-5"
-							>
-								<div>
-									<span class="font-display text-lg text-neutral-900 sm:text-xl">{item.title}</span>
-									<span class="mt-1 block text-sm text-neutral-500">
-										{item.description}
-									</span>
-								</div>
-								<span
-									class="ml-auto hidden text-2xl text-neutral-300 transition-transform group-hover:translate-x-1 group-hover:text-neutral-900 sm:block"
-									>→</span
-								>
-							</a>
-						{/each}
+					<div class="flex flex-wrap gap-3">
+						<a
+							href="/portfolio"
+							class="font-display inline-flex items-center justify-center gap-3 rounded-full border border-neutral-900/10 bg-neutral-900 px-7 py-3 text-xs uppercase tracking-[0.35em] text-white transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+						>
+							<span class="inline-flex h-2.5 w-2.5 rounded-full bg-rose-500"></span>
+							Bekijk portfolio
+						</a>
+						<a
+							href="/about"
+							class="inline-flex items-center gap-2 text-sm font-medium text-neutral-700 underline decoration-neutral-300 underline-offset-6 transition hover:text-neutral-900 hover:decoration-neutral-500"
+						>
+							Leer Beau kennen
+						</a>
 					</div>
 				</div>
 
-				<p class="text-sm text-neutral-500">
-					{home.availability}
-				</p>
+				<figure class="md:order-1">
+					<div class="overflow-hidden rounded-[2rem] border border-neutral-200 bg-white shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:shadow-[0_20px_60px_rgba(15,23,42,0.1)]">
+						<img
+							src={home.heroImage.src}
+							alt={home.heroImage.alt}
+							class="h-full w-full object-cover object-center sm:aspect-[4/5]"
+							loading="lazy"
+							decoding="async"
+						/>
+					</div>
+					<figcaption class="mt-4 text-xs uppercase tracking-[0.38em] text-neutral-400">
+						{home.heroImage.alt}
+					</figcaption>
+				</figure>
 			</div>
-		</div>
+		</section>
+
+		<section class="mt-16 w-full">
+			<div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
+				{#if home.cta?.length}
+					<ul class="grid gap-4 rounded-[2rem] border border-neutral-200 bg-white px-6 py-8 shadow-[0_14px_40px_rgba(15,23,42,0.08)] list-none sm:grid-cols-2 sm:px-10 sm:py-10">
+						{#each home.cta as item}
+							<li class="rounded-2xl border border-neutral-200 px-5 py-4 text-sm text-neutral-600 transition hover:border-neutral-300">
+								<p class="font-medium text-neutral-900">{item.title}</p>
+								<p class="text-neutral-500">{item.description}</p>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+				{#if secondaryCTA}
+					<div class="mt-4 flex items-center gap-3 text-xs uppercase tracking-[0.36em] text-neutral-400">
+						<span class="inline-flex h-2 w-2 flex-none rounded-full bg-neutral-300"></span>
+						<span class="text-neutral-500">{secondaryCTA.title}</span>
+						<span>·</span>
+						<span class="text-neutral-400">{secondaryCTA.description}</span>
+					</div>
+				{/if}
+			</div>
+		</section>
 	</main>
 </div>
