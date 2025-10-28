@@ -13,11 +13,11 @@
 				href="https://instagram.com/robijnstudios"
 				target="_blank"
 				rel="noreferrer"
-				class="transition-colors hover:text-neutral-900"
+				class="transition-colors hover:text-rose-700"
 			>
 				Instagram
 			</a>
-			<a href="mailto:info@robijnstudios.nl" class="transition-colors hover:text-neutral-900">
+			<a href="mailto:info@robijnstudios.nl" class="transition-colors hover:text-rose-700">
 				info@robijnstudios.nl
 			</a>
 		</div>

@@ -22,7 +22,7 @@
 	<Header />
 
 	<main class="flex flex-1 justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
-		<div class="grid w-full max-w-5xl items-start gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16">
+		<div class="grid w-full max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16">
 			<section class="flex flex-col gap-6">
 				<p class="text-xs uppercase tracking-[0.35em] text-neutral-500">Laten we samenwerken</p>
 				<h1 class="font-display text-[clamp(2.3rem,3vw+1.5rem,3.8rem)] uppercase leading-[1.05] text-neutral-900">
@@ -36,7 +36,7 @@
 					<ul class="mt-4 space-y-3">
 						{#each contact.bullets as bullet}
 							<li class="flex items-center gap-3">
-								<span class="h-2 w-2 rounded-full bg-neutral-900"></span>
+								<span class="h-2 w-2 rounded-full bg-rose-600"></span>
 								{bullet}
 							</li>
 						{/each}
@@ -62,7 +62,7 @@
 							</p>
 							<p class="text-sm text-neutral-500">
 								Mocht je binnen die tijd niets van me horen, stuur dan gerust een mail naar
-								<a href={`mailto:${contactEmail}`} class="underline decoration-neutral-400 underline-offset-4 hover:text-neutral-900">
+								<a href={`mailto:${contactEmail}`} class="underline decoration-neutral-400 underline-offset-4 hover:text-rose-700">
 									{contactEmail}
 								</a>
 								met een verwijzing naar je aanvraag.
@@ -70,7 +70,7 @@
 						</div>
 						<a
 							href="/"
-							class="font-display inline-flex w-full items-center justify-center rounded-full bg-neutral-900 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 sm:w-auto"
+						class="font-display inline-flex w-full items-center justify-center rounded-full bg-rose-600 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 sm:w-auto"
 						>
 							Terug naar home
 						</a>
@@ -85,7 +85,7 @@
 									name="firstName"
 									placeholder="Je voornaam"
 									required
-									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-rose-600 focus:ring-2 focus:ring-rose-600/10"
 								/>
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
@@ -95,7 +95,7 @@
 									name="lastName"
 									placeholder="Je achternaam"
 									required
-									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-rose-600 focus:ring-2 focus:ring-rose-600/10"
 								/>
 							</label>
 						</div>
@@ -107,7 +107,7 @@
 								name="email"
 								placeholder="you@email.com"
 								required
-								class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-rose-600 focus:ring-2 focus:ring-rose-600/10"
 							/>
 						</label>
 
@@ -117,7 +117,7 @@
 							<div class="grid gap-4">
 								{#each packages as pakket}
 									<label
-										class="group flex cursor-pointer flex-col gap-2 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-5 py-4 transition-all hover:border-neutral-900 hover:bg-white sm:flex-row sm:items-center"
+										class="group flex cursor-pointer flex-col gap-2 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-5 py-4 transition-all hover:border-rose-600 hover:bg-white sm:flex-row sm:items-center"
 									>
 										<div class="flex items-center gap-3">
 											<input
@@ -125,7 +125,7 @@
 												name="pakket"
 												value={pakket.id}
 												required
-												class="h-4 w-4 border-neutral-300 text-neutral-900 focus:ring-neutral-900/30"
+												class="h-4 w-4 border-neutral-300 text-rose-600 focus:ring-rose-600/30"
 											/>
 											<div>
 												<p class="font-display text-base text-neutral-900">{pakket.title}</p>
@@ -147,7 +147,7 @@
 								rows="5"
 								placeholder="Waar wil je de focus op leggen? Zijn er locaties die je aanspreken? Mag ik meedenken over styling?"
 								required
-								class="resize-none rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							class="resize-none rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-rose-600 focus:ring-2 focus:ring-rose-600/10"
 							></textarea>
 						</label>
 
@@ -157,7 +157,7 @@
 
 						<button
 							type="submit"
-							class="font-display inline-flex w-full items-center justify-center rounded-full bg-neutral-900 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 sm:w-auto"
+							class="font-display inline-flex w-full items-center justify-center rounded-full bg-rose-600 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 sm:w-auto"
 						>
 							Verstuur aanvraag
 						</button>
@@ -166,10 +166,10 @@
 
 				<p class="mt-6 text-sm text-neutral-500">
 					{contact.outro}
-					<a
-						href={`mailto:${contactEmail}`}
-						class="underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-900"
-					>
+						<a
+							href={`mailto:${contactEmail}`}
+							class="underline decoration-neutral-400 underline-offset-4 transition hover:text-rose-700"
+						>
 						{contactEmail}
 					</a
 					>.
