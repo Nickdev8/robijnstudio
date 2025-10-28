@@ -1,0 +1,16 @@
+{
+	"private": true,
+	"name": "robijnstudio-root",
+	"scripts": {
+		"dev": "npm --prefix app run dev",
+		"build": "npm --prefix app run build",
+		"preview": "npm --prefix app run preview",
+		"check": "npm --prefix app run check",
+		"check:watch": "npm --prefix app run check:watch",
+		"format": "npm --prefix app run format",
+		"lint": "npm --prefix app run lint",
+		"test": "npm --prefix app run test",
+		"test:e2e": "npm --prefix app run test:e2e",
+		"prepare": "npm --prefix app run prepare"
+	}
+}
