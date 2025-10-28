@@ -5,6 +5,7 @@
 	let { data }: { data: PageData } = $props();
 	const { contact } = data;
 	const packages = contact.packages;
+	const contactEmail = contact.email;
 </script>
 
 <svelte:head>
@@ -126,12 +127,12 @@
 				</form>
 
 				<p class="mt-6 text-sm text-neutral-500">
-					{contact.outro.replace('info@robijnstudios.nl', '')}
+					{contact.outro}
 					<a
-						href="mailto:info@robijnstudios.nl"
+						href={`mailto:${contactEmail}`}
 						class="underline decoration-neutral-400 underline-offset-4 transition hover:text-neutral-900"
 					>
-						info@robijnstudios.nl
+						{contactEmail}
 					</a
 					>.
 				</p>
