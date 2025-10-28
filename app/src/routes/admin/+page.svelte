@@ -11,8 +11,38 @@ export let data: PageData;
 export let form: FormState = undefined;
 const formState = form;
 
+const normalizeContent = (input: SiteContent): SiteContent => {
+	const normalizedProjects = input.about.projects.map((project, index) => {
+		const slug = project.slug?.trim() || `project-${index + 1}`;
+		const heroImage = project.heroImage ?? { src: '', alt: '' };
+		const body =
+			Array.isArray(project.body) && project.body.length > 0
+				? project.body.map((paragraph) => paragraph ?? '')
+				: [''];
+
+		return {
+			...project,
+			slug,
+			heroImage: {
+				src: heroImage.src ?? '',
+				alt: heroImage.alt ?? ''
+			},
+			body,
+			externalUrl: project.externalUrl ?? ''
+		};
+	});
+
+	return {
+		...input,
+		about: {
+			...input.about,
+			projects: normalizedProjects
+		}
+	};
+};
+
 let content: SiteContent | null =
-	data.authenticated && data.content ? structuredClone(data.content) : null;
+	data.authenticated && data.content ? normalizeContent(structuredClone(data.content)) : null;
 let successMessage = formState?.success ? 'Wijzigingen opgeslagen.' : '';
 let errorMessage = formState?.error ?? '';
 
@@ -213,13 +243,23 @@ const handleSubmit = (event: Event) => {
 
 	const addProject = () => {
 		if (!content) return;
+		const timestamp = Date.now();
 		content = {
 			...content,
 			about: {
 				...content.about,
 				projects: [
 					...content.about.projects,
-					{ title: 'Nieuw project', description: '', href: 'https://example.com', result: '', videoUrl: '' }
+					{
+						slug: `project-${timestamp}`,
+						title: 'Nieuw project',
+						description: '',
+						result: '',
+						videoUrl: '',
+						heroImage: { src: '', alt: '' },
+						body: [''],
+						externalUrl: ''
+					}
 				]
 			}
 		};
@@ -232,6 +272,39 @@ const handleSubmit = (event: Event) => {
 			about: {
 				...content.about,
 				projects: content.about.projects.filter((_item, i) => i !== index)
+			}
+		};
+	};
+
+	const addProjectParagraph = (projectIndex: number) => {
+		if (!content) return;
+		const projects = [...content.about.projects];
+		const target = { ...projects[projectIndex] };
+		target.body = [...target.body, ''];
+		projects[projectIndex] = target;
+		content = {
+			...content,
+			about: {
+				...content.about,
+				projects
+			}
+		};
+	};
+
+	const removeProjectParagraph = (projectIndex: number, paragraphIndex: number) => {
+		if (!content) return;
+		const projects = [...content.about.projects];
+		const target = { ...projects[projectIndex] };
+		target.body = target.body.filter((_item, idx) => idx !== paragraphIndex);
+		if (!target.body.length) {
+			target.body = [''];
+		}
+		projects[projectIndex] = target;
+		content = {
+			...content,
+			about: {
+				...content.about,
+				projects
 			}
 		};
 	};
@@ -276,6 +349,15 @@ const addGalleryItem = () => {
 			}
 		};
 	};
+
+const sectionNav = [
+	{ id: 'home', label: 'Home' },
+	{ id: 'about', label: 'Over' },
+	{ id: 'projects', label: 'Projectcases' },
+	{ id: 'testimonials', label: 'Testimonials' },
+	{ id: 'portfolio', label: 'Portfolio' },
+	{ id: 'contact', label: 'Contact' }
+] as const;
 
 	const removeGalleryItem = (index: number) => {
 		if (!content) return;
@@ -391,20 +473,34 @@ const addGalleryItem = () => {
 				<p class="mb-6 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{successMessage}</p>
 			{/if}
 
-			{#if errorMessage}
-				<p class="mb-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{errorMessage}</p>
-			{/if}
+				{#if errorMessage}
+					<p class="mb-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{errorMessage}</p>
+				{/if}
 
-			<form
-				method="post"
-				action="?/save"
-				onsubmit={handleSubmit}
-				class="space-y-10"
+				<nav
+					class="mb-8 flex flex-wrap gap-3 rounded-full border border-neutral-300 bg-white/80 px-4 py-3 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-500 shadow-sm sm:justify-center sm:gap-4 sm:text-xs"
+					aria-label="Secties"
+				>
+					{#each sectionNav as section}
+						<a
+							href={`#${section.id}`}
+							class="rounded-full border border-transparent px-4 py-2 transition hover:border-neutral-900 hover:text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/20"
+						>
+							{section.label}
+						</a>
+					{/each}
+				</nav>
+
+				<form
+					method="post"
+					action="?/save"
+					onsubmit={handleSubmit}
+					class="space-y-10"
 			>
 				<input type="hidden" name="payload" value="" />
 
-				<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
-					<h2 class="font-display text-2xl text-neutral-900">Home</h2>
+					<section id="home" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
+						<h2 class="font-display text-2xl text-neutral-900">Home</h2>
 					<div class="mt-6 grid gap-6">
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tagline</span>
@@ -534,7 +630,7 @@ const addGalleryItem = () => {
 					</div>
 				</section>
 
-			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+					<section id="about" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
 				<h2 class="font-display text-2xl text-neutral-900">Over</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
@@ -549,103 +645,129 @@ const addGalleryItem = () => {
 						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Kop</span>
 						<input
 							type="text"
-								bind:value={content.about.headline}
-								class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-							/>
-						</label>
+							bind:value={content.about.headline}
+							class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
 
-						<div class="space-y-4">
-							<div class="flex items-center justify-between">
-								<h3 class="font-display text-lg text-neutral-900">Paragrafen</h3>
-								<button
-									type="button"
-									onclick={addParagraph}
-									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-								>
-									Toevoegen
-								</button>
+					<div class="space-y-4">
+						<div class="flex items-center justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Paragrafen</h3>
+							<button
+								type="button"
+								onclick={addParagraph}
+								class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Toevoegen
+							</button>
+						</div>
+						{#each content.about.paragraphs as paragraph, index}
+							<div class="rounded-2xl border border-neutral-200 p-4">
+								<div class="flex items-start justify-between gap-4">
+									<p class="font-display text-neutral-900">Paragraaf {index + 1}</p>
+									<button
+										type="button"
+										onclick={() => removeParagraph(index)}
+										class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+									>
+										Verwijder
+									</button>
+								</div>
+								<textarea
+									rows="3"
+									bind:value={content.about.paragraphs[index]}
+									class="mt-4 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								></textarea>
 							</div>
-							{#each content.about.paragraphs as paragraph, index}
+						{/each}
+					</div>
+
+					<div class="space-y-4">
+						<div class="flex items-center justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Stats</h3>
+							<button
+								type="button"
+								onclick={addStat}
+								class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Toevoegen
+							</button>
+						</div>
+						<div class="grid gap-4 sm:grid-cols-2">
+							{#each content.about.stats as stat, index}
 								<div class="rounded-2xl border border-neutral-200 p-4">
-									<div class="flex items-start justify-between gap-4">
-										<p class="font-display text-neutral-900">Paragraaf {index + 1}</p>
+									<div class="flex items-center justify-between gap-4">
+										<p class="font-display text-neutral-900">Item {index + 1}</p>
 										<button
 											type="button"
-											onclick={() => removeParagraph(index)}
+											onclick={() => removeStat(index)}
 											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 										>
 											Verwijder
 										</button>
 									</div>
-									<textarea
-										rows="3"
-										bind:value={content.about.paragraphs[index]}
-										class="mt-4 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									></textarea>
+									<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Label</span>
+										<input
+											type="text"
+											bind:value={content.about.stats[index].label}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										/>
+									</label>
+									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Waarde</span>
+										<input
+											type="text"
+											bind:value={content.about.stats[index].value}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										/>
+									</label>
 								</div>
 							{/each}
 						</div>
+					</div>
 
-						<div class="space-y-4">
-							<div class="flex items-center justify-between">
-								<h3 class="font-display text-lg text-neutral-900">Stats</h3>
-								<button
-									type="button"
-									onclick={addStat}
-									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-								>
-									Toevoegen
-								</button>
-							</div>
-							<div class="grid gap-4 sm:grid-cols-2">
-								{#each content.about.stats as stat, index}
-									<div class="rounded-2xl border border-neutral-200 p-4">
-										<div class="flex items-center justify-between gap-4">
-											<p class="font-display text-neutral-900">Item {index + 1}</p>
-											<button
-												type="button"
-												onclick={() => removeStat(index)}
-												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
-											>
-												Verwijder
-											</button>
-										</div>
-										<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Label</span>
-											<input
-												type="text"
-												bind:value={content.about.stats[index].label}
-												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-											/>
-										</label>
-										<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Waarde</span>
-											<input
-												type="text"
-												bind:value={content.about.stats[index].value}
-												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-											/>
-										</label>
-									</div>
-								{/each}
-							</div>
-						</div>
+					<div class="grid gap-4 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
+							<input
+								type="url"
+								bind:value={content.about.portrait.src}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+							<UploadDropzone bind:url={content.about.portrait.src} />
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
+							<input
+								type="text"
+								bind:value={content.about.portrait.alt}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
+				</div>
+			</section>
 
-						<div class="space-y-4">
-							<div class="flex items-center justify-between">
-								<h3 class="font-display text-lg text-neutral-900">Projecten</h3>
-								<button
-									type="button"
-									onclick={addProject}
-									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-								>
-									Toevoegen
-								</button>
-							</div>
-				<div class="space-y-4" role="list">
+			<section id="projects" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
+				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<h2 class="font-display text-2xl text-neutral-900">Projectcases</h2>
+						<p class="text-sm text-neutral-500">Worden gebruikt op de Over-pagina én als losse projectpagina.</p>
+					</div>
+					<button
+						type="button"
+						onclick={addProject}
+						class="mt-2 inline-flex items-center justify-center rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900 sm:mt-0"
+					>
+						Nieuw project
+					</button>
+				</div>
+
+				<div class="mt-6 space-y-4" role="list">
 					{#each content.about.projects as project, index}
 						<div
-							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('projects', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
+							class={`rounded-2xl border border-neutral-200 p-5 ${isDragging('projects', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
 							draggable={true}
 							ondragstart={() => startDrag('projects', index)}
 							ondragover={allowDrop}
@@ -654,63 +776,134 @@ const addGalleryItem = () => {
 							role="listitem"
 							aria-grabbed={isDragging('projects', index)}
 						>
+							<div class="flex flex-wrap items-center justify-between gap-4">
+								<p class="font-display text-lg text-neutral-900">Project {index + 1}</p>
+								<div class="flex items-center gap-3">
+									<button
+										type="button"
+										onclick={() => removeProject(index)}
+										class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+									>
+										Verwijder
+									</button>
+								</div>
+							</div>
+
+							<div class="mt-4 grid gap-4 sm:grid-cols-2">
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
+									<input
+										type="text"
+										bind:value={content.about.projects[index].title}
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									/>
+								</label>
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Slug</span>
+									<input
+										type="text"
+										bind:value={content.about.projects[index].slug}
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										placeholder="bijv. soft-echo"
+									/>
+								</label>
+							</div>
+
+							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Korte omschrijving</span>
+								<textarea
+									rows="2"
+									bind:value={content.about.projects[index].description}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								></textarea>
+							</label>
+
+							<div class="mt-3 grid gap-4 sm:grid-cols-2">
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Resultaat</span>
+									<input
+										type="text"
+										bind:value={content.about.projects[index].result}
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									/>
+								</label>
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Video (embed URL)</span>
+									<input
+										type="url"
+										bind:value={content.about.projects[index].videoUrl}
+										placeholder="https://player.vimeo.com/..."
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									/>
+								</label>
+							</div>
+
+							<div class="mt-3 grid gap-4 sm:grid-cols-2">
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Hero-afbeelding</span>
+									<input
+										type="url"
+										bind:value={content.about.projects[index].heroImage.src}
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									/>
+									<UploadDropzone bind:url={content.about.projects[index].heroImage.src} />
+								</label>
+								<label class="flex flex-col gap-2 text-sm text-neutral-600">
+									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Hero alt-tekst</span>
+									<input
+										type="text"
+										bind:value={content.about.projects[index].heroImage.alt}
+										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									/>
+								</label>
+							</div>
+
+							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Externe case (optioneel)</span>
+								<input
+									type="url"
+									bind:value={content.about.projects[index].externalUrl}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+									placeholder="https://..."
+								/>
+							</label>
+
+							<div class="mt-4 space-y-3">
+								<div class="flex items-center justify-between">
+									<p class="font-display text-neutral-900">Detailparagrafen</p>
+									<button
+										type="button"
+										onclick={() => addProjectParagraph(index)}
+										class="rounded-full border border-neutral-300 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+									>
+										Paragraaf toevoegen
+									</button>
+								</div>
+								{#each project.body as paragraph, bodyIndex}
+									<div class="rounded-2xl border border-neutral-200 p-4">
 										<div class="flex items-start justify-between gap-4">
-											<p class="font-display text-neutral-900">Project {index + 1}</p>
-											<button
-												type="button"
-												onclick={() => removeProject(index)}
-												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
-											>
-												Verwijder
-											</button>
+											<p class="font-display text-neutral-900">Paragraaf {bodyIndex + 1}</p>
+											{#if project.body.length > 1}
+												<button
+													type="button"
+													onclick={() => removeProjectParagraph(index, bodyIndex)}
+													class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+												>
+													Verwijder
+												</button>
+											{/if}
 										</div>
-										<div class="mt-4 grid gap-4 sm:grid-cols-2">
-											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
-												<input
-													type="text"
-													bind:value={content.about.projects[index].title}
-													class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-												/>
-											</label>
-											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Link</span>
-												<input
-													type="url"
-													bind:value={content.about.projects[index].href}
-													class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-												/>
-											</label>
-										</div>
-					<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Omschrijving</span>
-						<textarea
-							rows="2"
-							bind:value={content.about.projects[index].description}
-							class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-						></textarea>
-					</label>
-					<div class="mt-3 grid gap-3 sm:grid-cols-2">
-						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Resultaat</span>
-							<input
-								type="text"
-								bind:value={content.about.projects[index].result}
-								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-							/>
-						</label>
-						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Video (embed URL)</span>
-							<input
-								type="url"
-								bind:value={content.about.projects[index].videoUrl}
-								placeholder="https://player.vimeo.com/..."
-								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-							/>
-						</label>
-					</div>
+										<textarea
+											rows="3"
+											bind:value={content.about.projects[index].body[bodyIndex]}
+											class="mt-4 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										></textarea>
 									</div>
 								{/each}
+							</div>
+						</div>
+					{/each}
+
 					{#if content.about.projects.length > 1}
 						<div
 							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
@@ -723,20 +916,21 @@ const addGalleryItem = () => {
 						</div>
 					{/if}
 				</div>
-			</div>
+			</section>
 
-			<div class="space-y-4">
-				<div class="flex items-center justify-between">
-					<h3 class="font-display text-lg text-neutral-900">Testimonials</h3>
+			<section id="testimonials" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
+				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+					<h2 class="font-display text-2xl text-neutral-900">Testimonials</h2>
 					<button
 						type="button"
 						onclick={addTestimonial}
-						class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+						class="inline-flex items-center justify-center rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 					>
-						Toevoegen
+						Nieuwe quote
 					</button>
 				</div>
-				<div class="space-y-4" role="list">
+
+				<div class="mt-6 space-y-4" role="list">
 					{#each content.about.testimonials as testimonial, index}
 						<div
 							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('testimonials', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
@@ -776,6 +970,7 @@ const addGalleryItem = () => {
 							</label>
 						</div>
 					{/each}
+
 					{#if content.about.testimonials.length > 1}
 						<div
 							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
@@ -788,31 +983,9 @@ const addGalleryItem = () => {
 						</div>
 					{/if}
 				</div>
-			</div>
+			</section>
 
-						<div class="grid gap-4 sm:grid-cols-2">
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
-								<input
-									type="url"
-									bind:value={content.about.portrait.src}
-									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-								/>
-								<UploadDropzone bind:url={content.about.portrait.src} />
-							</label>
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
-								<input
-									type="text"
-									bind:value={content.about.portrait.alt}
-									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-								/>
-							</label>
-						</div>
-					</div>
-				</section>
-
-			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+			<section id="portfolio" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
 				<h2 class="font-display text-2xl text-neutral-900">Portfolio</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
@@ -913,7 +1086,7 @@ const addGalleryItem = () => {
 					</div>
 				</section>
 
-			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+			<section id="contact" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
 				<h2 class="font-display text-2xl text-neutral-900">Contact</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">

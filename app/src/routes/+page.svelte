@@ -3,10 +3,8 @@ import PageTagline from '$lib/components/PageTagline.svelte';
 import { buildSrcSet, defaultSizes } from '$lib/utils/image';
 import type { PageData } from './$types';
 
-	export let data: PageData;
-	const { home } = data;
-	const primaryCTA = home.cta?.[0];
-	const secondaryCTA = home.cta?.[1];
+export let data: PageData;
+const { home } = data;
 </script>
 
 <svelte:head>
@@ -15,6 +13,14 @@ import type { PageData } from './$types';
 		name="description"
 		content="Portfolio van Beau Robijn Fotografie — fotografische verhalen met een filmische signatuur."
 	/>
+	<meta property="og:title" content="Beau Robijn Fotografie" />
+	<meta property="og:description" content={home.description} />
+	<meta property="og:image" content={home.heroImage.src} />
+	<meta property="og:image:alt" content={home.heroImage.alt} />
+	<meta name="twitter:title" content="Beau Robijn Fotografie" />
+	<meta name="twitter:description" content={home.description} />
+	<meta name="twitter:image" content={home.heroImage.src} />
+	<meta name="twitter:image:alt" content={home.heroImage.alt} />
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="home">
@@ -28,18 +34,10 @@ import type { PageData } from './$types';
 						<span class="mt-1 block text-[clamp(1.4rem,2vw+1rem,2.4rem)] text-neutral-400">{home.subtitle}</span>
 					</h1>
 					<p class="max-w-xl text-base leading-relaxed text-neutral-600 sm:text-lg">{home.description}</p>
-
-					<div class="grid gap-4 text-sm text-neutral-500 sm:grid-cols-2">
-						<div class="rounded-2xl border border-neutral-200/70 bg-white px-5 py-4">
-							<p class="font-display text-xs uppercase tracking-[0.32em] text-neutral-400">Focus</p>
-							<p class="mt-2 font-medium text-neutral-900">{primaryCTA?.title ?? 'Authentieke verhalen'}</p>
-							<p class="text-neutral-500">{primaryCTA?.description ?? 'Filmische fotografie met ruimte voor kwetsbaarheid.'}</p>
-						</div>
-						<div class="rounded-2xl border border-neutral-200/70 bg-white px-5 py-4">
-							<p class="font-display text-xs uppercase tracking-[0.32em] text-neutral-400">Beschikbaarheid</p>
-							<p class="mt-2 text-neutral-600">{home.availability}</p>
-						</div>
-					</div>
+					<p class="rounded-2xl border border-neutral-200/70 bg-white px-5 py-4 text-sm text-neutral-500">
+						<span class="font-display block text-xs uppercase tracking-[0.32em] text-neutral-400">Beschikbaarheid</span>
+						<span class="mt-2 block text-neutral-600">{home.availability}</span>
+					</p>
 
 					<div class="flex flex-wrap gap-3">
 						<a
@@ -78,27 +76,5 @@ import type { PageData } from './$types';
 			</div>
 		</section>
 
-		<section class="mt-16 w-full">
-			<div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
-				{#if home.cta?.length}
-					<ul class="grid gap-4 rounded-[2rem] border border-neutral-200 bg-white px-6 py-8 shadow-[0_14px_40px_rgba(15,23,42,0.08)] list-none sm:grid-cols-2 sm:px-10 sm:py-10">
-						{#each home.cta as item}
-							<li class="rounded-2xl border border-neutral-200 px-5 py-4 text-sm text-neutral-600 transition hover:border-neutral-300">
-								<p class="font-medium text-neutral-900">{item.title}</p>
-								<p class="text-neutral-500">{item.description}</p>
-							</li>
-						{/each}
-					</ul>
-				{/if}
-				{#if secondaryCTA}
-					<div class="mt-4 flex items-center gap-3 text-xs uppercase tracking-[0.36em] text-neutral-400">
-						<span class="inline-flex h-2 w-2 flex-none rounded-full bg-neutral-300"></span>
-						<span class="text-neutral-500">{secondaryCTA.title}</span>
-						<span>·</span>
-						<span class="text-neutral-400">{secondaryCTA.description}</span>
-					</div>
-				{/if}
-			</div>
-		</section>
-	</main>
-</div>
+		</main>
+	</div>

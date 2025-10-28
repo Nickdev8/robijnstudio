@@ -9,7 +9,23 @@
       "alt": "Intiem portret in studio-setting"
     },
     "heroLabel": "Portretserie",
-    "cta": [],
+    "cta": [
+      {
+        "title": "Documentaire traject",
+        "description": "Drie verdiepende sessies waarin we jouw verhaal vastleggen met analoge en digitale beelden.",
+        "href": "/contact?pakket=documentary"
+      },
+      {
+        "title": "Editorial dagshoot",
+        "description": "Volledige productiedag met stylingadvies, locatie scouting en 30 nabewerkte highlights.",
+        "href": "/contact?pakket=editorial-day"
+      },
+      {
+        "title": "Mentorship sessie",
+        "description": "Twee uur begeleiding voor beginnende fotografen: portfolio review, workflow en storytelling.",
+        "href": "/contact?pakket=mentorship"
+      }
+    ],
     "availability": "Beschikbaar voor redactionele en commerci\u00eble shoots wereldwijd \u00b7 info@robijnstudios.nl"
   },
   "about": {
@@ -35,39 +51,20 @@
     ],
     "projects": [
       {
-        "title": "Soft Echo",
-        "description": "Zachte portretserie over queer identiteit, geschoten op 120mm film en tentoongesteld tijdens de academiedagen.",
-        "href": "https://robijnstudios.nl/project/soft-echo",
-        "result": "Tentoonstelling \"Soft Echo\" tijdens HKU Finals 2024, met 600+ bezoekers in het openingsweekend.",
-        "videoUrl": "https://player.vimeo.com/video/76979871?h=8272103f6e"
-      },
-      {
-        "title": "Evening Lines",
-        "description": "Cinematische reeks tijdens blauwe uurtjes op industrieterreinen; een dialoog tussen licht en lonely architecture.",
-        "href": "https://robijnstudios.nl/project/evening-lines",
-        "result": "Publicatie in OneWorld Magazine en campagnebeelden voor een duurzaam modemerk.",
-        "videoUrl": "https://www.youtube.com/embed/F3hTW9e20d8"
-      },
-      {
-        "title": "Close to Sound",
-        "description": "Korte docu over jonge muzikanten in Rotterdam, waarin beeld en geluid samensmelten tot een intieme repetitie-ervaring.",
-        "href": "https://robijnstudios.nl/project/close-to-sound",
-        "result": "Live visuals voor Rotterdamse pop-up en streaming teaser voor festival Subbacultcha.",
-        "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo"
-      },
-      {
-        "title": "Still Waters",
-        "description": "Documentaire miniserie over professionele zwemmers die trainen in open water; opgenomen op 16mm film.",
-        "href": "https://robijnstudios.nl/project/still-waters",
-        "result": "Bekroond met de Light Leak Award voor beste studentendocu.",
-        "videoUrl": "https://player.vimeo.com/video/327292558?h=7cadf3aa2e"
-      },
-      {
-        "title": "Neon Sleep",
-        "description": "Stylistische fashionfilm vol neonreflecties en rookmachines, gemaakt in samenwerking met een lokale designer.",
-        "href": "https://robijnstudios.nl/project/neon-sleep",
-        "result": "Gelanceerd tijdens Fashionclash en opgepikt door Not Just a Label.",
-        "videoUrl": "https://www.youtube.com/embed/aqz-KE-bpKQ"
+        "slug": "small-band-doc",
+        "title": "Tiny Stage Sessions",
+        "description": "Een 1,5 minuut documentaire over een lokale muziekband die elke woensdag in een piepkleine kelder repeteert.",
+        "result": "Première tijdens de academie showcase, direct gebruikt als teaser op social media van de band.",
+        "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo",
+        "heroImage": {
+          "src": "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80",
+          "alt": "Kleine muziekband tijdens een intieme repetitie"
+        },
+        "body": [
+          "Voor Tiny Stage Sessions filmde ik drie repetities van een opkomende indieband in een kelderstudio van twintig vierkante meter. De uitdaging was om de energie van een volle set te vangen terwijl we letterlijk tussen de versterkers en drumstellen door manoeuvreerden.",
+          "Ik werkte handheld met lichtgevoelige lenzen zodat we konden inspelen op de dynamiek van het moment. De montage focust op de kleine rituelen tussen de bandleden: stemmen, lachen, improviseren. In slechts anderhalve minuut ontstaat zo het gevoel dat je onderdeel van de band bent."
+        ],
+        "externalUrl": "https://robijnstudios.nl/project/tiny-stage-sessions"
       }
     ],
     "portrait": {
