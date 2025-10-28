@@ -21,11 +21,14 @@ export type StatItem = {
 };
 
 export type ProjectItem = {
+	slug: string;
 	title: string;
 	description: string;
-	href: string;
 	result?: string;
 	videoUrl?: string;
+	heroImage: { src: string; alt: string };
+	body: string[];
+	externalUrl?: string;
 };
 
 export type Testimonial = {

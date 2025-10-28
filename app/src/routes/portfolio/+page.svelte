@@ -7,21 +7,44 @@ import type { PageData } from './$types';
 
 export let data: PageData;
 const { portfolio } = data;
-	const selected = writable<LightboxImage | null>(null);
-	const gallerySizes = '(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 92vw';
+const selected = writable<LightboxImage | null>(null);
+const gallerySizes = '(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 92vw';
+const shareImage =
+	portfolio.gallery?.[0] ??
+	({
+		src: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=1600&q=80',
+		alt: 'Editorial shoot in het gouden uur'
+	} as LightboxImage);
 
-	const openLightbox = (image: LightboxImage) => {
-		selected.set(image);
-	};
+const openLightbox = (image: LightboxImage) => {
+	selected.set(image);
+};
 
-	const closeLightbox = () => {
-		selected.set(null);
-	};
+const closeLightbox = () => {
+	selected.set(null);
+};
 </script>
 
 <svelte:head>
 	<title>Portfolio | Beau Robijn Fotografie</title>
-	<meta name="description" content="Portfolio overzicht van Beau Robijn Fotografie. Responsieve grid met portretten en documentaire beelden." />
+	<meta
+		name="description"
+		content="Portfolio overzicht van Beau Robijn Fotografie. Responsieve grid met portretten en documentaire beelden."
+	/>
+	<meta property="og:title" content="Portfolio | Beau Robijn Fotografie" />
+	<meta
+		property="og:description"
+		content="Portfolio overzicht van Beau Robijn Fotografie. Responsieve grid met portretten en documentaire beelden."
+	/>
+	<meta property="og:image" content={shareImage.src} />
+	<meta property="og:image:alt" content={shareImage.alt} />
+	<meta name="twitter:title" content="Portfolio | Beau Robijn Fotografie" />
+	<meta
+		name="twitter:description"
+		content="Portfolio overzicht van Beau Robijn Fotografie. Responsieve grid met portretten en documentaire beelden."
+	/>
+	<meta name="twitter:image" content={shareImage.src} />
+	<meta name="twitter:image:alt" content={shareImage.alt} />
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="portfolio">

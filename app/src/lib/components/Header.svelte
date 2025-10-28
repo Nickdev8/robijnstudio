@@ -10,6 +10,7 @@
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Home', match: 'exact' },
 		{ href: '/about', label: 'Over', match: 'startsWith' },
+		{ href: '/projects', label: 'Projects', match: 'startsWith' },
 		{ href: '/portfolio', label: 'Portfolio', match: 'startsWith' },
 		{ href: '/contact', label: 'Contact', match: 'startsWith' }
 	];

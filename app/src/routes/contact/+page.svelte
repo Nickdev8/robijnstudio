@@ -8,6 +8,10 @@ export let form: ActionData | undefined;
 const { contact } = data;
 const packages = contact.packages;
 const contactEmail = contact.email;
+const shareImage = {
+	src: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1600&q=80',
+	alt: 'Contactmoment tijdens een fotoshoot in Amsterdam'
+};
 </script>
 
 <svelte:head>
@@ -16,6 +20,20 @@ const contactEmail = contact.email;
 		name="description"
 		content="Neem contact op met Beau Robijn Fotografie. Kies een pakket, vertel je verhaal en plan een shoot."
 	/>
+	<meta property="og:title" content="Contact | Beau Robijn Fotografie" />
+	<meta
+		property="og:description"
+		content="Neem contact op met Beau Robijn Fotografie. Kies een pakket, vertel je verhaal en plan een shoot."
+	/>
+	<meta property="og:image" content={shareImage.src} />
+	<meta property="og:image:alt" content={shareImage.alt} />
+	<meta name="twitter:title" content="Contact | Beau Robijn Fotografie" />
+	<meta
+		name="twitter:description"
+		content="Neem contact op met Beau Robijn Fotografie. Kies een pakket, vertel je verhaal en plan een shoot."
+	/>
+	<meta name="twitter:image" content={shareImage.src} />
+	<meta name="twitter:image:alt" content={shareImage.alt} />
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="contact">
