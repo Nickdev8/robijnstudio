@@ -6,8 +6,9 @@ import type { GalleryItem, SiteContent } from '$lib/types/content';
 
 type FormState = { error?: string; success?: boolean } | undefined;
 
-let { data }: { data: PageData } = $props();
-const formState = (data as { form?: FormState }).form;
+export let data: PageData;
+export let form: FormState = undefined;
+const formState = form;
 
 let content: SiteContent | null =
 	data.authenticated && data.content ? structuredClone(data.content) : null;
