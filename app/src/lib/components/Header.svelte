@@ -21,26 +21,67 @@
 
 		return current.pathname === item.href;
 	};
+
+	let isMenuOpen = false;
+	const toggleMenu = () => {
+		isMenuOpen = !isMenuOpen;
+	};
+	const closeMenu = () => {
+		isMenuOpen = false;
+	};
 </script>
 
-<header class="flex flex-col items-center gap-6 px-4 pt-10 sm:px-6 sm:pt-12">
-		<img
-			src="/logo.svg"
-			alt="Logo van Beau Robijn Fotografie"
-			class="h-20 sm:h-24 w-auto max-w-[min(80vw,20rem)] object-contain"
-			loading="lazy"
-			decoding="async"
-		/>
+<header class="flex flex-col items-center gap-5 px-4 pt-8 sm:px-6 sm:pt-12">
+	<img
+		src="/logo.svg"
+		alt="Logo van Beau Robijn Fotografie"
+		class="h-20 sm:h-24 w-auto max-w-[min(80vw,20rem)] object-contain"
+		loading="lazy"
+		decoding="async"
+	/>
+
+	<div class="flex w-full max-w-6xl items-center justify-between sm:hidden">
+		<button
+			type="button"
+			class="flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-neutral-700 transition hover:border-neutral-900 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+			on:click={toggleMenu}
+			aria-expanded={isMenuOpen}
+			aria-controls="primary-navigation"
+		>
+			Menu
+			<span class="sr-only">open navigatie</span>
+			<svg
+				class="h-4 w-4"
+				viewBox="0 0 24 24"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+				aria-hidden="true"
+			>
+				<path
+					d="M4 7h16M4 12h16M4 17h16"
+					stroke="currentColor"
+					stroke-width="1.5"
+					stroke-linecap="round"
+				/>
+			</svg>
+		</button>
+	</div>
 
 	<nav
-		class="flex flex-wrap items-center justify-center gap-4 text-[0.68rem] uppercase tracking-[0.32em] text-neutral-600 sm:gap-7 sm:text-[0.72rem] sm:tracking-[0.38em] lg:gap-10 lg:text-xs lg:tracking-[0.42em]"
+		id="primary-navigation"
+		class={`${
+			isMenuOpen ? 'flex' : 'hidden'
+		} flex-col items-center gap-4 rounded-2xl border border-neutral-200 bg-white/95 px-6 py-5 text-[0.68rem] uppercase tracking-[0.24em] text-neutral-700 shadow-sm transition sm:flex sm:flex-row sm:flex-wrap sm:justify-center sm:gap-7 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-[0.72rem] sm:tracking-[0.32em] lg:gap-10 lg:text-xs lg:tracking-[0.38em]`}
 	>
 		{#each navItems as nav}
 			{@const active = isActive($page.url, nav)}
 			<a
 				href={nav.href}
 				aria-current={active ? 'page' : undefined}
-				class={`group relative pb-2 transition-colors duration-200 hover:text-rose-700 ${active ? 'text-rose-700' : ''}`}
+				on:click={closeMenu}
+				class={`group relative pb-1 transition-colors duration-200 hover:text-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30 ${
+					active ? 'text-rose-700' : ''
+				}`}
 			>
 				{nav.label}
 				<span

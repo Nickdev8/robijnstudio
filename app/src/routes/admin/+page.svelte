@@ -16,6 +16,120 @@ let content: SiteContent | null =
 let successMessage = formState?.success ? 'Wijzigingen opgeslagen.' : '';
 let errorMessage = formState?.error ?? '';
 
+type DragSection = 'projects' | 'gallery' | 'testimonials';
+
+const reorderList = <T>(items: T[], from: number, to: number): T[] => {
+	const updated = [...items];
+	const [moved] = updated.splice(from, 1);
+	const targetIndex = from < to ? to - 1 : to;
+	updated.splice(targetIndex, 0, moved);
+	return updated;
+};
+
+let dragging: { section: DragSection | null; index: number | null } = { section: null, index: null };
+
+const startDrag = (section: DragSection, index: number) => {
+	dragging = { section, index };
+};
+
+const cancelDrag = () => {
+	dragging = { section: null, index: null };
+};
+
+const allowDrop = (event: DragEvent) => {
+	event.preventDefault();
+	if (event.dataTransfer) {
+		event.dataTransfer.dropEffect = 'move';
+	}
+};
+
+const dropOn = (section: DragSection, index: number) => {
+	if (!content || dragging.section !== section || dragging.index === null) return;
+	if (dragging.index === index) {
+		cancelDrag();
+		return;
+	}
+
+	if (section === 'projects') {
+		content = {
+			...content,
+			about: {
+				...content.about,
+				projects: reorderList(content.about.projects, dragging.index, Math.min(index, content.about.projects.length - 1))
+			}
+		};
+	}
+
+	if (section === 'gallery') {
+		content = {
+			...content,
+			portfolio: {
+				...content.portfolio,
+				gallery: reorderList(content.portfolio.gallery, dragging.index, Math.min(index, content.portfolio.gallery.length - 1))
+			}
+		};
+	}
+
+	if (section === 'testimonials') {
+		content = {
+			...content,
+			about: {
+				...content.about,
+				testimonials: reorderList(
+					content.about.testimonials,
+					dragging.index,
+					Math.min(index, content.about.testimonials.length - 1)
+				)
+			}
+		};
+	}
+
+	cancelDrag();
+};
+
+const dropAtEnd = (section: DragSection) => {
+	if (!content || dragging.section !== section || dragging.index === null) return;
+
+	if (section === 'projects') {
+		content = {
+			...content,
+			about: {
+				...content.about,
+				projects: reorderList(content.about.projects, dragging.index, content.about.projects.length)
+			}
+		};
+	}
+
+	if (section === 'gallery') {
+		content = {
+			...content,
+			portfolio: {
+				...content.portfolio,
+				gallery: reorderList(content.portfolio.gallery, dragging.index, content.portfolio.gallery.length)
+			}
+		};
+	}
+
+	if (section === 'testimonials') {
+		content = {
+			...content,
+			about: {
+				...content.about,
+				testimonials: reorderList(
+					content.about.testimonials,
+					dragging.index,
+					content.about.testimonials.length
+				)
+			}
+		};
+	}
+
+	cancelDrag();
+};
+
+const isDragging = (section: DragSection, index: number) =>
+	dragging.section === section && dragging.index === index;
+
 const preparePayload = (event: Event) => {
 	if (!content) return;
 	const form = event.currentTarget as HTMLFormElement;
@@ -105,7 +219,7 @@ const handleSubmit = (event: Event) => {
 				...content.about,
 				projects: [
 					...content.about.projects,
-					{ title: 'Nieuw project', description: '', href: 'https://example.com' }
+					{ title: 'Nieuw project', description: '', href: 'https://example.com', result: '', videoUrl: '' }
 				]
 			}
 		};
@@ -122,7 +236,34 @@ const handleSubmit = (event: Event) => {
 		};
 	};
 
-	const addGalleryItem = () => {
+	
+
+	const addTestimonial = () => {
+		if (!content) return;
+		content = {
+			...content,
+			about: {
+				...content.about,
+				testimonials: [
+					...content.about.testimonials,
+					{ quote: 'Nieuw citaat', source: '— Naam, functie' }
+				]
+			}
+		};
+	};
+
+	const removeTestimonial = (index: number) => {
+		if (!content) return;
+		content = {
+			...content,
+			about: {
+				...content.about,
+				testimonials: content.about.testimonials.filter((_item, i) => i !== index)
+			}
+		};
+	};
+
+const addGalleryItem = () => {
 		if (!content) return;
 		content = {
 			...content,
@@ -214,7 +355,7 @@ const handleSubmit = (event: Event) => {
 				</p>
 				<form method="post" action="?/login" class="space-y-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Wachtwoord</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Wachtwoord</span>
 						<input
 							type="password"
 							name="password"
@@ -266,7 +407,7 @@ const handleSubmit = (event: Event) => {
 					<h2 class="font-display text-2xl text-neutral-900">Home</h2>
 					<div class="mt-6 grid gap-6">
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Tagline</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tagline</span>
 							<input
 								type="text"
 								bind:value={content.home.tagline}
@@ -275,7 +416,7 @@ const handleSubmit = (event: Event) => {
 						</label>
 						<div class="grid gap-4 sm:grid-cols-2">
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Titel</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Titel</span>
 								<input
 									type="text"
 									bind:value={content.home.title}
@@ -283,7 +424,7 @@ const handleSubmit = (event: Event) => {
 								/>
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Subtitel</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Subtitel</span>
 								<input
 									type="text"
 									bind:value={content.home.subtitle}
@@ -292,7 +433,7 @@ const handleSubmit = (event: Event) => {
 							</label>
 						</div>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
 							<textarea
 								rows="3"
 								bind:value={content.home.description}
@@ -301,7 +442,7 @@ const handleSubmit = (event: Event) => {
 						</label>
 						<div class="grid gap-4 sm:grid-cols-2">
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Hero afbeelding URL</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Hero afbeelding URL</span>
 								<input
 									type="url"
 									bind:value={content.home.heroImage.src}
@@ -310,7 +451,7 @@ const handleSubmit = (event: Event) => {
 								<UploadDropzone bind:url={content.home.heroImage.src} />
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Hero alt-tekst</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Hero alt-tekst</span>
 								<input
 									type="text"
 									bind:value={content.home.heroImage.alt}
@@ -319,7 +460,7 @@ const handleSubmit = (event: Event) => {
 							</label>
 						</div>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Hero label</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Hero label</span>
 							<input
 								type="text"
 								bind:value={content.home.heroLabel}
@@ -353,7 +494,7 @@ const handleSubmit = (event: Event) => {
 										</div>
 										<div class="mt-4 grid gap-4 sm:grid-cols-2">
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Titel</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
 												<input
 													type="text"
 													bind:value={cta.title}
@@ -361,7 +502,7 @@ const handleSubmit = (event: Event) => {
 												/>
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Link</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Link</span>
 												<input
 													type="text"
 													bind:value={cta.href}
@@ -370,7 +511,7 @@ const handleSubmit = (event: Event) => {
 											</label>
 										</div>
 										<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Omschrijving</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Omschrijving</span>
 											<textarea
 												rows="2"
 												bind:value={cta.description}
@@ -383,7 +524,7 @@ const handleSubmit = (event: Event) => {
 						</div>
 
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Beschikbaarheidstekst</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Beschikbaarheidstekst</span>
 							<input
 								type="text"
 								bind:value={content.home.availability}
@@ -397,7 +538,7 @@ const handleSubmit = (event: Event) => {
 				<h2 class="font-display text-2xl text-neutral-900">Over</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro tagline</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro tagline</span>
 						<input
 							type="text"
 							bind:value={content.about.introTag}
@@ -405,7 +546,7 @@ const handleSubmit = (event: Event) => {
 						/>
 					</label>
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Kop</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Kop</span>
 						<input
 							type="text"
 								bind:value={content.about.headline}
@@ -470,7 +611,7 @@ const handleSubmit = (event: Event) => {
 											</button>
 										</div>
 										<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Label</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Label</span>
 											<input
 												type="text"
 												bind:value={content.about.stats[index].label}
@@ -478,7 +619,7 @@ const handleSubmit = (event: Event) => {
 											/>
 										</label>
 										<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Waarde</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Waarde</span>
 											<input
 												type="text"
 												bind:value={content.about.stats[index].value}
@@ -501,9 +642,18 @@ const handleSubmit = (event: Event) => {
 									Toevoegen
 								</button>
 							</div>
-							<div class="space-y-4">
-								{#each content.about.projects as project, index}
-									<div class="rounded-2xl border border-neutral-200 p-4">
+				<div class="space-y-4" role="list">
+					{#each content.about.projects as project, index}
+						<div
+							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('projects', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
+							draggable={true}
+							ondragstart={() => startDrag('projects', index)}
+							ondragover={allowDrop}
+							ondrop={() => dropOn('projects', index)}
+							ondragend={cancelDrag}
+							role="listitem"
+							aria-grabbed={isDragging('projects', index)}
+						>
 										<div class="flex items-start justify-between gap-4">
 											<p class="font-display text-neutral-900">Project {index + 1}</p>
 											<button
@@ -516,7 +666,7 @@ const handleSubmit = (event: Event) => {
 										</div>
 										<div class="mt-4 grid gap-4 sm:grid-cols-2">
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Titel</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
 												<input
 													type="text"
 													bind:value={content.about.projects[index].title}
@@ -524,7 +674,7 @@ const handleSubmit = (event: Event) => {
 												/>
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Link</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Link</span>
 												<input
 													type="url"
 													bind:value={content.about.projects[index].href}
@@ -532,41 +682,117 @@ const handleSubmit = (event: Event) => {
 												/>
 											</label>
 										</div>
-										<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Omschrijving</span>
-											<textarea
-												rows="2"
-												bind:value={content.about.projects[index].description}
-												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-											></textarea>
-										</label>
+					<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Omschrijving</span>
+						<textarea
+							rows="2"
+							bind:value={content.about.projects[index].description}
+							class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						></textarea>
+					</label>
+					<div class="mt-3 grid gap-3 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Resultaat</span>
+							<input
+								type="text"
+								bind:value={content.about.projects[index].result}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Video (embed URL)</span>
+							<input
+								type="url"
+								bind:value={content.about.projects[index].videoUrl}
+								placeholder="https://player.vimeo.com/..."
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
 									</div>
 								{/each}
-							</div>
+					{#if content.about.projects.length > 1}
+						<div
+							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
+							ondragover={allowDrop}
+							ondrop={() => dropAtEnd('projects')}
+							role="button"
+							aria-label="Plaats project achteraan"
+						>
+							Plaats hier
 						</div>
+					{/if}
+				</div>
+			</div>
 
-						<div class="grid gap-4 sm:grid-cols-2">
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Testimonial</span>
+			<div class="space-y-4">
+				<div class="flex items-center justify-between">
+					<h3 class="font-display text-lg text-neutral-900">Testimonials</h3>
+					<button
+						type="button"
+						onclick={addTestimonial}
+						class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+					>
+						Toevoegen
+					</button>
+				</div>
+				<div class="space-y-4" role="list">
+					{#each content.about.testimonials as testimonial, index}
+						<div
+							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('testimonials', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
+							draggable={true}
+							ondragstart={() => startDrag('testimonials', index)}
+							ondragover={allowDrop}
+							ondrop={() => dropOn('testimonials', index)}
+							ondragend={cancelDrag}
+							role="listitem"
+							aria-grabbed={isDragging('testimonials', index)}
+						>
+							<div class="flex items-start justify-between gap-4">
+								<p class="font-display text-neutral-900">Testimonial {index + 1}</p>
+								<button
+									type="button"
+									onclick={() => removeTestimonial(index)}
+									class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+								>
+									Verwijder
+								</button>
+							</div>
+							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Quote</span>
 								<textarea
 									rows="3"
-									bind:value={content.about.testimonial.quote}
+									bind:value={content.about.testimonials[index].quote}
 									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								></textarea>
 							</label>
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Bron</span>
+							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Bron</span>
 								<input
 									type="text"
-									bind:value={content.about.testimonial.source}
+									bind:value={content.about.testimonials[index].source}
 									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
 							</label>
 						</div>
+					{/each}
+					{#if content.about.testimonials.length > 1}
+						<div
+							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
+							ondragover={allowDrop}
+							ondrop={() => dropAtEnd('testimonials')}
+							role="button"
+							aria-label="Plaats testimonial achteraan"
+						>
+							Plaats hier
+						</div>
+					{/if}
+				</div>
+			</div>
 
 						<div class="grid gap-4 sm:grid-cols-2">
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Portret URL</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
 								<input
 									type="url"
 									bind:value={content.about.portrait.src}
@@ -575,7 +801,7 @@ const handleSubmit = (event: Event) => {
 								<UploadDropzone bind:url={content.about.portrait.src} />
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Portret alt-tekst</span>
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
 								<input
 									type="text"
 									bind:value={content.about.portrait.alt}
@@ -590,7 +816,7 @@ const handleSubmit = (event: Event) => {
 				<h2 class="font-display text-2xl text-neutral-900">Portfolio</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Tagline</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tagline</span>
 						<input
 							type="text"
 							bind:value={content.portfolio.tagline}
@@ -598,7 +824,7 @@ const handleSubmit = (event: Event) => {
 						/>
 					</label>
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
 							<textarea
 								rows="3"
 								bind:value={content.portfolio.description}
@@ -617,9 +843,18 @@ const handleSubmit = (event: Event) => {
 									Toevoegen
 								</button>
 							</div>
-							<div class="space-y-4">
-								{#each content.portfolio.gallery as image, index}
-									<div class="rounded-2xl border border-neutral-200 p-4">
+				<div class="space-y-4" role="list">
+					{#each content.portfolio.gallery as image, index}
+						<div
+							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('gallery', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
+							draggable={true}
+							ondragstart={() => startDrag('gallery', index)}
+							ondragover={allowDrop}
+							ondrop={() => dropOn('gallery', index)}
+							ondragend={cancelDrag}
+							role="listitem"
+							aria-grabbed={isDragging('gallery', index)}
+						>
 										<div class="flex items-start justify-between gap-4">
 											<p class="font-display text-neutral-900">Beeld {index + 1}</p>
 											<button
@@ -632,7 +867,7 @@ const handleSubmit = (event: Event) => {
 										</div>
 										<div class="mt-4 grid gap-4 sm:grid-cols-2">
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Afbeelding URL</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Afbeelding URL</span>
 												<input
 													type="url"
 													bind:value={content.portfolio.gallery[index].src}
@@ -641,7 +876,7 @@ const handleSubmit = (event: Event) => {
 												<UploadDropzone bind:url={content.portfolio.gallery[index].src} />
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Alt-tekst</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Alt-tekst</span>
 												<input
 													type="text"
 													bind:value={content.portfolio.gallery[index].alt}
@@ -650,7 +885,7 @@ const handleSubmit = (event: Event) => {
 											</label>
 										</div>
 										<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Formaat</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Formaat</span>
 											<select
 												bind:value={content.portfolio.gallery[index].size}
 												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
@@ -662,7 +897,18 @@ const handleSubmit = (event: Event) => {
 										</label>
 									</div>
 								{/each}
-							</div>
+					{#if content.portfolio.gallery.length > 1}
+						<div
+							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
+							ondragover={allowDrop}
+							ondrop={() => dropAtEnd('gallery')}
+							role="button"
+							aria-label="Plaats beeld achteraan"
+						>
+							Plaats hier
+						</div>
+					{/if}
+				</div>
 						</div>
 					</div>
 				</section>
@@ -671,7 +917,7 @@ const handleSubmit = (event: Event) => {
 				<h2 class="font-display text-2xl text-neutral-900">Contact</h2>
 				<div class="mt-6 grid gap-6">
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Tagline</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tagline</span>
 						<input
 							type="text"
 							bind:value={content.contact.tagline}
@@ -679,7 +925,7 @@ const handleSubmit = (event: Event) => {
 						/>
 					</label>
 					<label class="flex flex-col gap-2 text-sm text-neutral-600">
-						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
 						<textarea
 								rows="3"
 								bind:value={content.contact.description}
@@ -744,7 +990,7 @@ const handleSubmit = (event: Event) => {
 										</div>
 										<div class="mt-4 grid gap-4 sm:grid-cols-2">
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">ID / referentie</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">ID / referentie</span>
 												<input
 													type="text"
 													bind:value={content.contact.packages[index].id}
@@ -752,7 +998,7 @@ const handleSubmit = (event: Event) => {
 												/>
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
-												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Titel</span>
+												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
 												<input
 													type="text"
 													bind:value={content.contact.packages[index].title}
@@ -761,7 +1007,7 @@ const handleSubmit = (event: Event) => {
 											</label>
 										</div>
 										<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Omschrijving</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Omschrijving</span>
 											<textarea
 												rows="2"
 												bind:value={content.contact.packages[index].description}
@@ -769,7 +1015,7 @@ const handleSubmit = (event: Event) => {
 											></textarea>
 										</label>
 										<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Prijs</span>
+											<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Prijs</span>
 											<input
 												type="text"
 												bind:value={content.contact.packages[index].price}
@@ -782,7 +1028,7 @@ const handleSubmit = (event: Event) => {
 						</div>
 
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Outro</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Outro</span>
 							<textarea
 								rows="2"
 								bind:value={content.contact.outro}
@@ -790,7 +1036,7 @@ const handleSubmit = (event: Event) => {
 							></textarea>
 						</label>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Contact e-mail</span>
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Contact e-mail</span>
 							<input
 								type="email"
 								bind:value={content.contact.email}

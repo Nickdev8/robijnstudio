@@ -93,8 +93,15 @@
 - Optional Apache helpers live in `app/static/.htaccess` (HTTPS redirect, caching headers, security guards); ignored in pure Node setups but handy if fronted by Apache.
 - `app/src/routes/sitemap.xml/+server.ts` emits a fresh XML sitemap for key pages. Set `PUBLIC_SITE_URL` (preferred) or `SITE_URL`/`BASE_URL` in the environment to control canonical origins; it falls back to the request origin otherwise.
 - Global `<svelte:head>` now injects canonical links, Open Graph defaults, a Twitter card, and a theme color via `app/src/routes/+layout.svelte`.
+- Mobile header collapses into a hamburger toggle (`app/src/lib/components/Header.svelte`) with focus-visible styling; taglines use reduced tracking on small breakpoints to avoid overflow.
 
-## 12. Future-Proofing Checklist
+## 12. Content Authoring Upgrades
+- `app/src/routes/admin/+page.svelte` supports drag-and-drop ordering for About projects, testimonials, and portfolio gallery entries, plus add/remove controls for multi-testimonial support.
+- Projects accept optional `result` (outcome text) and `videoUrl` embeds, surfaced as case-study cards on the About page.
+- `app/src/lib/utils/image.ts` exposes `buildSrcSet`; hero, portrait, and gallery images call it for responsive `srcset` output and consistent lazy loading.
+- Playwright e2e coverage exercises the contact form and admin login; set `EMAIL_TRANSPORT=json` (configurable in `playwright.config.ts`) to avoid SMTP when testing.
+
+## 13. Future-Proofing Checklist
 - **Image optimisation**: At present images are served from their source URLs. Consider integrating an optimisation layer (Cloudinary, Imgix, Vercel Image Optimization, or a custom Sharp-based worker) before widening distribution.
 - **SSR-friendly auth**: Admin authentication lives entirely in server actions and cookies. When adding OAuth or sessions, keep sensitive work on the server side so SSR and endpoint access remain consistent.
 - **Dynamic SEO**: The sitemap enumerates a static route list. If portfolio entries migrate to a database, expand the sitemap load to fetch slugs and update per-route `<svelte:head>` metadata accordingly.

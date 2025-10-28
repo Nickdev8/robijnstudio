@@ -24,6 +24,8 @@ export type ProjectItem = {
 	title: string;
 	description: string;
 	href: string;
+	result?: string;
+	videoUrl?: string;
 };
 
 export type Testimonial = {
@@ -37,7 +39,7 @@ export type AboutContent = {
 	paragraphs: string[];
 	stats: StatItem[];
 	projects: ProjectItem[];
-	testimonial: Testimonial;
+	testimonials: Testimonial[];
 	portrait: { src: string; alt: string };
 };
 

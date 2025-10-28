@@ -24,6 +24,10 @@ const resolveFromAddress = () => {
 };
 
 const createTransport = () => {
+	if (env.EMAIL_TRANSPORT === 'json') {
+		return nodemailer.createTransport({ jsonTransport: true });
+	}
+
 	const host = env.SMTP_HOST;
 	const port = env.SMTP_PORT ? Number(env.SMTP_PORT) : 587;
 	const secure = env.SMTP_SECURE === 'true' || port === 465;
