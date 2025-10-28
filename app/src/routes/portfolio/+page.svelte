@@ -17,11 +17,11 @@ const shareImage =
 	} as LightboxImage);
 
 const openLightbox = (image: LightboxImage) => {
-	selected.set(image);
+	// selected.set(image);
 };
 
 const closeLightbox = () => {
-	selected.set(null);
+	// selected.set(null);
 };
 </script>
 
