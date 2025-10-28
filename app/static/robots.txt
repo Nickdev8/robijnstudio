@@ -1,3 +1,7 @@
-# allow crawling everything by default
+# Allow all well-behaved crawlers while blocking private areas.
 User-agent: *
-Disallow:
+Disallow: /admin
+Allow: /
+
+# Point crawlers to the XML sitemap for faster discovery.
+Sitemap: https://robijnstudios.nl/sitemap.xml

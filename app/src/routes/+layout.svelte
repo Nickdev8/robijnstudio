@@ -4,12 +4,22 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import favicon from '$lib/assets/favicon.svg';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	const { children, data } = $props<{ children: () => unknown; data: LayoutData }>();
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	{#if data?.canonical}
+		<link rel="canonical" href={data.canonical} />
+		<meta property="og:url" content={data.canonical} />
+		<meta name="twitter:url" content={data.canonical} />
+	{/if}
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Beau Robijn Fotografie" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="theme-color" content="#111111" />
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-white text-neutral-900">
