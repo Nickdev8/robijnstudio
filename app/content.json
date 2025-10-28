@@ -1,6 +1,6 @@
 {
   "home": {
-    "tagline": "Amsterdam \u00b7 Tijdloze fotografie",
+    "tagline": "Amsterdam · Tijdloze fotografie",
     "title": "Robijn Fotografie",
     "subtitle": "Beau van der Schaaf",
     "description": "Ik documenteer stille kracht en kwetsbaarheid in beeld, met aandacht voor textuur, natuurlijke lichtval en een cinema-achtige gelaagdheid. Elk project start met een persoonlijk gesprek en eindigt in beelden die voelen als herinneringen.",
@@ -10,14 +10,14 @@
     },
     "heroLabel": "Portretserie",
     "cta": [],
-    "availability": "Beschikbaar voor redactionele en commerci\u00eble shoots wereldwijd \u00b7 info@robijnstudios.nl"
+    "availability": "Beschikbaar voor redactionele en commerciële shoots wereldwijd · info@robijnstudios.nl"
   },
   "about": {
-    "introTag": "Student \u00b7 Fotograaf \u00b7 Verteller",
+    "introTag": "Student · Fotograaf · Verteller",
     "headline": "Ik ben Beau Robijn, een student die zoekt naar echte momenten",
     "paragraphs": [
       "In mijn studie audiovisuele vormgeving verdiep ik me in analoge processen en hedendaagse fotografie. Mijn werk draait om subtiele gebaren, huidtextuur en die ene seconde waarin iemand zichzelf vergeet. Ik geloof er heilig in dat een goede foto voelt alsof je er zelf bij was.",
-      "Naast lessen en stages werk ik aan persoonlijke projecten die vari\u00ebren van documentaire portretten van medestudenten tot fictieve modeshoots. Ik neem je graag mee achter de schermen van wat mij inspireert en hoe ik als jonge maker groei."
+      "Naast lessen en stages werk ik aan persoonlijke projecten die variëren van documentaire portretten van medestudenten tot fictieve modeshoots. Ik neem je graag mee achter de schermen van wat mij inspireert en hoe ik als jonge maker groei."
     ],
     "stats": [
       {
@@ -51,8 +51,8 @@
       }
     ],
     "testimonial": {
-      "quote": "\u201cBeau heeft een bijzondere gevoeligheid voor het kleine detail. Zelfs als student levert ze beelden af met een niveau van rust en intensiteit dat je normaal alleen bij ervaren freelancers ziet.\u201d",
-      "source": "\u2014 Docent fotografie, HKU"
+      "quote": "“Beau heeft een bijzondere gevoeligheid voor het kleine detail. Zelfs als student levert ze beelden af met een niveau van rust en intensiteit dat je normaal alleen bij ervaren freelancers ziet.”",
+      "source": "— Docent fotografie, HKU"
     },
     "portrait": {
       "src": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80",
@@ -89,12 +89,12 @@
       },
       {
         "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Urban sc\u00e8ne tijdens blauwe uurtje",
+        "alt": "Urban scène tijdens blauwe uurtje",
         "size": "wide"
       },
       {
         "src": "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Industri\u00eble architectuur in mist",
+        "alt": "Industriële architectuur in mist",
         "size": "square"
       },
       {
@@ -105,7 +105,7 @@
     ]
   },
   "contact": {
-    "description": "Vul het formulier in met je idee, timing en gewenste pakket. Ons doel is om binnen twee werkdagen te reageren met een voorstel, planning en moodboard-idee\u00ebn.",
+    "description": "Vul het formulier in met je idee, timing en gewenste pakket. Ons doel is om binnen twee werkdagen te reageren met een voorstel, planning en moodboard-ideeën.",
     "bullets": [
       "Gebaseerd in Amsterdam, maar beschikbaar wereldwijd.",
       "Levering digitale galerij binnen 7 werkdagen.",
@@ -114,15 +114,15 @@
     "packages": [
       {
         "id": "portrait-mini",
-        "title": "Portret Mini \u00b7 2 uur",
-        "description": "200 foto\u2019s, selectie en kleurcorrectie inbegrepen.",
-        "price": "\u20ac480"
+        "title": "Portret Mini · 2 uur",
+        "description": "200 foto’s, selectie en kleurcorrectie inbegrepen.",
+        "price": "€480"
       },
       {
         "id": "editorial-halfday",
         "title": "Editorial Half-Day",
-        "description": "4 uur op locatie, 400 foto\u2019s + contactblad en 30 nabewerkte beelden.",
-        "price": "\u20ac820"
+        "description": "4 uur op locatie, 400 foto’s + contactblad en 30 nabewerkte beelden.",
+        "price": "€820"
       },
       {
         "id": "custom-story",

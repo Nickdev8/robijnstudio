@@ -92,10 +92,19 @@ let isDragging = false;
 				throw new Error('Server gaf geen URL terug.');
 			}
 
-			url = uploadedUrl;
+			const resolvedUrl =
+				uploadedUrl.startsWith('http://') ||
+				uploadedUrl.startsWith('https://') ||
+				uploadedUrl.startsWith('//')
+					? uploadedUrl
+					: typeof window !== 'undefined'
+						? new URL(uploadedUrl, window.location.origin).toString()
+						: uploadedUrl;
+
+			url = resolvedUrl;
 			status = 'success';
 			message = 'Upload voltooid.';
-			dispatch('upload', { url: uploadedUrl });
+			dispatch('upload', { url: resolvedUrl });
 			setTimeout(() => {
 				if (status === 'success') {
 					status = 'idle';
