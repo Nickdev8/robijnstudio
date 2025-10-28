@@ -1,8 +1,10 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	export let data: PageData;
+	export let form: ActionData | undefined;
+
 	const { contact } = data;
 	const packages = contact.packages;
 	const contactEmail = contact.email;
@@ -43,7 +45,7 @@
 			</section>
 
 			<section>
-				<form class="space-y-6 rounded-[2rem] border border-neutral-200 bg-white/85 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:rounded-[2.5rem] sm:p-8">
+				<form method="post" class="space-y-6 rounded-[2rem] border border-neutral-200 bg-white/85 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:rounded-[2.5rem] sm:p-8">
 					<div class="grid gap-6 sm:grid-cols-2">
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Voornaam</span>
@@ -117,6 +119,14 @@
 							class="resize-none rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 						></textarea>
 					</label>
+
+					{#if form?.success}
+						<p class="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+							Dank je wel! Ik neem binnen 48 uur contact met je op.
+						</p>
+					{:else if form?.error}
+						<p class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{form.error}</p>
+					{/if}
 
 					<button
 						type="submit"
