@@ -1,10 +1,11 @@
 <script lang="ts">
 	import Lightbox, { type LightboxImage } from '$lib/components/Lightbox.svelte';
+	import PageTagline from '$lib/components/PageTagline.svelte';
 	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-	const { portfolio } = data;
+export let data: PageData;
+const { portfolio } = data;
 	const selected = writable<LightboxImage | null>(null);
 
 	const openLightbox = (image: LightboxImage) => {
@@ -17,15 +18,15 @@
 </script>
 
 <svelte:head>
-	<title>Portfolio | Beau Robijn Studios</title>
-	<meta name="description" content="Portfolio overzicht van Beau Robijn Studios. Responsieve grid met portretten en documentaire beelden." />
+	<title>Portfolio | Beau Robijn Fotografie</title>
+	<meta name="description" content="Portfolio overzicht van Beau Robijn Fotografie. Responsieve grid met portretten en documentaire beelden." />
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="portfolio">
 	<main class="flex flex-1 justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="flex w-full max-w-6xl flex-col gap-10 sm:gap-12">
 			<header class="flex flex-col items-start gap-6">
-				<span class="text-xs uppercase tracking-[0.32em] text-rose-600">Een selectie van recent werk</span>
+				<PageTagline text={portfolio.tagline} />
 				<h1 class="font-display text-[clamp(2.4rem,4vw+1.5rem,4.2rem)] uppercase leading-[1] text-neutral-900">
 					Portfolio
 				</h1>

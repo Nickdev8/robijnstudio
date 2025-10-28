@@ -393,27 +393,25 @@ const handleSubmit = (event: Event) => {
 					</div>
 				</section>
 
-				<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
-					<h2 class="font-display text-2xl text-neutral-900">Over</h2>
-					<div class="mt-6 grid gap-6">
-						<div class="grid gap-4 sm:grid-cols-2">
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro tag</span>
-								<input
-									type="text"
-									bind:value={content.about.introTag}
-									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-								/>
-							</label>
-							<label class="flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Kop</span>
-								<input
-									type="text"
-									bind:value={content.about.headline}
-									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-								/>
-							</label>
-						</div>
+			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+				<h2 class="font-display text-2xl text-neutral-900">Over</h2>
+				<div class="mt-6 grid gap-6">
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro tagline</span>
+						<input
+							type="text"
+							bind:value={content.about.introTag}
+							class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Kop</span>
+						<input
+							type="text"
+								bind:value={content.about.headline}
+								class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
 
 						<div class="space-y-4">
 							<div class="flex items-center justify-between">
@@ -588,11 +586,19 @@ const handleSubmit = (event: Event) => {
 					</div>
 				</section>
 
-				<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
-					<h2 class="font-display text-2xl text-neutral-900">Portfolio</h2>
-					<div class="mt-6 grid gap-6">
-						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
+			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+				<h2 class="font-display text-2xl text-neutral-900">Portfolio</h2>
+				<div class="mt-6 grid gap-6">
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Tagline</span>
+						<input
+							type="text"
+							bind:value={content.portfolio.tagline}
+							class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
 							<textarea
 								rows="3"
 								bind:value={content.portfolio.description}
@@ -661,12 +667,20 @@ const handleSubmit = (event: Event) => {
 					</div>
 				</section>
 
-				<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
-					<h2 class="font-display text-2xl text-neutral-900">Contact</h2>
-					<div class="mt-6 grid gap-6">
-						<label class="flex flex-col gap-2 text-sm text-neutral-600">
-							<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
-							<textarea
+			<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
+				<h2 class="font-display text-2xl text-neutral-900">Contact</h2>
+				<div class="mt-6 grid gap-6">
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Tagline</span>
+						<input
+							type="text"
+							bind:value={content.contact.tagline}
+							class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Intro</span>
+						<textarea
 								rows="3"
 								bind:value={content.contact.description}
 								class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"

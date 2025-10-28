@@ -1,19 +1,20 @@
 <script lang="ts">
+	import PageTagline from '$lib/components/PageTagline.svelte';
 	import type { ActionData, PageData } from './$types';
 
-	export let data: PageData;
-	export let form: ActionData | undefined;
+export let data: PageData;
+export let form: ActionData | undefined;
 
-	const { contact } = data;
-	const packages = contact.packages;
-	const contactEmail = contact.email;
+const { contact } = data;
+const packages = contact.packages;
+const contactEmail = contact.email;
 </script>
 
 <svelte:head>
-	<title>Contact | Beau Robijn Studios</title>
+	<title>Contact | Beau Robijn Fotografie</title>
 	<meta
 		name="description"
-		content="Neem contact op met Beau Robijn Studios. Kies een pakket, vertel je verhaal en plan een shoot."
+		content="Neem contact op met Beau Robijn Fotografie. Kies een pakket, vertel je verhaal en plan een shoot."
 	/>
 </svelte:head>
 
@@ -21,7 +22,7 @@
 	<main class="flex flex-1 justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="grid w-full max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16">
 			<section class="flex flex-col gap-6">
-				<p class="text-xs uppercase tracking-[0.35em] text-neutral-500">Laten we samenwerken</p>
+				<PageTagline text={contact.tagline} />
 				<h1 class="font-display text-[clamp(2.3rem,3vw+1.5rem,3.8rem)] uppercase leading-[1.05] text-neutral-900">
 					Vertel me over jouw project
 				</h1>

@@ -1,12 +1,13 @@
 <script lang="ts">
+	import PageTagline from '$lib/components/PageTagline.svelte';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
-	const { about } = data;
+export let data: PageData;
+const { about } = data;
 </script>
 
 <svelte:head>
-	<title>Over Beau Robijn Studios</title>
+	<title>Over Beau Robijn Fotografie</title>
 	<meta
 		name="description"
 		content="Leer Beau Robijn kennen — student fotografie met een oog voor intieme portretseries en documentaire projecten."
@@ -17,10 +18,7 @@
 	<main class="flex flex-1 items-center justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="grid w-full max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
 			<section class="flex flex-col gap-8">
-				<p class="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-neutral-500">
-					<img src="/ruby.png" alt="" aria-hidden="true" class="h-4 w-4 object-contain" />
-					<span>{about.introTag}</span>
-				</p>
+				<PageTagline text={about.introTag} />
 				<h1 class="font-display text-[clamp(1.8rem,2.4vw+1.1rem,2.8rem)] uppercase leading-[1.08] text-neutral-900">
 					{about.headline}
 				</h1>

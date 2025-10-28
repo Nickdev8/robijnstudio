@@ -60,6 +60,7 @@
     }
   },
   "portfolio": {
+    "tagline": "Een selectie van recent werk",
     "description": "Een mix van intieme portretten, filmische modeshoots en documentaire reeksen. De grid schaalt mee met het scherm en geeft elk beeld de ruimte om te ademen. Klik op een foto om deze in hoge resolutie te bekijken.",
     "gallery": [
       {
@@ -105,6 +106,7 @@
     ]
   },
   "contact": {
+    "tagline": "Laten we samenwerken",
     "description": "Vul het formulier in met je idee, timing en gewenste pakket. Ons doel is om binnen twee werkdagen te reageren met een voorstel, planning en moodboard-ideeën.",
     "bullets": [
       "Gebaseerd in Amsterdam, maar beschikbaar wereldwijd.",

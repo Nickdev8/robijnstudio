@@ -48,6 +48,7 @@ export type GalleryItem = {
 };
 
 export type PortfolioContent = {
+	tagline: string;
 	description: string;
 	gallery: GalleryItem[];
 };
@@ -60,6 +61,7 @@ export type PackageItem = {
 };
 
 export type ContactContent = {
+	tagline: string;
 	description: string;
 	bullets: string[];
 	packages: PackageItem[];
