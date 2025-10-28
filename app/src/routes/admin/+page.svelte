@@ -201,7 +201,7 @@ const handleSubmit = (event: Event) => {
 </script>
 
 <svelte:head>
-	<title>Admin | Beau Robijn Studios</title>
+	<title>Admin | Beau Robijn Fotografie</title>
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-neutral-50">

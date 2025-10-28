@@ -18,7 +18,7 @@ const resolveFromAddress = () => {
 		return env.EMAIL_FROM;
 	}
 	if (env.SMTP_USER?.trim()) {
-		return `Beau Robijn Studios <${env.SMTP_USER}>`;
+	return `Beau Robijn Fotografie <${env.SMTP_USER}>`;
 	}
 	return undefined;
 };
@@ -78,7 +78,7 @@ export const actions: Actions = {
 					message
 				].join('\n'),
 				html: `
-					<h2>Nieuwe aanvraag via Beau Robijn Studios</h2>
+					<h2>Nieuwe aanvraag via Beau Robijn Fotografie</h2>
 					<p><strong>Naam:</strong> ${firstName} ${lastName}</p>
 					<p><strong>E-mail:</strong> ${email}</p>
 					<p><strong>Pakket:</strong> ${packageId}</p>

@@ -1,14 +1,14 @@
 <script lang="ts">
 		import type { PageData } from './$types';
 
-		export let data: PageData;
-		const { home } = data;
-		const primaryCTA = home.cta?.[0];
+	export let data: PageData;
+	const { home } = data;
+	const primaryCTA = home.cta?.[0];
 	const secondaryCTA = home.cta?.[1];
 </script>
 
 <svelte:head>
-	<title>Beau Robijn Studios</title>
+	<title>Beau Robijn Fotografie</title>
 	<meta
 		name="description"
 		content="Portfolio van Beau Robijn Studios — fotografische verhalen met een filmische signatuur."
