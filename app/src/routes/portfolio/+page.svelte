@@ -1,12 +1,14 @@
 <script lang="ts">
-	import Lightbox, { type LightboxImage } from '$lib/components/Lightbox.svelte';
-	import PageTagline from '$lib/components/PageTagline.svelte';
-	import { writable } from 'svelte/store';
-	import type { PageData } from './$types';
+import Lightbox, { type LightboxImage } from '$lib/components/Lightbox.svelte';
+import PageTagline from '$lib/components/PageTagline.svelte';
+import { buildSrcSet } from '$lib/utils/image';
+import { writable } from 'svelte/store';
+import type { PageData } from './$types';
 
 export let data: PageData;
 const { portfolio } = data;
 	const selected = writable<LightboxImage | null>(null);
+	const gallerySizes = '(min-width: 1280px) 28vw, (min-width: 768px) 45vw, 92vw';
 
 	const openLightbox = (image: LightboxImage) => {
 		selected.set(image);
@@ -36,7 +38,7 @@ const { portfolio } = data;
 			</header>
 
 			<section
-				class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+				class="grid grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-6"
 				aria-label="Galerij met portfolio beelden"
 			>
 				{#each portfolio.gallery as image, index}
@@ -49,6 +51,8 @@ const { portfolio } = data;
 					>
 						<img
 							src={image.src}
+							srcset={buildSrcSet(image.src)}
+							sizes={gallerySizes}
 							alt={image.alt}
 							loading={index < 3 ? 'eager' : 'lazy'}
 							decoding="async"

@@ -12,8 +12,10 @@ Beau Robijn’s photography portfolio and booking site, built with SvelteKit. Th
 
 ## Features
 - Home, About, Portfolio, and Contact pages driven by structured content (`app/content.json`).
-- Protected admin dashboard (`/admin`) with live editing and image uploads stored under `CONTENT_DIR/uploads`.
-- Nodemailer-powered contact form with configurable SMTP credentials.
+- Protected admin dashboard (`/admin`) with live editing, drag-and-drop ordering, and image uploads stored under `CONTENT_DIR/uploads`.
+- Responsive navigation with a collapsible mobile menu and softened typography/grids for smaller breakpoints.
+- Case study cards, multi-voice testimonials, and optional video embeds on the About page.
+- Nodemailer-powered contact form with configurable transports and Playwright/Vitest coverage.
 - XML sitemap (`/sitemap.xml`), tuned `robots.txt`, and canonical meta tags for basic SEO.
 - Docker multi-stage build for production and `docker-compose.yml` for local container runs.
 
@@ -38,6 +40,7 @@ Copy `app/.env.example` (if present) or create `app/.env` with:
 | `ADMIN_PASSWORD` | Password for `/admin` login (default: `robijnstudio`). |
 | `CONTENT_DIR` / `CONTENT_FILE` | Optional custom storage path/file for content JSON and uploads. |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD` | Nodemailer transport configuration. |
+| `EMAIL_TRANSPORT` | Optional (`json`) to emit messages to stdout for tests or staging. |
 | `EMAIL_FROM`, `EMAIL_TO` | Override mail sender and recipient addresses. |
 | `PUBLIC_SITE_URL` (preferred) or `SITE_URL` / `BASE_URL` | Sets canonical URLs and sitemap origin. |
 
@@ -58,7 +61,7 @@ Uploads are saved under `<CONTENT_DIR>/uploads` and exposed publicly via `/uploa
 ## Testing
 - `npm run check` for TypeScript + Svelte diagnostics.
 - `npm run test:unit` for Vitest suites.
-- `npm run test:e2e` to execute Playwright tests (requires browsers installed via `npx playwright install`).
+- `npm run test:e2e` to execute Playwright tests (set `EMAIL_TRANSPORT=json` and install browsers with `npx playwright install`).
 
 ## Deployment
 - Production image `Dockerfile` builds SvelteKit, installs production dependencies, and runs `node build`.
