@@ -143,6 +143,13 @@ let isDragging = false;
 	function openFilePicker() {
 		fileInput?.click();
 	}
+
+	function onKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			openFilePicker();
+		}
+	}
 </script>
 
 <div class="text-xs text-neutral-500">
@@ -150,9 +157,13 @@ let isDragging = false;
 		class={`flex flex-col gap-2 rounded-xl border border-dashed px-4 py-3 transition ${
 			isDragging ? 'border-neutral-900 bg-neutral-900/5' : 'border-neutral-300 bg-neutral-50'
 		} ${status === 'error' ? 'border-red-400 bg-red-50' : ''}`}
+		role="button"
+		tabindex="0"
+		aria-label="Sleep een afbeelding hierheen of kies een bestand"
 		on:drop={onDrop}
 		on:dragover={onDragOver}
 		on:dragleave={onDragLeave}
+		on:keydown={onKeyDown}
 	>
 		<p class="text-neutral-500">
 			Sleep een afbeelding hierheen of
