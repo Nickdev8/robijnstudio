@@ -13,3 +13,7 @@ services:
     ports:
       - "127.0.0.1:3013:3000"
     working_dir: /app
+    volumes:
+      - content-data:/app/storage
+volumes:
+  content-data:
