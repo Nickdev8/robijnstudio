@@ -93,4 +93,12 @@
 - Optional Apache helpers live in `app/static/.htaccess` (HTTPS redirect, caching headers, security guards); ignored in pure Node setups but handy if fronted by Apache.
 - `app/src/routes/sitemap.xml/+server.ts` emits a fresh XML sitemap for key pages. Set `PUBLIC_SITE_URL` (preferred) or `SITE_URL`/`BASE_URL` in the environment to control canonical origins; it falls back to the request origin otherwise.
 - Global `<svelte:head>` now injects canonical links, Open Graph defaults, a Twitter card, and a theme color via `app/src/routes/+layout.svelte`.
+
+## 12. Future-Proofing Checklist
+- **Image optimisation**: At present images are served from their source URLs. Consider integrating an optimisation layer (Cloudinary, Imgix, Vercel Image Optimization, or a custom Sharp-based worker) before widening distribution.
+- **SSR-friendly auth**: Admin authentication lives entirely in server actions and cookies. When adding OAuth or sessions, keep sensitive work on the server side so SSR and endpoint access remain consistent.
+- **Dynamic SEO**: The sitemap enumerates a static route list. If portfolio entries migrate to a database, expand the sitemap load to fetch slugs and update per-route `<svelte:head>` metadata accordingly.
+- **Upload hygiene**: Server handlers already guard MIME type and size. For client-managed libraries, add virus scanning, image resizing, and storage in a dedicated bucket/CDN to minimise risk.
+- **Automation**: Wire Vitest, Playwright, and `npm run check` into CI, and document any new environment variables in `.env.example` to keep deployments stable during upgrades.
+
 This document should give future contributors (or AI “agents”) enough context to understand how the portfolio is structured, where to adjust content, and how to operate or extend the system end-to-end.
