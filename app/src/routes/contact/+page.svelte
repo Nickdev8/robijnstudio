@@ -155,10 +155,10 @@ const contactEmail = contact.email;
 
 						<button
 							type="submit"
-							class="font-display inline-flex w-full items-center justify-center rounded-full bg-rose-600 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 sm:w-auto"
-						>
-							Verstuur aanvraag
-						</button>
+						class="font-display inline-flex w-full items-center justify-center rounded-full bg-rose-600 px-8 py-3 text-sm uppercase tracking-[0.3em] text-white transition hover:translate-y-[-1px] hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600/20 sm:w-auto cursor-pointer"
+					>
+						Verstuur aanvraag
+					</button>
 					</form>
 				{/if}
 
