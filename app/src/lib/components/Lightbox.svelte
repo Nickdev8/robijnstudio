@@ -49,13 +49,13 @@
 		</button>
 
 		<div
-			class="relative max-h-[85vh] w-full max-w-4xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-black/40 shadow-[0_30px_80px_rgba(0,0,0,0.3)]"
+			class="relative flex max-h-[90vh] max-w-[90vw] items-center justify-center rounded-[2.5rem] border border-white/10 bg-black/40 px-4 py-4 shadow-[0_30px_80px_rgba(0,0,0,0.3)]"
 			onpointerdown={(event) => event.stopPropagation()}
 		>
 			<img
 				src={image.src}
 				alt={image.alt ?? 'Uitvergroot portfolio beeld'}
-				class="h-full w-full object-contain"
+				class="max-h-full max-w-full rounded-[1.5rem] object-contain"
 				loading="eager"
 				decoding="async"
 			/>

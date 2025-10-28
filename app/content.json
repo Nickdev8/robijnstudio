@@ -1,11 +1,11 @@
 {
   "home": {
-    "tagline": "Amsterdam \u00b7 Tijdloze fotografie",
+    "tagline": "Amsterdam · Tijdloze fotografie",
     "title": "Robijn Fotografie",
     "subtitle": "Beau van der Schaaf",
     "description": "Ik documenteer stille kracht en kwetsbaarheid in beeld, met aandacht voor textuur, natuurlijke lichtval en een cinema-achtige gelaagdheid. Elk project start met een persoonlijk gesprek en eindigt in beelden die voelen als herinneringen.",
     "heroImage": {
-      "src": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1100&q=80",
+      "src": "http://localhost:5173/uploads/1761694943479-ec1ea3d6-de17-4a94-995e-289da4b6148d.webp",
       "alt": "Intiem portret in studio-setting"
     },
     "heroLabel": "Portretserie",
@@ -26,14 +26,14 @@
         "href": "/contact?pakket=mentorship"
       }
     ],
-    "availability": "Beschikbaar voor redactionele en commerci\u00eble shoots wereldwijd \u00b7 info@robijnstudios.nl"
+    "availability": "Beschikbaar voor redactionele en commerciële shoots wereldwijd · info@robijnstudios.nl"
   },
   "about": {
-    "introTag": "Student \u00b7 Fotograaf \u00b7 Verteller",
+    "introTag": "Student · Fotograaf · Verteller",
     "headline": "Ik ben Beau Robijn, een student die zoekt naar echte momenten",
     "paragraphs": [
       "In mijn studie audiovisuele vormgeving verdiep ik me in analoge processen en hedendaagse fotografie. Mijn werk draait om subtiele gebaren, huidtextuur en die ene seconde waarin iemand zichzelf vergeet. Ik geloof er heilig in dat een goede foto voelt alsof je er zelf bij was.",
-      "Naast lessen en stages werk ik aan persoonlijke projecten die vari\u00ebren van documentaire portretten van medestudenten tot fictieve modeshoots. Ik neem je graag mee achter de schermen van wat mij inspireert en hoe ik als jonge maker groei."
+      "Naast lessen en stages werk ik aan persoonlijke projecten die variëren van documentaire portretten van medestudenten tot fictieve modeshoots. Ik neem je graag mee achter de schermen van wat mij inspireert en hoe ik als jonge maker groei."
     ],
     "stats": [
       {
@@ -57,7 +57,7 @@
         "result": "Première tijdens de academie showcase, direct gebruikt als teaser op social media van de band.",
         "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo",
         "heroImage": {
-          "src": "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80",
+          "src": "http://localhost:5173/uploads/1761695282360-10008cc3-4341-41d6-8acb-c5137d84c027.jpg",
           "alt": "Kleine muziekband tijdens een intieme repetitie"
         },
         "body": [
@@ -68,21 +68,21 @@
       }
     ],
     "portrait": {
-      "src": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80",
+      "src": "http://localhost:5173/uploads/1761694695047-11945bc8-ea70-44c6-9354-e5d620120deb.png",
       "alt": "Beau Robijn aan het werk in de studio"
     },
     "testimonials": [
       {
-        "quote": "\u201cBeau heeft een bijzondere gevoeligheid voor het kleine detail. Zelfs als student levert ze beelden af met een niveau van rust en intensiteit dat je normaal alleen bij ervaren freelancers ziet.\u201d",
-        "source": "\u2014 Docent fotografie, HKU"
+        "quote": "“Beau heeft een bijzondere gevoeligheid voor het kleine detail. Zelfs als student levert ze beelden af met een niveau van rust en intensiteit dat je normaal alleen bij ervaren freelancers ziet.”",
+        "source": "— Docent fotografie, HKU"
       },
       {
-        "quote": "\u201cOnze redactionele shoot voelde als een samenwerking met een volwassen creatief team. Beau denkt mee, stuurt bij wanneer dat nodig is en bewaart altijd de menselijkheid in beeld.\u201d",
-        "source": "\u2014 Julia van Utregt, hoofdredacteur Skoop Magazine"
+        "quote": "“Onze redactionele shoot voelde als een samenwerking met een volwassen creatief team. Beau denkt mee, stuurt bij wanneer dat nodig is en bewaart altijd de menselijkheid in beeld.”",
+        "source": "— Julia van Utregt, hoofdredacteur Skoop Magazine"
       },
       {
-        "quote": "\u201cVoor de release van mijn debuutsingle wilde ik geen standaard persfoto\u2019s. Beau bouwde een mini-set en leverde binnen drie dagen een compleet beeldverhaal \u00e9n behind-the-scenes video.\u201d",
-        "source": "\u2014 Melvin Ras, producer & performer"
+        "quote": "“Voor de release van mijn debuutsingle wilde ik geen standaard persfoto’s. Beau bouwde een mini-set en leverde binnen drie dagen een compleet beeldverhaal én behind-the-scenes video.”",
+        "source": "— Melvin Ras, producer & performer"
       }
     ]
   },
@@ -91,50 +91,25 @@
     "description": "Een mix van intieme portretten, filmische modeshoots en documentaire reeksen. De grid schaalt mee met het scherm en geeft elk beeld de ruimte om te ademen. Klik op een foto om deze in hoge resolutie te bekijken.",
     "gallery": [
       {
-        "src": "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Model leunt tegen muur met zacht zijlicht",
+        "src": "http://localhost:5173/uploads/1761695045060-508e470b-4d18-4ec9-9f56-bb5d7e14c493.jpg",
+        "alt": "Stijl & Contrasten",
         "size": "tall"
       },
       {
-        "src": "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Fashion shoot in het gouden uur",
-        "size": "wide"
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Documentaire portret op straat",
-        "size": "square"
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1542038435-74bb5eafc601?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Close-up met grafische schaduwen",
-        "size": "square"
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Intiem portret in studio setting",
+        "src": "http://localhost:5173/uploads/1761695106786-56acc181-e7a9-4f39-83c7-80c2a8637919.jpg",
+        "alt": "Zwart-witfoto",
         "size": "tall"
       },
       {
-        "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Urban sc\u00e8ne tijdens blauwe uurtje",
+        "src": "http://localhost:5173/uploads/1761695150407-3f088375-d3e5-46e2-99a4-53a7ed9760ab.jpg",
+        "alt": "Dromerige zwart-witfoto",
         "size": "wide"
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Industri\u00eble architectuur in mist",
-        "size": "square"
-      },
-      {
-        "src": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=1100&q=80",
-        "alt": "Twee vrienden lachen in zonlicht",
-        "size": "square"
       }
     ]
   },
   "contact": {
     "tagline": "Laten we samenwerken",
-    "description": "Vul het formulier in met je idee, timing en gewenste pakket. Ons doel is om binnen twee werkdagen te reageren met een voorstel, planning en moodboard-idee\u00ebn.",
+    "description": "Vul het formulier in met je idee, timing en gewenste pakket. Ons doel is om binnen twee werkdagen te reageren met een voorstel, planning en moodboard-ideeën.",
     "bullets": [
       "Gebaseerd in Amsterdam, maar beschikbaar wereldwijd.",
       "Levering digitale galerij binnen 7 werkdagen.",
@@ -143,15 +118,15 @@
     "packages": [
       {
         "id": "portrait-mini",
-        "title": "Portret Mini \u00b7 2 uur",
-        "description": "200 foto\u2019s, selectie en kleurcorrectie inbegrepen.",
-        "price": "\u20ac480"
+        "title": "Portret Mini · 2 uur",
+        "description": "200 foto’s, selectie en kleurcorrectie inbegrepen.",
+        "price": "€480"
       },
       {
         "id": "editorial-halfday",
         "title": "Editorial Half-Day",
-        "description": "4 uur op locatie, 400 foto\u2019s + contactblad en 30 nabewerkte beelden.",
-        "price": "\u20ac820"
+        "description": "4 uur op locatie, 400 foto’s + contactblad en 30 nabewerkte beelden.",
+        "price": "€820"
       },
       {
         "id": "custom-story",
