@@ -3,14 +3,13 @@
 	import { page } from '$app/stores';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import favicon from '$lib/assets/favicon.svg';
 	import type { LayoutData } from './$types';
 
 	const { children, data } = $props<{ children: () => unknown; data: LayoutData }>();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href="/ruby.png" type="image/png" />
 	{#if data?.canonical}
 		<link rel="canonical" href={data.canonical} />
 		<meta property="og:url" content={data.canonical} />
