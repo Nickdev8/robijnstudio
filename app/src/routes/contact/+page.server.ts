@@ -12,7 +12,16 @@ export const load: PageServerLoad = async () => {
 };
 
 const DEFAULT_TO = 'nick.esselman@gmail.com';
-const DEFAULT_FROM = 'Beau Robijn Studios <no-reply@robijnstudios.nl>';
+
+const resolveFromAddress = () => {
+	if (env.EMAIL_FROM?.trim()) {
+		return env.EMAIL_FROM;
+	}
+	if (env.SMTP_USER?.trim()) {
+		return `Beau Robijn Studios <${env.SMTP_USER}>`;
+	}
+	return undefined;
+};
 
 const createTransport = () => {
 	const host = env.SMTP_HOST;
@@ -58,7 +67,7 @@ export const actions: Actions = {
 			const transporter = createTransport();
 			await transporter.sendMail({
 				to: env.EMAIL_TO ?? DEFAULT_TO,
-				from: env.EMAIL_FROM ?? DEFAULT_FROM,
+				from: resolveFromAddress(),
 				replyTo: email,
 				subject: `Nieuwe contactaanvraag van ${firstName} ${lastName}`,
 				text: [
