@@ -1,18 +1,33 @@
+<svelte:options runes={false} />
+
 <script lang="ts">
-	import type { PageData } from './$types';
-	import type { GalleryItem, SiteContent } from '$lib/types/content';
+import type { PageData } from './$types';
+import type { GalleryItem, SiteContent } from '$lib/types/content';
 
-	let { data }: { data: PageData } = $props();
+type FormState = { error?: string; success?: boolean } | undefined;
 
-	let content: SiteContent | null =
-		data.authenticated && data.content ? structuredClone(data.content) : null;
-	let payload = content ? JSON.stringify(content) : '';
-	let successMessage = data.form?.success ? 'Wijzigingen opgeslagen.' : '';
-	let errorMessage = data.form?.error ?? '';
+let { data }: { data: PageData } = $props();
+const formState = (data as { form?: FormState }).form;
 
-	$: if (content) {
-		payload = JSON.stringify(content);
+let content: SiteContent | null =
+	data.authenticated && data.content ? structuredClone(data.content) : null;
+let successMessage = formState?.success ? 'Wijzigingen opgeslagen.' : '';
+let errorMessage = formState?.error ?? '';
+
+const preparePayload = (event: Event) => {
+	if (!content) return;
+	const form = event.currentTarget as HTMLFormElement;
+	const hidden = form.elements.namedItem('payload');
+	if (hidden instanceof HTMLInputElement) {
+		hidden.value = JSON.stringify(content);
 	}
+};
+const handleSubmit = (event: Event) => {
+	successMessage = "";
+	errorMessage = "";
+	preparePayload(event);
+};
+
 
 	const addCTA = () => {
 		if (!content) return;
@@ -205,8 +220,8 @@
 							class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 						/>
 					</label>
-					{#if data.form?.error}
-						<p class="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-500">{data.form.error}</p>
+					{#if formState?.error}
+						<p class="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-500">{formState.error}</p>
 					{/if}
 					<button
 						type="submit"
@@ -240,13 +255,10 @@
 			<form
 				method="post"
 				action="?/save"
-				on:submit={() => {
-					successMessage = '';
-					errorMessage = '';
-				}}
+				onsubmit={handleSubmit}
 				class="space-y-10"
 			>
-				<input type="hidden" name="payload" value={payload} />
+				<input type="hidden" name="payload" value="" />
 
 				<section class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8">
 					<h2 class="font-display text-2xl text-neutral-900">Home</h2>
@@ -317,7 +329,7 @@
 								<h3 class="font-display text-lg text-neutral-900">CTA-items</h3>
 								<button
 									type="button"
-									on:click={addCTA}
+									onclick={addCTA}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -330,7 +342,7 @@
 											<p class="font-display text-neutral-900">Item {index + 1}</p>
 											<button
 												type="button"
-												on:click={() => removeCTA(index)}
+												onclick={() => removeCTA(index)}
 												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 											>
 												Verwijder
@@ -405,7 +417,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Paragrafen</h3>
 								<button
 									type="button"
-									on:click={addParagraph}
+									onclick={addParagraph}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -417,7 +429,7 @@
 										<p class="font-display text-neutral-900">Paragraaf {index + 1}</p>
 										<button
 											type="button"
-											on:click={() => removeParagraph(index)}
+											onclick={() => removeParagraph(index)}
 											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 										>
 											Verwijder
@@ -437,7 +449,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Stats</h3>
 								<button
 									type="button"
-									on:click={addStat}
+									onclick={addStat}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -450,7 +462,7 @@
 											<p class="font-display text-neutral-900">Item {index + 1}</p>
 											<button
 												type="button"
-												on:click={() => removeStat(index)}
+												onclick={() => removeStat(index)}
 												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 											>
 												Verwijder
@@ -482,7 +494,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Projecten</h3>
 								<button
 									type="button"
-									on:click={addProject}
+									onclick={addProject}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -495,7 +507,7 @@
 											<p class="font-display text-neutral-900">Project {index + 1}</p>
 											<button
 												type="button"
-												on:click={() => removeProject(index)}
+												onclick={() => removeProject(index)}
 												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 											>
 												Verwijder
@@ -589,7 +601,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Afbeeldingen</h3>
 								<button
 									type="button"
-									on:click={addGalleryItem}
+									onclick={addGalleryItem}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -602,7 +614,7 @@
 											<p class="font-display text-neutral-900">Beeld {index + 1}</p>
 											<button
 												type="button"
-												on:click={() => removeGalleryItem(index)}
+												onclick={() => removeGalleryItem(index)}
 												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 											>
 												Verwijder
@@ -661,7 +673,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Highlights</h3>
 								<button
 									type="button"
-									on:click={addBullet}
+									onclick={addBullet}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -677,7 +689,7 @@
 										/>
 										<button
 											type="button"
-											on:click={() => removeBullet(index)}
+											onclick={() => removeBullet(index)}
 											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 										>
 											×
@@ -692,7 +704,7 @@
 								<h3 class="font-display text-lg text-neutral-900">Pakketten</h3>
 								<button
 									type="button"
-									on:click={addPackage}
+									onclick={addPackage}
 									class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
 								>
 									Toevoegen
@@ -705,7 +717,7 @@
 											<p class="font-display text-neutral-900">Pakket {index + 1}</p>
 											<button
 												type="button"
-												on:click={() => removePackage(index)}
+												onclick={() => removePackage(index)}
 												class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 											>
 												Verwijder

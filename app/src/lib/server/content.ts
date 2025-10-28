@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { SiteContent } from '$lib/types/content';
+import type { SiteContent } from '$lib/types/content';
 
 const CONTENT_PATH = join(process.cwd(), 'content.json');
 
