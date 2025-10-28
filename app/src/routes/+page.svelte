@@ -1,10 +1,9 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
-	import type { PageData } from './$types';
+		import type { PageData } from './$types';
 
-	export let data: PageData;
-	const { home } = data;
-	const primaryCTA = home.cta?.[0];
+		export let data: PageData;
+		const { home } = data;
+		const primaryCTA = home.cta?.[0];
 	const secondaryCTA = home.cta?.[1];
 </script>
 
@@ -17,8 +16,6 @@
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="home">
-	<Header />
-
 	<main class="flex flex-1 flex-col items-center px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
 		<section class="w-full max-w-6xl">
 			<div class="grid items-center gap-12 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-16">
