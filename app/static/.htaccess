@@ -1,0 +1,39 @@
+# ----------------------------------------------------------------------------------
+# Apache helper configuration for robijnstudios.nl
+# Only takes effect if the app is served by Apache (ignored in pure Node deployments).
+# ----------------------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Enforce HTTPS
+	RewriteCond %{HTTPS} !=on
+	RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+
+	# Strip trailing slashes (except for the root)
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} .+/$
+	RewriteRule ^(.+?)/$ /$1 [L,R=301,NE]
+</IfModule>
+
+# Cache static assets aggressively
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresDefault "access plus 7 days"
+	ExpiresByType image/webp "access plus 1 year"
+	ExpiresByType image/jpeg "access plus 1 year"
+	ExpiresByType image/png "access plus 1 year"
+	ExpiresByType image/gif "access plus 1 year"
+	ExpiresByType image/svg+xml "access plus 1 year"
+	ExpiresByType text/css "access plus 1 month"
+	ExpiresByType application/javascript "access plus 1 month"
+	ExpiresByType application/json "access plus 1 day"
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+	Header set X-Content-Type-Options "nosniff"
+	Header set X-Frame-Options "SAMEORIGIN"
+	Header set Referrer-Policy "strict-origin-when-cross-origin"
+	Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
