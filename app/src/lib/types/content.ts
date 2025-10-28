@@ -64,6 +64,7 @@ export type ContactContent = {
 	bullets: string[];
 	packages: PackageItem[];
 	outro: string;
+	email: string;
 };
 
 export type SiteContent = {

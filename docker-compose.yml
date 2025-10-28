@@ -1,10 +1,10 @@
-name: blog.nickesselman.nl
+name: robijnstudios.nl
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    image: blog.nickesselman.nl:prod
+    image: robijnstudios.nl:prod
     restart: unless-stopped
     environment:
       NODE_ENV: production
