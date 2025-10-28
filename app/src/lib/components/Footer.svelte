@@ -5,12 +5,12 @@
 <footer class="mt-auto border-t border-neutral-200 bg-white/90 px-6 py-10 text-neutral-600">
 	<div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 text-center text-sm md:flex-row md:justify-between md:text-left">
 		<div>
-			<p class="font-display text-lg text-neutral-900">Beau Robijn Studios</p>
+			<p class="font-display text-lg text-neutral-900">Beau Robijn Fotografie</p>
 			<p class="mt-1 text-xs uppercase tracking-[0.4em] text-neutral-400">Fotografie &amp; verhalen</p>
 		</div>
 		<div class="flex items-center gap-6 text-sm">
 			<a
-				href="https://instagram.com/robijnstudios"
+				href="https://www.instagram.com/robijn_fotografie"
 				target="_blank"
 				rel="noreferrer"
 				class="transition-colors hover:text-rose-700"
@@ -21,6 +21,6 @@
 				info@robijnstudios.nl
 			</a>
 		</div>
-		<div class="text-xs text-neutral-400 md:text-right">© {year} Beau Robijn Studios</div>
+		<div class="text-xs text-neutral-400 md:text-right">© {year} Beau Robijn Fotografie</div>
 	</div>
 </footer>

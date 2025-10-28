@@ -26,7 +26,7 @@
 <header class="flex flex-col items-center gap-6 px-4 pt-10 sm:px-6 sm:pt-12">
 	<img
 		src="/logo.svg"
-		alt="Logo van Beau Robijn Studios"
+		alt="Logo van Beau Robijn Fotografie"
 		class="h-20 w-20 sm:h-24 sm:w-24"
 		loading="lazy"
 		decoding="async"
