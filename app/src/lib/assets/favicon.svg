@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="fav-title">
-  <title id="fav-title">Robijn icoon</title>
-  <g>
-    <path d="M12 26.5 22 12h20l10 14.5-20 27-20-27Z" fill="#f43f5e"/>
-    <path d="M22 12h20l-6 14.5H16l6-14.5ZM42 12l10 14.5-16 2L36 12h6Z" fill="#fb7185" opacity=".9"/>
-    <path d="M16 26.5h28l-12 17L16 26.5Z" fill="#be123c"/>
-  </g>
-</svg>
