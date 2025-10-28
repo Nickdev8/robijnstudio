@@ -1,9 +1,11 @@
-import { redirect, fail, type Actions, type PageServerLoad } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
 import { readContent, writeContent } from '$lib/server/content';
 import type { SiteContent } from '$lib/types/content';
+import type { Actions, PageServerLoad } from './$types';
+import { env } from '$env/dynamic/private';
 
 const ADMIN_COOKIE = 'robijnstudio_admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'robijnstudio';
+const ADMIN_PASSWORD = env.ADMIN_PASSWORD ?? 'robijnstudio';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const authenticated = cookies.get(ADMIN_COOKIE) === 'true';

@@ -1,19 +1,19 @@
 <script lang="ts">
 	import Header from '$lib/components/Header.svelte';
 	import Lightbox, { type LightboxImage } from '$lib/components/Lightbox.svelte';
+	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const { portfolio } = data;
-
-	let selected: LightboxImage | null = null;
+	const selected = writable<LightboxImage | null>(null);
 
 	const openLightbox = (image: LightboxImage) => {
-		selected = image;
+		selected.set(image);
 	};
 
 	const closeLightbox = () => {
-		selected = null;
+		selected.set(null);
 	};
 </script>
 
@@ -47,7 +47,7 @@
 						class={`group relative overflow-hidden rounded-[1.8rem] border border-neutral-200 bg-neutral-100 sm:rounded-[2.5rem] ${
 							image.size === 'wide' ? 'sm:col-span-2 lg:col-span-2' : ''
 						} ${image.size === 'tall' ? 'lg:row-span-2' : ''}`}
-						on:click={() => openLightbox({ src: image.src, alt: image.alt })}
+						onclick={() => openLightbox({ src: image.src, alt: image.alt })}
 					>
 						<img
 							src={image.src}
@@ -68,5 +68,5 @@
 		</div>
 	</main>
 
-	<Lightbox image={selected} onClose={closeLightbox} />
+	<Lightbox image={$selected} onClose={closeLightbox} />
 </div>
