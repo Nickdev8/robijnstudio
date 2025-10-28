@@ -65,5 +65,12 @@ Uploads are saved under `<CONTENT_DIR>/uploads` and exposed publicly via `/uploa
 - `docker-compose.yml` maps port `3013 -> 3000` locally and mounts a volume (`content-data`) so content and uploads survive container restarts.
 - Ensure environment variables (especially SMTP and `PUBLIC_SITE_URL`) are provided in your hosting platform or Docker compose file.
 
+## Production Considerations
+- **Image optimisation**: The site currently serves images from their configured URLs as-is; SvelteKit does not optimise them automatically. For better performance, front the assets with an image CDN (Imgix, Cloudinary, Vercel’s Image Optimization API) or add a resize/compress step to your upload pipeline before storing files in `/uploads`.
+- **SSR & admin auth**: The admin area relies on SSR-only cookies (`robijnstudio_admin`). When customising authentication, keep the logic inside server routes/actions to avoid exposing secrets in the client bundle and confirm that endpoints are protected during SSR navigation.
+- **Dynamic SEO**: The sitemap and canonical tags use environment-provided hostnames and statically defined routes. If you later move portfolio data into a database or CMS, extend `app/src/routes/sitemap.xml/+server.ts` and per-page `load` functions to enumerate dynamic slugs so search engines discover them.
+- **Safe uploads**: Upload handlers already whitelist MIME types and cap files at 5 MB. For additional hardening, consider scanning uploads (e.g., via ClamAV), generating responsive derivatives, and serving files from an isolated CDN bucket to avoid executing user content on the app server.
+- **Automation & future-proofing**: Combine `npm run check`, Vitest, and Playwright in CI to guard against regressions. Containerise deployments (via the existing Dockerfile) so upgrades to Node or SvelteKit are explicit, and source control `.env.example` with any new settings you introduce to keep environments aligned.
+
 ## Contributing
 Pull requests are welcome. Please run `npm run check` before submitting changes and keep the content schema (`app/src/lib/types/content.ts`) in sync with any new fields exposed in the UI.
