@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -15,8 +14,6 @@
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="about">
-	<Header />
-
 	<main class="flex flex-1 items-center justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="grid w-full max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
 			<section class="flex flex-col gap-8">

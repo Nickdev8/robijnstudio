@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
 	import Lightbox, { type LightboxImage } from '$lib/components/Lightbox.svelte';
 	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
@@ -23,8 +22,6 @@
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="portfolio">
-	<Header />
-
 	<main class="flex flex-1 justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="flex w-full max-w-6xl flex-col gap-10 sm:gap-12">
 			<header class="flex flex-col items-start gap-6">
