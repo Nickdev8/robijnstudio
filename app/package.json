@@ -12,6 +12,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check .",
+		"test:unit": "vitest run",
 		"test:e2e": "playwright test",
 		"test": "npm run test:e2e"
 	},
@@ -32,7 +33,8 @@
 		"svelte-check": "^4.3.2",
 		"tailwindcss": "^4.1.13",
 		"typescript": "^5.9.2",
-		"vite": "^7.1.7"
+		"vite": "^7.1.7",
+		"vitest": "^4.0.4"
 	},
 	"dependencies": {
 		"nodemailer": "^6.10.1"

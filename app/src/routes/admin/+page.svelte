@@ -1,6 +1,7 @@
 <svelte:options runes={false} />
 
 <script lang="ts">
+import UploadDropzone from '$lib/components/UploadDropzone.svelte';
 import type { PageData } from './$types';
 import type { GalleryItem, SiteContent } from '$lib/types/content';
 
@@ -306,6 +307,7 @@ const handleSubmit = (event: Event) => {
 									bind:value={content.home.heroImage.src}
 									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
+								<UploadDropzone bind:url={content.home.heroImage.src} />
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
 								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Hero alt-tekst</span>
@@ -572,6 +574,7 @@ const handleSubmit = (event: Event) => {
 									bind:value={content.about.portrait.src}
 									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
+								<UploadDropzone bind:url={content.about.portrait.src} />
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
 								<span class="font-lifted text-xs uppercase tracking-[0.45em] text-neutral-400">Portret alt-tekst</span>
@@ -629,6 +632,7 @@ const handleSubmit = (event: Event) => {
 													bind:value={content.portfolio.gallery[index].src}
 													class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 												/>
+												<UploadDropzone bind:url={content.portfolio.gallery[index].src} />
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
 												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.45em] text-neutral-400">Alt-tekst</span>
