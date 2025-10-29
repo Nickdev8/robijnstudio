@@ -157,14 +157,20 @@ const handleSubmit = (event: Event) => {
 	preparePayload(event);
 };
 
-const saveEnhancer: SubmitFunction = async ({ result }) => {
-	if (result.type === 'success') {
-		successMessage = 'Wijzigingen opgeslagen.';
-		errorMessage = '';
-	} else if (result.type === 'failure') {
-		errorMessage = typeof result.data?.error === 'string' ? result.data.error : 'Opslaan mislukt.';
-		successMessage = '';
-	}
+const saveEnhancer: SubmitFunction = () => {
+	return async ({ result, update }) => {
+		if (result.type === 'success') {
+			await update({ reset: false, invalidateAll: false });
+			successMessage = 'Wijzigingen opgeslagen.';
+			errorMessage = '';
+		} else if (result.type === 'failure') {
+			await update({ reset: false, invalidateAll: false });
+			successMessage = '';
+			errorMessage = typeof result.data?.error === 'string' ? result.data.error : 'Opslaan mislukt.';
+		} else {
+			await update();
+		}
+	};
 };
 
 
