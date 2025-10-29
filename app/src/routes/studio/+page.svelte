@@ -25,11 +25,9 @@ const studioPhotos = studio.photos.slice(0, 2);
 	<meta name="twitter:image:alt" content={studio.portrait.alt} />
 </svelte:head>
 
-<div class="flex flex-1 flex-col bg-gradient-to-b from-neutral-100 via-white to-neutral-100/60" id="studio">
+<div class="flex flex-1 flex-col bg-white" id="studio">
 	<main class="relative flex flex-1 justify-center px-4 pb-20 pt-16 sm:px-6 lg:pt-20">
 		<div class="relative w-full max-w-6xl">
-			<div class="pointer-events-none absolute -top-24 left-6 h-52 w-52 rounded-full bg-gradient-to-br from-rose-100/80 via-white to-transparent blur-3xl"></div>
-			<div class="pointer-events-none absolute -top-10 right-32 hidden h-48 w-48 rounded-full bg-gradient-to-tr from-rose-200/70 via-transparent to-transparent blur-3xl lg:block"></div>
 			{#if studio.rubyImage?.src}
 				<div class="pointer-events-none absolute -top-16 right-0 hidden lg:block">
 					<img
@@ -75,14 +73,14 @@ const studioPhotos = studio.photos.slice(0, 2);
 					{/each}
 				</div>
 
-					<div class="flex flex-col gap-6">
-						<article class="rounded-3xl border border-neutral-200/80 bg-white/80 p-8 backdrop-blur">
-							<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-neutral-400">
-								{studio.address.label}
-							</p>
-							<div class="mt-3 space-y-2 text-left text-base leading-relaxed text-neutral-700 sm:text-lg">
-								{#each studio.address.lines as line}
-									<p>{line}</p>
+				<div class="flex flex-col gap-6">
+					<article class="rounded-3xl border border-neutral-200/80 bg-white/80 p-8 backdrop-blur">
+						<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-neutral-400">
+							{studio.address.label}
+						</p>
+						<div class="mt-3 space-y-2 text-left text-base leading-relaxed text-neutral-700 sm:text-lg">
+							{#each studio.address.lines as line}
+								<p>{line}</p>
 							{/each}
 						</div>
 						{#if studio.address.mapUrl}
@@ -97,50 +95,48 @@ const studioPhotos = studio.photos.slice(0, 2);
 									<span aria-hidden="true">↗</span>
 								</a>
 							</div>
-							{/if}
-						</article>
+						{/if}
+					</article>
 
-						<article class="rounded-3xl border border-rose-200/70 bg-rose-50/80 p-8 text-left backdrop-blur">
-							<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-rose-500">
-								{studio.contactLabel}
-							</p>
-							<p class="mt-3 text-base leading-relaxed text-rose-900 sm:text-lg">
-								{studio.contactDescription}
-							</p>
+					<article class="rounded-3xl border border-rose-200/70 bg-rose-50/80 p-8 text-left backdrop-blur">
+						<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-rose-500">
+							{studio.contactLabel}
+						</p>
+						<p class="mt-3 text-base leading-relaxed text-rose-900 sm:text-lg">
+							{studio.contactDescription}
+						</p>
 						<a
 							class="mt-6 inline-flex items-center justify-center rounded-full bg-rose-700 px-6 py-3 text-sm font-medium text-white transition hover:bg-rose-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600"
 							href={emailHref}
 						>
-								{studio.contactEmail}
-							</a>
-						</article>
+							{studio.contactEmail}
+						</a>
+					</article>
 
-						<article class="rounded-3xl border border-neutral-200/80 bg-white/80 p-8 backdrop-blur">
-							<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-neutral-400">
-								{studio.scheduleLabel}
-							</p>
-							<ul class="mt-4 space-y-3 text-sm text-neutral-700 sm:text-base">
-								{#each studio.schedule as item}
-									<li class="flex items-baseline justify-between gap-4 rounded-2xl border border-neutral-200/70 bg-neutral-50/80 px-4 py-3">
-										<span class="font-medium text-neutral-900">{item.day}</span>
-										<span>{item.hours}</span>
-									</li>
-								{/each}
-							</ul>
+					<article class="rounded-3xl border border-neutral-200/80 bg-white/80 p-8 backdrop-blur">
+						<p class="font-lifted text-[0.7rem] uppercase tracking-[0.32em] text-neutral-400">
+							{studio.scheduleLabel}
+						</p>
+						<ul class="mt-4 space-y-3 text-sm text-neutral-700 sm:text-base">
+							{#each studio.schedule as item}
+								<li class="flex items-baseline justify-between gap-4 rounded-2xl border border-neutral-200/70 bg-neutral-50/80 px-4 py-3">
+									<span class="font-medium text-neutral-900">{item.day}</span>
+									<span>{item.hours}</span>
+								</li>
+							{/each}
+						</ul>
 						{#if studio.scheduleNote}
 							<p class="mt-4 text-sm text-neutral-500">{studio.scheduleNote}</p>
 						{/if}
 					</article>
-					</div>
+				</div>
 
-					<div class="flex items-start justify-center">
-						<div
-							class="overflow-hidden rounded-[2.6rem] border border-rose-200/70 bg-white/80 backdrop-blur"
-						>
-							<img
-								src={studio.portrait.src}
-								srcset={buildSrcSet(studio.portrait.src)}
-								sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 80vw"
+				<div class="flex items-start justify-center">
+					<div class="overflow-hidden rounded-[2.6rem] border border-rose-200/70 bg-white/80 backdrop-blur">
+						<img
+							src={studio.portrait.src}
+							srcset={buildSrcSet(studio.portrait.src)}
+							sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 80vw"
 							alt={studio.portrait.alt}
 							class="h-full w-full object-cover object-center"
 							loading="lazy"

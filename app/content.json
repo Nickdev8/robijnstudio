@@ -5,7 +5,7 @@
     "subtitle": "Beau van der Schaaf",
     "description": "Ik ben Beau van der Schaaf, 18 jaar en gepassioneerd portretfotograaf. Mijn werk beweegt tussen zwart-wit en kleur, studio en buitenlocatie. Momenteel studeer ik fotografie in Amsterdam en werk ik graag samen aan creatieve beelden die karakter en emotie vastleggen.",
     "heroImage": {
-      "src": "http://localhost:5173/uploads/1761694943479-ec1ea3d6-de17-4a94-995e-289da4b6148d.webp",
+      "src": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1600&q=80",
       "alt": "Intiem portret in studio-setting"
     },
     "heroLabel": "Portretserie",
@@ -57,7 +57,7 @@
         "result": "Getoond tijdens academie showcase, gebruikt als teaser voor release.",
         "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo",
         "heroImage": {
-          "src": "http://localhost:5173/uploads/1761695282360-10008cc3-4341-41d6-8acb-c5137d84c027.jpg",
+          "src": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80",
           "alt": "Indieband tijdens repetitie in kelderstudio"
         },
         "body": [
@@ -68,7 +68,7 @@
       }
     ],
     "portrait": {
-      "src": "http://localhost:5173/uploads/1761694695047-11945bc8-ea70-44c6-9354-e5d620120deb.png",
+      "src": "https://images.unsplash.com/photo-1518674660708-0b84225f76cd?auto=format&fit=crop&w=1400&q=80",
       "alt": "Beau Robijn aan het werk in de studio"
     },
     "testimonials": [
@@ -103,20 +103,20 @@
     "contactDescription": "Stuur een mail voor reserveringen, rondleidingen of productievragen. Ik reageer binnen twee werkdagen.",
     "photos": [
       {
-        "src": "http://localhost:5173/uploads/1761695106786-56acc181-e7a9-4f39-83c7-80c2a8637919.jpg",
+        "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
         "alt": "Daglicht hoek van de studio in Amsterdam"
       },
       {
-        "src": "http://localhost:5173/uploads/1761695045060-508e470b-4d18-4ec9-9f56-bb5d7e14c493.jpg",
+        "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1400&q=80",
         "alt": "Werktafel met camera's en moodboards"
       }
     ],
     "rubyImage": {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><polygon points='60,8 112,44 92,112 28,112 8,44' fill='%23be123c' stroke='%23f87171' stroke-width='8' stroke-linejoin='round'/><polygon points='60,8 112,44 60,64 8,44' fill='%23f43f5e' opacity='0.85'/><polygon points='60,64 92,112 28,112' fill='%239f1239' opacity='0.75'/></svg>",
+      "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
       "alt": "Gestileerde robijn"
     },
     "portrait": {
-      "src": "http://localhost:5173/uploads/1761694695047-11945bc8-ea70-44c6-9354-e5d620120deb.png",
+      "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1400&q=80",
       "alt": "Beau Robijn in de studio"
     },
     "scheduleLabel": "Aanwezigheid",
@@ -145,19 +145,54 @@
     "description": "Een mix van intieme portretten, filmische modeshoots en documentaire reeksen. De grid schaalt mee met het scherm en geeft elk beeld de ruimte om te ademen. Klik op een foto om deze in hoge resolutie te bekijken.",
     "gallery": [
       {
-        "src": "http://localhost:5173/uploads/1761695045060-508e470b-4d18-4ec9-9f56-bb5d7e14c493.jpg",
-        "alt": "Stijl & Contrasten",
-        "size": "tall"
+        "src": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Soft natural light portrait",
+        "size": "square"
       },
       {
-        "src": "http://localhost:5173/uploads/1761695106786-56acc181-e7a9-4f39-83c7-80c2a8637919.jpg",
-        "alt": "Zwart-witfoto",
-        "size": "tall"
-      },
-      {
-        "src": "http://localhost:5173/uploads/1761695150407-3f088375-d3e5-46e2-99a4-53a7ed9760ab.jpg",
-        "alt": "Dromerige zwart-witfoto",
+        "src": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Analog contact sheet close-up",
         "size": "wide"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Fashion editorial in motion",
+        "size": "tall"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Minimal studio still life",
+        "size": "square"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1487412720507-4bc021defc06?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Detail of styled wardrobe",
+        "size": "square"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Intimate documentary moment",
+        "size": "wide"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Cinematic duo portrait",
+        "size": "tall"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1445052510913-2093f5cde6fd?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Architectural location texture",
+        "size": "square"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Backstage artist preparation",
+        "size": "wide"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1200&q=80",
+        "alt": "Golden hour silhouette",
+        "size": "square"
       }
     ]
   },
