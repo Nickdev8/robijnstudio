@@ -16,6 +16,6 @@ services:
       - "127.0.0.1:3013:3000"
     working_dir: /app
     volumes:
-      - content-data:/app/storage
+      - /srv/webapps/robijnfotografie.nl/storage:/app/storage
 volumes:
   content-data:
