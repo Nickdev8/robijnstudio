@@ -12,7 +12,8 @@ export let form: FormState = undefined;
 const formState = form;
 
 const normalizeContent = (input: SiteContent): SiteContent => {
-	const normalizedProjects = input.about.projects.map((project, index) => {
+	const projects = Array.isArray(input.about.projects) ? input.about.projects : [];
+	const normalizedProjects = projects.map((project, index) => {
 		const slug = project.slug?.trim() || `project-${index + 1}`;
 		const heroImage = project.heroImage ?? { src: '', alt: '' };
 		const body =

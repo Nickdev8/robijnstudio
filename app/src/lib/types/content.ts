@@ -27,6 +27,17 @@ export type Testimonial = {
 	source: string;
 };
 
+export type AboutProject = {
+	slug: string;
+	title: string;
+	description: string;
+	result?: string;
+	videoUrl?: string;
+	heroImage: { src: string; alt: string };
+	body: string[];
+	externalUrl?: string;
+};
+
 export type StudioImage = {
 	src: string;
 	alt: string;
@@ -42,6 +53,7 @@ export type AboutContent = {
 	headline: string;
 	paragraphs: string[];
 	stats: StatItem[];
+	projects: AboutProject[];
 	testimonials: Testimonial[];
 	portrait: { src: string; alt: string };
 };
