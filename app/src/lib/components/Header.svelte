@@ -72,7 +72,7 @@
 		id="primary-navigation"
 		class={`${
 			isMenuOpen ? 'flex' : 'hidden'
-		} flex-col items-center gap-4 rounded-2xl border border-neutral-200 bg-white/95 px-6 py-5 text-[0.68rem] uppercase tracking-[0.24em] text-neutral-700 shadow-sm transition sm:flex sm:flex-row sm:flex-wrap sm:justify-center sm:gap-7 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-[0.72rem] sm:tracking-[0.32em] lg:gap-10 lg:text-xs lg:tracking-[0.38em]`}
+		} flex-col items-center gap-4 rounded-2xl border border-neutral-200 bg-white/95 px-6 py-5 text-[0.68rem] uppercase tracking-[0.24em] text-neutral-700 transition sm:flex sm:flex-row sm:flex-wrap sm:justify-center sm:gap-7 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:text-[0.72rem] sm:tracking-[0.32em] lg:gap-10 lg:text-xs lg:tracking-[0.38em]`}
 	>
 		{#each navItems as nav}
 			{@const active = isActive($page.url, nav)}
