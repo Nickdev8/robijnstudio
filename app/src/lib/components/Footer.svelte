@@ -28,8 +28,12 @@
 			</div>
 			<div class="text-xs text-neutral-400 md:text-right">© {year} Beau Robijn Fotografie</div>
 		</div>
-		<div class="text-xs text-neutral-400 md:text-center pt-5">
-			Website gemaakt door Nick Esselman. Contact: info@nickesselman.nl
+		<div class="flex flex-col items-center gap-1 pt-5 text-center text-xs text-neutral-400 sm:flex-row sm:justify-center sm:gap-2">
+			<span>Website gemaakt door Nick Esselman.</span>
+			<span class="hidden text-neutral-300 sm:inline">•</span>
+			<a class="text-neutral-500 transition-colors hover:text-rose-700" href="mailto:info@nickesselman.nl">
+				info@nickesselman.nl
+			</a>
 		</div>
 	</div>
 </footer>
