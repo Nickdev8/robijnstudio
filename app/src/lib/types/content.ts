@@ -20,20 +20,21 @@ export type StatItem = {
 	value: string;
 };
 
-export type ProjectItem = {
-	slug: string;
-	title: string;
-	description: string;
-	result?: string;
-	videoUrl?: string;
-	heroImage: { src: string; alt: string };
-	body: string[];
-	externalUrl?: string;
-};
+
 
 export type Testimonial = {
 	quote: string;
 	source: string;
+};
+
+export type StudioImage = {
+	src: string;
+	alt: string;
+};
+
+export type StudioScheduleItem = {
+	day: string;
+	hours: string;
 };
 
 export type AboutContent = {
@@ -41,9 +42,27 @@ export type AboutContent = {
 	headline: string;
 	paragraphs: string[];
 	stats: StatItem[];
-	projects: ProjectItem[];
 	testimonials: Testimonial[];
 	portrait: { src: string; alt: string };
+};
+
+export type StudioContent = {
+	title: string;
+	subtitle: string;
+	address: {
+		label: string;
+		lines: string[];
+		mapUrl?: string;
+	};
+	contactEmail: string;
+	contactLabel: string;
+	contactDescription: string;
+	photos: StudioImage[];
+	rubyImage: StudioImage;
+	portrait: StudioImage;
+	scheduleLabel: string;
+	schedule: StudioScheduleItem[];
+	scheduleNote?: string;
 };
 
 export type GalleryItem = {
@@ -77,6 +96,7 @@ export type ContactContent = {
 export type SiteContent = {
 	home: HomeContent;
 	about: AboutContent;
+	studio: StudioContent;
 	portfolio: PortfolioContent;
 	contact: ContactContent;
 };
