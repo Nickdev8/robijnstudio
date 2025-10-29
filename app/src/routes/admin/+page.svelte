@@ -1,6 +1,8 @@
 <svelte:options runes={false} />
 
 <script lang="ts">
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
 import UploadDropzone from '$lib/components/UploadDropzone.svelte';
 import type { PageData } from './$types';
 import type { GalleryItem, SiteContent } from '$lib/types/content';
@@ -153,6 +155,16 @@ const handleSubmit = (event: Event) => {
 	successMessage = "";
 	errorMessage = "";
 	preparePayload(event);
+};
+
+const saveEnhancer: SubmitFunction = async ({ result }) => {
+	if (result.type === 'success') {
+		successMessage = 'Wijzigingen opgeslagen.';
+		errorMessage = '';
+	} else if (result.type === 'failure') {
+		errorMessage = typeof result.data?.error === 'string' ? result.data.error : 'Opslaan mislukt.';
+		successMessage = '';
+	}
 };
 
 
@@ -329,20 +341,19 @@ const addGalleryItem = () => {
 	content = {
 		...content,
 		portfolio: {
-				...content.portfolio,
-				gallery: [
-					...content.portfolio.gallery,
-					{ src: 'https://', alt: 'Nieuw beeld', size: 'square' as GalleryItem['size'] }
-				]
-			}
-		};
+			...content.portfolio,
+			gallery: [
+				...content.portfolio.gallery,
+				{ src: 'https://', alt: 'Nieuw beeld', size: 'square' as GalleryItem['size'] }
+			]
+		}
 	};
+};
 
 const sectionNav = [
 	{ id: 'home', label: 'Home' },
 	{ id: 'about', label: 'Over' },
 	{ id: 'studio', label: 'Studio' },
-	{ id: 'testimonials', label: 'Testimonials' },
 	{ id: 'portfolio', label: 'Portfolio' },
 	{ id: 'contact', label: 'Contact' }
 ] as const;
@@ -483,6 +494,7 @@ const sectionNav = [
 					method="post"
 					action="?/save"
 					onsubmit={handleSubmit}
+					use:enhance={saveEnhancer}
 					class="space-y-10"
 			>
 				<input type="hidden" name="payload" value="" />
@@ -734,178 +746,326 @@ const sectionNav = [
 							/>
 						</label>
 					</div>
+
+					<div class="space-y-4">
+						<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Wat mensen zeggen</h3>
+							<button
+								type="button"
+								onclick={addTestimonial}
+								class="inline-flex items-center justify-center rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Nieuwe quote
+							</button>
+						</div>
+
+						<div class="space-y-4" role="list">
+							{#each content.about.testimonials as testimonial, index}
+								<div
+									class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('testimonials', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
+									draggable={true}
+									ondragstart={() => startDrag('testimonials', index)}
+									ondragover={allowDrop}
+									ondrop={() => dropOn('testimonials', index)}
+									ondragend={cancelDrag}
+									role="listitem"
+									aria-grabbed={isDragging('testimonials', index)}
+								>
+									<div class="flex items-start justify-between gap-4">
+										<p class="font-display text-neutral-900">Quote {index + 1}</p>
+										<button
+											type="button"
+											onclick={() => removeTestimonial(index)}
+											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+										>
+											Verwijder
+										</button>
+									</div>
+									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Quote</span>
+										<textarea
+											rows="3"
+											bind:value={content.about.testimonials[index].quote}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										></textarea>
+									</label>
+									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Bron</span>
+										<input
+											type="text"
+											bind:value={content.about.testimonials[index].source}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										/>
+									</label>
+								</div>
+							{/each}
+
+							{#if content.about.testimonials.length > 1}
+								<div
+									class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
+									ondragover={allowDrop}
+									ondrop={() => dropAtEnd('testimonials')}
+									role="button"
+									tabindex="0"
+									aria-label="Plaats quote achteraan"
+								>
+									Plaats hier
+								</div>
+							{/if}
+						</div>
+					</div>
 				</div>
 			</section>
 
-			<section id="projects" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
-				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<h2 class="font-display text-2xl text-neutral-900">Projectcases</h2>
-						<p class="text-sm text-neutral-500">Worden gebruikt op de Over-pagina én als losse projectpagina.</p>
-					</div>
-					<button
-						type="button"
-						onclick={addProject}
-						class="mt-2 inline-flex items-center justify-center rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900 sm:mt-0"
-					>
-						Nieuw project
-					</button>
-				</div>
+			<section id="studio" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
+				<h2 class="font-display text-2xl text-neutral-900">Studio</h2>
+				<p class="mt-1 text-sm text-neutral-500">Beheer de studio pagina: adres, foto’s en beschikbaarheid.</p>
 
-				<div class="mt-6 space-y-4" role="list">
-					{#each content.about.projects as project, index}
-						<div
-							class={`rounded-2xl border border-neutral-200 p-5 ${isDragging('projects', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
-							draggable={true}
-							ondragstart={() => startDrag('projects', index)}
-							ondragover={allowDrop}
-							ondrop={() => dropOn('projects', index)}
-							ondragend={cancelDrag}
-							role="listitem"
-							aria-grabbed={isDragging('projects', index)}
-						>
-							<div class="flex flex-wrap items-center justify-between gap-4">
-								<p class="font-display text-lg text-neutral-900">Project {index + 1}</p>
-								<div class="flex items-center gap-3">
+				<div class="mt-6 space-y-6">
+					<div class="grid gap-4 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Titel</span>
+							<input
+								type="text"
+								bind:value={content.studio.title}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Subtitel</span>
+							<input
+								type="text"
+								bind:value={content.studio.subtitle}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
+
+					<div class="space-y-4">
+						<div class="flex items-center justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Adres</h3>
+							<button
+								type="button"
+								onclick={addAddressLine}
+								class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Lijn toevoegen
+							</button>
+						</div>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Label</span>
+							<input
+								type="text"
+								bind:value={content.studio.address.label}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						{#each content.studio.address.lines as line, index}
+							<div class="rounded-2xl border border-neutral-200 p-4">
+								<div class="flex items-start justify-between gap-4">
+									<p class="font-display text-neutral-900">Regel {index + 1}</p>
 									<button
 										type="button"
-										onclick={() => removeProject(index)}
+										onclick={() => removeAddressLine(index)}
 										class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
 									>
 										Verwijder
 									</button>
 								</div>
-							</div>
-
-							<div class="mt-4 grid gap-4 sm:grid-cols-2">
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Titel</span>
-									<input
-										type="text"
-										bind:value={content.about.projects[index].title}
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									/>
-								</label>
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Slug</span>
-									<input
-										type="text"
-										bind:value={content.about.projects[index].slug}
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-										placeholder="bijv. soft-echo"
-									/>
-								</label>
-							</div>
-
-							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Korte omschrijving</span>
-								<textarea
-									rows="2"
-									bind:value={content.about.projects[index].description}
-									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-								></textarea>
-							</label>
-
-							<div class="mt-3 grid gap-4 sm:grid-cols-2">
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Resultaat</span>
-									<input
-										type="text"
-										bind:value={content.about.projects[index].result}
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									/>
-								</label>
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Video (embed URL)</span>
-									<input
-										type="url"
-										bind:value={content.about.projects[index].videoUrl}
-										placeholder="https://player.vimeo.com/..."
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									/>
-								</label>
-							</div>
-
-							<div class="mt-3 grid gap-4 sm:grid-cols-2">
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Hero-afbeelding</span>
-									<input
-										type="url"
-										bind:value={content.about.projects[index].heroImage.src}
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									/>
-									<UploadDropzone bind:url={content.about.projects[index].heroImage.src} />
-								</label>
-								<label class="flex flex-col gap-2 text-sm text-neutral-600">
-									<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Hero alt-tekst</span>
-									<input
-										type="text"
-										bind:value={content.about.projects[index].heroImage.alt}
-										class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									/>
-								</label>
-							</div>
-
-							<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
-								<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Externe case (optioneel)</span>
 								<input
-									type="url"
-									bind:value={content.about.projects[index].externalUrl}
-									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-									placeholder="https://..."
+									type="text"
+									bind:value={content.studio.address.lines[index]}
+									class="mt-4 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
-							</label>
-
-							<div class="mt-4 space-y-3">
-								<div class="flex items-center justify-between">
-									<p class="font-display text-neutral-900">Detailparagrafen</p>
-									<button
-										type="button"
-										onclick={() => addProjectParagraph(index)}
-										class="rounded-full border border-neutral-300 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-									>
-										Paragraaf toevoegen
-									</button>
-								</div>
-								{#each project.body as paragraph, bodyIndex}
-									<div class="rounded-2xl border border-neutral-200 p-4">
-										<div class="flex items-start justify-between gap-4">
-											<p class="font-display text-neutral-900">Paragraaf {bodyIndex + 1}</p>
-											{#if project.body.length > 1}
-												<button
-													type="button"
-													onclick={() => removeProjectParagraph(index, bodyIndex)}
-													class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
-												>
-													Verwijder
-												</button>
-											{/if}
-										</div>
-										<textarea
-											rows="3"
-											bind:value={content.about.projects[index].body[bodyIndex]}
-											class="mt-4 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
-										></textarea>
-									</div>
-								{/each}
 							</div>
-						</div>
-					{/each}
+						{/each}
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Kaart URL (optioneel)</span>
+							<input
+								type="url"
+								bind:value={content.studio.address.mapUrl}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
 
-					{#if content.about.projects.length > 1}
-						<div
-							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
-							ondragover={allowDrop}
-							ondrop={() => dropAtEnd('projects')}
-							role="button"
-							aria-label="Plaats project achteraan"
-						>
-							Plaats hier
+					<div class="space-y-4">
+						<div class="flex items-center justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Studio foto’s</h3>
+							<button
+								type="button"
+								onclick={addStudioPhoto}
+								class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Foto toevoegen
+							</button>
 						</div>
-					{/if}
+						<div class="grid gap-4 md:grid-cols-2">
+							{#each content.studio.photos as photo, index}
+								<div class="rounded-2xl border border-neutral-200 p-4">
+									<div class="flex items-start justify-between gap-4">
+										<p class="font-display text-neutral-900">Foto {index + 1}</p>
+										<button
+											type="button"
+											onclick={() => removeStudioPhoto(index)}
+											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+										>
+											Verwijder
+										</button>
+									</div>
+									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Afbeelding URL</span>
+										<input
+											type="url"
+											bind:value={content.studio.photos[index].src}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										/>
+										<UploadDropzone bind:url={content.studio.photos[index].src} />
+									</label>
+									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
+										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Alt-tekst</span>
+										<input
+											type="text"
+											bind:value={content.studio.photos[index].alt}
+											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+										/>
+									</label>
+								</div>
+							{/each}
+						</div>
+					</div>
+
+					<div class="grid gap-4 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Ruby afbeelding URL</span>
+							<input
+								type="url"
+								bind:value={content.studio.rubyImage.src}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+							<UploadDropzone bind:url={content.studio.rubyImage.src} />
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Ruby alt-tekst</span>
+							<input
+								type="text"
+								bind:value={content.studio.rubyImage.alt}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
+
+					<div class="grid gap-4 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
+							<input
+								type="url"
+								bind:value={content.studio.portrait.src}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+							<UploadDropzone bind:url={content.studio.portrait.src} />
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
+							<input
+								type="text"
+								bind:value={content.studio.portrait.alt}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
+
+					<div class="grid gap-4 sm:grid-cols-2">
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Contact label</span>
+							<input
+								type="text"
+								bind:value={content.studio.contactLabel}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Contact e-mail</span>
+							<input
+								type="email"
+								bind:value={content.studio.contactEmail}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+					</div>
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Contact beschrijving</span>
+						<textarea
+							rows="3"
+							bind:value={content.studio.contactDescription}
+							class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						></textarea>
+					</label>
+
+					<div class="space-y-4">
+						<div class="flex items-center justify-between">
+							<h3 class="font-display text-lg text-neutral-900">Aanwezigheid</h3>
+							<button
+								type="button"
+								onclick={addScheduleItem}
+								class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+							>
+								Tijdblok toevoegen
+							</button>
+						</div>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Label</span>
+							<input
+								type="text"
+								bind:value={content.studio.scheduleLabel}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						<div class="space-y-4">
+							{#each content.studio.schedule as item, index}
+								<div class="rounded-2xl border border-neutral-200 p-4">
+									<div class="flex items-start justify-between gap-4">
+										<p class="font-display text-neutral-900">Blok {index + 1}</p>
+										<button
+											type="button"
+											onclick={() => removeScheduleItem(index)}
+											class="text-xs uppercase tracking-[0.3em] text-neutral-400 transition hover:text-red-500"
+										>
+											Verwijder
+										</button>
+									</div>
+									<div class="mt-3 grid gap-4 sm:grid-cols-2">
+										<label class="flex flex-col gap-2 text-sm text-neutral-600">
+											<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Dag</span>
+											<input
+												type="text"
+												bind:value={content.studio.schedule[index].day}
+												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+											/>
+										</label>
+										<label class="flex flex-col gap-2 text-sm text-neutral-600">
+											<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tijden</span>
+											<input
+												type="text"
+												bind:value={content.studio.schedule[index].hours}
+												class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+											/>
+										</label>
+									</div>
+								</div>
+							{/each}
+						</div>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Notitie (optioneel)</span>
+							<textarea
+								rows="2"
+								bind:value={content.studio.scheduleNote}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							></textarea>
+						</label>
+					</div>
 				</div>
 			</section>
-
 			<section id="testimonials" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
 				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<h2 class="font-display text-2xl text-neutral-900">Testimonials</h2>
@@ -965,6 +1125,7 @@ const sectionNav = [
 							ondragover={allowDrop}
 							ondrop={() => dropAtEnd('testimonials')}
 							role="button"
+							tabindex="0"
 							aria-label="Plaats testimonial achteraan"
 						>
 							Plaats hier
@@ -1058,17 +1219,18 @@ const sectionNav = [
 										</label>
 									</div>
 								{/each}
-					{#if content.portfolio.gallery.length > 1}
-						<div
-							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
-							ondragover={allowDrop}
-							ondrop={() => dropAtEnd('gallery')}
-							role="button"
-							aria-label="Plaats beeld achteraan"
-						>
-							Plaats hier
-						</div>
-					{/if}
+								{#if content.portfolio.gallery.length > 1}
+									<div
+										class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
+										ondragover={allowDrop}
+										ondrop={() => dropAtEnd('gallery')}
+										role="button"
+										tabindex="0"
+										aria-label="Plaats beeld achteraan"
+									>
+										Plaats hier
+									</div>
+								{/if}
 				</div>
 						</div>
 					</div>
