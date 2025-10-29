@@ -69,7 +69,7 @@ const { home } = data;
 							fetchpriority="high"
 						/>
 					</div>
-					<figcaption class="mt-4 text-xs uppercase tracking-[0.38em] text-neutral-400">
+					<figcaption class="mt-4 text-center text-xs uppercase tracking-[0.38em] text-neutral-400">
 						{home.heroImage.alt}
 					</figcaption>
 				</figure>
