@@ -80,15 +80,18 @@
 				href={nav.href}
 				aria-current={active ? 'page' : undefined}
 				on:click={closeMenu}
-				class={`group relative pb-1 transition-colors duration-200 hover:text-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30 ${
+				class={`group relative rounded-full px-3 py-2 transition-colors duration-200 hover:text-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30 sm:px-4 sm:py-2.5 ${
 					active ? 'text-rose-700' : ''
 				}`}
 			>
 				{nav.label}
 				<span
-					class={`pointer-events-none absolute inset-x-0 -bottom-0.5 hidden h-px bg-rose-600 transition-opacity duration-200 sm:block ${
-						active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+					class={`pointer-events-none absolute left-3 right-3 bottom-1 hidden h-[1.5px] bg-rose-600 transition-all duration-300 sm:block ${
+						active
+							? 'opacity-100'
+							: 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
 					}`}
+					style="transform-origin: center"
 				></span>
 			</a>
 		{/each}
