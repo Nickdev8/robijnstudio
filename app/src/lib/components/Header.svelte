@@ -10,7 +10,7 @@
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Home', match: 'exact' },
 		{ href: '/about', label: 'Over', match: 'startsWith' },
-		{ href: '/projects', label: 'Projects', match: 'startsWith' },
+		{ href: '/studio', label: 'Studio', match: 'startsWith' },
 		{ href: '/portfolio', label: 'Portfolio', match: 'startsWith' },
 		{ href: '/contact', label: 'Contact', match: 'startsWith' }
 	];
@@ -32,7 +32,7 @@
 	};
 </script>
 
-<header class="flex flex-col items-center gap-5 px-4 pt-8 sm:px-6 sm:pt-12">
+<header class="flex flex-col items-center gap-5 px-4 pt-4 sm:px-6 sm:pt-3">
 	<img
 		src="/logo.svg"
 		alt="Logo van Beau Robijn Fotografie"

@@ -3,7 +3,7 @@
     "tagline": "Amsterdam · Tijdloze fotografie",
     "title": "Robijn Fotografie",
     "subtitle": "Beau van der Schaaf",
-    "description": "Ik documenteer stille kracht en kwetsbaarheid in beeld, met aandacht voor textuur, natuurlijke lichtval en een cinema-achtige gelaagdheid. Elk project start met een persoonlijk gesprek en eindigt in beelden die voelen als herinneringen.",
+    "description": "Ik ben Beau van der Schaaf, 18 jaar en gepassioneerd portretfotograaf. Mijn werk beweegt tussen zwart-wit en kleur, studio en buitenlocatie. Momenteel studeer ik fotografie in Amsterdam en werk ik graag samen aan creatieve beelden die karakter en emotie vastleggen.",
     "heroImage": {
       "src": "http://localhost:5173/uploads/1761694943479-ec1ea3d6-de17-4a94-995e-289da4b6148d.webp",
       "alt": "Intiem portret in studio-setting"
@@ -32,39 +32,21 @@
     "introTag": "Student · Fotograaf · Verteller",
     "headline": "Ik ben Beau Robijn, een student die zoekt naar echte momenten",
     "paragraphs": [
-      "In mijn studie audiovisuele vormgeving verdiep ik me in analoge processen en hedendaagse fotografie. Mijn werk draait om subtiele gebaren, huidtextuur en die ene seconde waarin iemand zichzelf vergeet. Ik geloof er heilig in dat een goede foto voelt alsof je er zelf bij was.",
-      "Naast lessen en stages werk ik aan persoonlijke projecten die variëren van documentaire portretten van medestudenten tot fictieve modeshoots. Ik neem je graag mee achter de schermen van wat mij inspireert en hoe ik als jonge maker groei."
+      "Ik ben Beau van der Schaaf, een 18-jarige fotograaf met een passie voor portretfotografie. Ik werk zowel in zwart-wit als in kleur, afhankelijk van de sfeer en het verhaal dat ik wil overbrengen. Mijn werk vindt plaats in de studio én op locatie. Ik hou van de afwisseling tussen gecontroleerd licht en de spontaniteit van buitenfotografie.",
+      "Momenteel volg ik een fotografieopleiding in Amsterdam, waar ik nu in mijn tweede jaar zit. Fotografie is voor mij meer dan een vak; het is een manier om mensen te leren kennen en hun persoonlijkheid vast te leggen op beeld. Ik ben een creatief en samenwerkend persoon, ik vind het belangrijk om samen met anderen tot iets unieks te komen."
     ],
     "stats": [
       {
         "label": "Studie",
-        "value": "Audiovisueel, HKU"
+        "value": "photographic designer, Amsterdam "
       },
       {
         "label": "Specialiteit",
-        "value": "Portret & korte docu"
+        "value": "Portretfotografie "
       },
       {
         "label": "Werkveld",
-        "value": "NLD & BE"
-      }
-    ],
-    "projects": [
-      {
-        "slug": "small-band-doc",
-        "title": "Tiny Stage Sessions",
-        "description": "Een 1,5 minuut documentaire over een lokale muziekband die elke woensdag in een piepkleine kelder repeteert.",
-        "result": "Première tijdens de academie showcase, direct gebruikt als teaser op social media van de band.",
-        "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo",
-        "heroImage": {
-          "src": "http://localhost:5173/uploads/1761695282360-10008cc3-4341-41d6-8acb-c5137d84c027.jpg",
-          "alt": "Kleine muziekband tijdens een intieme repetitie"
-        },
-        "body": [
-          "Voor Tiny Stage Sessions filmde ik drie repetities van een opkomende indieband in een kelderstudio van twintig vierkante meter. De uitdaging was om de energie van een volle set te vangen terwijl we letterlijk tussen de versterkers en drumstellen door manoeuvreerden.",
-          "Ik werkte handheld met lichtgevoelige lenzen zodat we konden inspelen op de dynamiek van het moment. De montage focust op de kleine rituelen tussen de bandleden: stemmen, lachen, improviseren. In slechts anderhalve minuut ontstaat zo het gevoel dat je onderdeel van de band bent."
-        ],
-        "externalUrl": "https://robijnstudios.nl/project/tiny-stage-sessions"
+        "value": "Nederland"
       }
     ],
     "portrait": {
@@ -85,6 +67,60 @@
         "source": "— Melvin Ras, producer & performer"
       }
     ]
+  },
+  "studio": {
+    "title": "Studio Robijn",
+    "subtitle": "Analoge en digitale ruimte voor portretten in Amsterdam-Noord",
+    "address": {
+      "label": "Adres",
+      "lines": [
+        "Meeuwenlaan 123",
+        "1021 JK Amsterdam",
+        "Derde verdieping · Studio 3B"
+      ],
+      "mapUrl": "https://maps.google.com/?q=Meeuwenlaan+123+Amsterdam"
+    },
+    "contactEmail": "info@robijnstudios.nl",
+    "contactLabel": "Plan je bezoek",
+    "contactDescription": "Stuur een mail voor reserveringen, rondleidingen of productievragen. Ik reageer binnen twee werkdagen.",
+    "photos": [
+      {
+        "src": "http://localhost:5173/uploads/1761695106786-56acc181-e7a9-4f39-83c7-80c2a8637919.jpg",
+        "alt": "Daglicht hoek van de studio in Amsterdam"
+      },
+      {
+        "src": "http://localhost:5173/uploads/1761695045060-508e470b-4d18-4ec9-9f56-bb5d7e14c493.jpg",
+        "alt": "Werktafel met camera's en moodboards"
+      }
+    ],
+    "rubyImage": {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><polygon points='60,8 112,44 92,112 28,112 8,44' fill='%23be123c' stroke='%23f87171' stroke-width='8' stroke-linejoin='round'/><polygon points='60,8 112,44 60,64 8,44' fill='%23f43f5e' opacity='0.85'/><polygon points='60,64 92,112 28,112' fill='%239f1239' opacity='0.75'/></svg>",
+      "alt": "Gestileerde robijn"
+    },
+    "portrait": {
+      "src": "http://localhost:5173/uploads/1761694695047-11945bc8-ea70-44c6-9354-e5d620120deb.png",
+      "alt": "Beau Robijn in de studio"
+    },
+    "scheduleLabel": "Aanwezigheid",
+    "schedule": [
+      {
+        "day": "Maandag",
+        "hours": "10:00 – 16:00"
+      },
+      {
+        "day": "Woensdag",
+        "hours": "12:00 – 18:00"
+      },
+      {
+        "day": "Vrijdag",
+        "hours": "10:00 – 17:00"
+      },
+      {
+        "day": "Zaterdag",
+        "hours": "Op afspraak"
+      }
+    ],
+    "scheduleNote": "Andere tijden mogelijk in overleg."
   },
   "portfolio": {
     "tagline": "Een selectie van recent werk",
