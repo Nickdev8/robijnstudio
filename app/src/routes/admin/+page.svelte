@@ -47,7 +47,7 @@ let content: SiteContent | null =
 let successMessage = formState?.success ? 'Wijzigingen opgeslagen.' : '';
 let errorMessage = formState?.error ?? '';
 
-type DragSection = 'projects' | 'gallery' | 'testimonials';
+type DragSection = 'gallery' | 'testimonials';
 
 const reorderList = <T>(items: T[], from: number, to: number): T[] => {
 	const updated = [...items];
@@ -81,16 +81,6 @@ const dropOn = (section: DragSection, index: number) => {
 		return;
 	}
 
-	if (section === 'projects') {
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects: reorderList(content.about.projects, dragging.index, Math.min(index, content.about.projects.length - 1))
-			}
-		};
-	}
-
 	if (section === 'gallery') {
 		content = {
 			...content,
@@ -120,16 +110,6 @@ const dropOn = (section: DragSection, index: number) => {
 
 const dropAtEnd = (section: DragSection) => {
 	if (!content || dragging.section !== section || dragging.index === null) return;
-
-	if (section === 'projects') {
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects: reorderList(content.about.projects, dragging.index, content.about.projects.length)
-			}
-		};
-	}
 
 	if (section === 'gallery') {
 		content = {
@@ -242,74 +222,6 @@ const handleSubmit = (event: Event) => {
 		};
 	};
 
-	const addProject = () => {
-		if (!content) return;
-		const timestamp = Date.now();
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects: [
-					...content.about.projects,
-					{
-						slug: `project-${timestamp}`,
-						title: 'Nieuw project',
-						description: '',
-						result: '',
-						videoUrl: '',
-						heroImage: { src: '', alt: '' },
-						body: [''],
-						externalUrl: ''
-					}
-				]
-			}
-		};
-	};
-
-	const removeProject = (index: number) => {
-		if (!content) return;
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects: content.about.projects.filter((_item, i) => i !== index)
-			}
-		};
-	};
-
-	const addProjectParagraph = (projectIndex: number) => {
-		if (!content) return;
-		const projects = [...content.about.projects];
-		const target = { ...projects[projectIndex] };
-		target.body = [...target.body, ''];
-		projects[projectIndex] = target;
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects
-			}
-		};
-	};
-
-	const removeProjectParagraph = (projectIndex: number, paragraphIndex: number) => {
-		if (!content) return;
-		const projects = [...content.about.projects];
-		const target = { ...projects[projectIndex] };
-		target.body = target.body.filter((_item, idx) => idx !== paragraphIndex);
-		if (!target.body.length) {
-			target.body = [''];
-		}
-		projects[projectIndex] = target;
-		content = {
-			...content,
-			about: {
-				...content.about,
-				projects
-			}
-		};
-	};
-
 	
 
 	const addTestimonial = () => {
@@ -326,22 +238,97 @@ const handleSubmit = (event: Event) => {
 		};
 	};
 
-	const removeTestimonial = (index: number) => {
-		if (!content) return;
-		content = {
-			...content,
-			about: {
-				...content.about,
-				testimonials: content.about.testimonials.filter((_item, i) => i !== index)
-			}
-		};
+const removeTestimonial = (index: number) => {
+	if (!content) return;
+	content = {
+		...content,
+		about: {
+			...content.about,
+			testimonials: content.about.testimonials.filter((_item, i) => i !== index)
+		}
 	};
+};
+
+const addAddressLine = () => {
+	if (!content) return;
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			address: {
+				...content.studio.address,
+				lines: [...content.studio.address.lines, '']
+			}
+		}
+	};
+};
+
+const removeAddressLine = (index: number) => {
+	if (!content) return;
+	const remaining = content.studio.address.lines.filter((_item, i) => i !== index);
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			address: {
+				...content.studio.address,
+				lines: remaining.length ? remaining : ['']
+			}
+		}
+	};
+};
+
+const addStudioPhoto = () => {
+	if (!content) return;
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			photos: [...content.studio.photos, { src: '', alt: '' }]
+		}
+	};
+};
+
+const removeStudioPhoto = (index: number) => {
+	if (!content) return;
+	const remaining = content.studio.photos.filter((_item, i) => i !== index);
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			photos: remaining.length ? remaining : [{ src: '', alt: '' }]
+		}
+	};
+};
+
+const addScheduleItem = () => {
+	if (!content) return;
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			schedule: [...content.studio.schedule, { day: 'Nieuwe dag', hours: '' }]
+		}
+	};
+};
+
+const removeScheduleItem = (index: number) => {
+	if (!content) return;
+	const remaining = content.studio.schedule.filter((_item, i) => i !== index);
+	content = {
+		...content,
+		studio: {
+			...content.studio,
+			schedule: remaining.length ? remaining : [{ day: 'Nieuwe dag', hours: '' }]
+		}
+	};
+};
 
 const addGalleryItem = () => {
-		if (!content) return;
-		content = {
-			...content,
-			portfolio: {
+	if (!content) return;
+	content = {
+		...content,
+		portfolio: {
 				...content.portfolio,
 				gallery: [
 					...content.portfolio.gallery,
@@ -354,7 +341,7 @@ const addGalleryItem = () => {
 const sectionNav = [
 	{ id: 'home', label: 'Home' },
 	{ id: 'about', label: 'Over' },
-	{ id: 'projects', label: 'Projectcases' },
+	{ id: 'studio', label: 'Studio' },
 	{ id: 'testimonials', label: 'Testimonials' },
 	{ id: 'portfolio', label: 'Portfolio' },
 	{ id: 'contact', label: 'Contact' }
