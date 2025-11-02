@@ -61,6 +61,7 @@ export type AboutContent = {
 export type StudioContent = {
 	title: string;
 	subtitle: string;
+	tagline: string;
 	address: {
 		label: string;
 		lines: string[];
@@ -69,6 +70,8 @@ export type StudioContent = {
 	contactEmail: string;
 	contactLabel: string;
 	contactDescription: string;
+	contactCtaHeading: string;
+	contactPrimaryLabel: string;
 	photos: StudioImage[];
 	rubyImage: StudioImage;
 	portrait: StudioImage;

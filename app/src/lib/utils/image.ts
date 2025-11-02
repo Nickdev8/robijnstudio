@@ -13,6 +13,11 @@ export const buildSrcSet = (url: string, widths: number[] = [480, 768, 1024, 144
 	const cleanUrl = url.trim();
 	if (!cleanUrl) return '';
 
+	const baseUrl = cleanUrl.split('?')[0].toLowerCase();
+	if (baseUrl.endsWith('.svg')) {
+		return '';
+	}
+
 	return widths
 		.map((width) => `${appendWidthParam(cleanUrl, width)} ${width}w`)
 		.join(', ');

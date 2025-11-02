@@ -5,7 +5,6 @@ import type { PageData } from './$types';
 
 export let data: PageData;
 const { about } = data;
-const projectHighlights = about.projects?.slice(0, 3) ?? [];
 const shareImage = about.portrait;
 const testimonials = about.testimonials ?? [];
 </script>
@@ -55,33 +54,6 @@ const testimonials = about.testimonials ?? [];
 					{/each}
 				</div>
 
-				{#if projectHighlights.length}
-					<div class="space-y-5">
-						<p class="text-xs uppercase tracking-[0.32em] text-neutral-500">Projecthoogtepunten</p>
-						<ul class="space-y-4">
-							{#each projectHighlights as project}
-								<li class="rounded-3xl border border-neutral-200 bg-white/90 p-6 shadow-[0_16px_35px_rgba(15,23,42,0.08)] transition hover:border-rose-400/60 hover:shadow-[0_18px_45px_rgba(15,23,42,0.1)]">
-									<div class="flex flex-wrap items-baseline gap-2">
-										<h3 class="font-display text-lg text-neutral-900">{project.title}</h3>
-										{#if project.result}
-											<span class="text-xs font-medium text-neutral-500">{project.result}</span>
-										{/if}
-									</div>
-									<p class="mt-3 text-sm leading-relaxed text-neutral-600">{project.description}</p>
-									<div class="mt-4">
-										<a
-											href={`/projects/${project.slug}`}
-											class="inline-flex items-center gap-2 text-sm font-medium text-rose-700 transition hover:text-rose-800"
-										>
-											Bekijk project
-											<span aria-hidden="true">→</span>
-										</a>
-									</div>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				{/if}
 			</section>
 
 			<section class="flex flex-col gap-8">

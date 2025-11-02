@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/ruby.png" type="image/png" />
+	<link rel="icon" href="/ruby.svg" type="image/svg+xml" />
 	{#if data?.canonical}
 		<link rel="canonical" href={data.canonical} />
 		<meta property="og:url" content={data.canonical} />

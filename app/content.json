@@ -49,24 +49,7 @@
         "value": "Nederland"
       }
     ],
-    "projects": [
-      {
-        "slug": "tiny-stage-sessions",
-        "title": "Tiny Stage Sessions",
-        "description": "Achter-de-schermen documentaire over een opkomende indieband in een kelderstudio van twintig vierkante meter.",
-        "result": "Getoond tijdens academie showcase, gebruikt als teaser voor release.",
-        "videoUrl": "https://www.youtube.com/embed/eX2qFMC8cFo",
-        "heroImage": {
-          "src": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80",
-          "alt": "Indieband tijdens repetitie in kelderstudio"
-        },
-        "body": [
-          "Voor Tiny Stage Sessions filmde ik drie repetities van een opkomende indieband in een kelderstudio van twintig vierkante meter. De uitdaging was om de energie van een volle set te vangen terwijl we letterlijk tussen de versterkers en drumstellen door manoeuvreerden.",
-          "Ik werkte handheld met lichtgevoelige lenzen zodat we konden inspelen op de dynamiek van het moment. De montage focust op de kleine rituelen tussen de bandleden: stemmen, lachen, improviseren. In slechts anderhalve minuut ontstaat zo het gevoel dat je onderdeel van de band bent."
-        ],
-        "externalUrl": "https://robijnstudios.nl/project/tiny-stage-sessions"
-      }
-    ],
+    "projects": [],
     "portrait": {
       "src": "https://images.unsplash.com/photo-1518674660708-0b84225f76cd?auto=format&fit=crop&w=1400&q=80",
       "alt": "Beau Robijn aan het werk in de studio"
@@ -89,6 +72,7 @@
   "studio": {
     "title": "Studio Robijn",
     "subtitle": "Analoge en digitale ruimte voor portretten in Amsterdam-Noord",
+    "tagline": "Eigen creatieve ruimte",
     "address": {
       "label": "Adres",
       "lines": [
@@ -101,6 +85,8 @@
     "contactEmail": "info@robijnstudios.nl",
     "contactLabel": "Plan je bezoek",
     "contactDescription": "Stuur een mail voor reserveringen, rondleidingen of productievragen. Ik reageer binnen twee werkdagen.",
+    "contactCtaHeading": "Plan een bezoek aan de studio",
+    "contactPrimaryLabel": "Plan via de contactpagina",
     "photos": [
       {
         "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
@@ -112,7 +98,7 @@
       }
     ],
     "rubyImage": {
-      "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
+      "src": "/ruby.svg",
       "alt": "Gestileerde robijn"
     },
     "portrait": {

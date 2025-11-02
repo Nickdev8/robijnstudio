@@ -13,36 +13,13 @@ export let data: PageData;
 export let form: FormState = undefined;
 const formState = form;
 
-const normalizeContent = (input: SiteContent): SiteContent => {
-	const projects = Array.isArray(input.about.projects) ? input.about.projects : [];
-	const normalizedProjects = projects.map((project, index) => {
-		const slug = project.slug?.trim() || `project-${index + 1}`;
-		const heroImage = project.heroImage ?? { src: '', alt: '' };
-		const body =
-			Array.isArray(project.body) && project.body.length > 0
-				? project.body.map((paragraph) => paragraph ?? '')
-				: [''];
-
-		return {
-			...project,
-			slug,
-			heroImage: {
-				src: heroImage.src ?? '',
-				alt: heroImage.alt ?? ''
-			},
-			body,
-			externalUrl: project.externalUrl ?? ''
-		};
-	});
-
-	return {
-		...input,
-		about: {
-			...input.about,
-			projects: normalizedProjects
-		}
-	};
-};
+const normalizeContent = (input: SiteContent): SiteContent => ({
+	...input,
+	about: {
+		...input.about,
+		projects: Array.isArray(input.about.projects) ? input.about.projects : []
+	}
+});
 
 let content: SiteContent | null =
 	data.authenticated && data.content ? normalizeContent(structuredClone(data.content)) : null;
@@ -828,7 +805,7 @@ const sectionNav = [
 				<p class="mt-1 text-sm text-neutral-500">Beheer de studio pagina: adres, foto’s en beschikbaarheid.</p>
 
 				<div class="mt-6 space-y-6">
-					<div class="grid gap-4 sm:grid-cols-2">
+					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Titel</span>
 							<input
@@ -842,6 +819,14 @@ const sectionNav = [
 							<input
 								type="text"
 								bind:value={content.studio.subtitle}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							/>
+						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Tagline</span>
+							<input
+								type="text"
+								bind:value={content.studio.tagline}
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 						</label>
@@ -893,6 +878,28 @@ const sectionNav = [
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 						</label>
+					</div>
+
+					<div class="space-y-4">
+						<h3 class="font-display text-lg text-neutral-900">Contact</h3>
+						<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+							<label class="flex flex-col gap-2 text-sm text-neutral-600 sm:col-span-2 lg:col-span-1">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Contact CTA titel</span>
+								<input
+									type="text"
+									bind:value={content.studio.contactCtaHeading}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								/>
+							</label>
+							<label class="flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Primaire knoplabel</span>
+								<input
+									type="text"
+									bind:value={content.studio.contactPrimaryLabel}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								/>
+							</label>
+						</div>
 					</div>
 
 					<div class="space-y-4">
