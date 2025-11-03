@@ -1384,16 +1384,22 @@ const sectionNav = [
 										</label>
 									</div>
 								{/each}
-								{#if content.portfolio.gallery.length > 1}
-									<div
-										class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
-										ondragover={allowDrop}
-										ondrop={() => dropAtEnd('gallery')}
-										role="button"
-										tabindex="0"
-										aria-label="Plaats beeld achteraan"
-									>
-										Plaats hier
+								{#if content.portfolio.gallery.length}
+									<div class="flex justify-end">
+										<button
+											type="button"
+											onclick={addGalleryItem}
+											class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
+											on:dragover={allowDrop}
+											on:drop={(event) => {
+												event.preventDefault();
+												event.stopPropagation();
+												dropAtEnd('gallery');
+											}}
+											aria-label="Voeg een nieuw beeld toe"
+										>
+											Toevoegen
+										</button>
 									</div>
 								{/if}
 				</div>
