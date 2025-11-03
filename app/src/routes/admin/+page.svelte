@@ -4,6 +4,7 @@
 import { enhance } from '$app/forms';
 import type { SubmitFunction } from '@sveltejs/kit';
 import UploadDropzone from '$lib/components/UploadDropzone.svelte';
+import AdminImagePreview from '$lib/components/AdminImagePreview.svelte';
 import type { PageData } from './$types';
 import type { GalleryItem, SiteContent } from '$lib/types/content';
 
@@ -578,6 +579,11 @@ const sectionNav = [
 									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
 								<UploadDropzone bind:url={content.home.heroImage.src} />
+								<AdminImagePreview
+									src={content.home.heroImage.src}
+									alt={content.home.heroImage.alt}
+									label="Hero voorbeeld"
+								/>
 							</label>
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
 								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Hero alt-tekst</span>
@@ -770,6 +776,11 @@ const sectionNav = [
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 							<UploadDropzone bind:url={content.about.portrait.src} />
+							<AdminImagePreview
+								src={content.about.portrait.src}
+								alt={content.about.portrait.alt}
+								label="Portret voorbeeld"
+							/>
 						</label>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
@@ -1015,6 +1026,11 @@ const sectionNav = [
 											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 										/>
 										<UploadDropzone bind:url={content.studio.photos[index].src} />
+										<AdminImagePreview
+											src={content.studio.photos[index].src}
+											alt={content.studio.photos[index].alt}
+											label={`Voorbeeld foto ${index + 1}`}
+										/>
 									</label>
 									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
 										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Alt-tekst</span>
@@ -1039,6 +1055,11 @@ const sectionNav = [
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 							<UploadDropzone bind:url={content.studio.rubyImage.src} />
+							<AdminImagePreview
+								src={content.studio.rubyImage.src}
+								alt={content.studio.rubyImage.alt}
+								label="Ruby voorbeeld"
+							/>
 						</label>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Ruby alt-tekst</span>
@@ -1060,6 +1081,11 @@ const sectionNav = [
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 							<UploadDropzone bind:url={content.studio.portrait.src} />
+							<AdminImagePreview
+								src={content.studio.portrait.src}
+								alt={content.studio.portrait.alt}
+								label="Studio portret voorbeeld"
+							/>
 						</label>
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret alt-tekst</span>
@@ -1330,6 +1356,11 @@ const sectionNav = [
 													class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 												/>
 												<UploadDropzone bind:url={content.portfolio.gallery[index].src} />
+												<AdminImagePreview
+													src={content.portfolio.gallery[index].src}
+													alt={content.portfolio.gallery[index].alt}
+													label={`Portfolio voorbeeld ${index + 1}`}
+												/>
 											</label>
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
 												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Alt-tekst</span>
