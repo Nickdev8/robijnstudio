@@ -1390,8 +1390,8 @@ const sectionNav = [
 											type="button"
 											onclick={addGalleryItem}
 											class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-											on:dragover={allowDrop}
-											on:drop={(event) => {
+											ondragover={allowDrop}
+											ondrop={(event) => {
 												event.preventDefault();
 												event.stopPropagation();
 												dropAtEnd('gallery');
