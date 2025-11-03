@@ -32,7 +32,7 @@ const testimonials = about.testimonials ?? [];
 </svelte:head>
 
 <div class="flex flex-1 flex-col bg-white" id="about">
-	<main class="flex flex-1 items-center justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
+	<main class="flex flex-1 flex-col gap-8 items-center justify-center px-4 pb-20 pt-14 sm:px-6 sm:pt-16">
 		<div class="grid w-full max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
 			<section class="flex flex-col gap-8">
 				<PageTagline text={about.introTag} />
@@ -72,25 +72,43 @@ const testimonials = about.testimonials ?? [];
 						/>
 					</div>
 				</div>
-
-					{#if testimonials.length}
-						<div class="space-y-5">
-							<p class="text-xs uppercase tracking-[0.32em] text-neutral-500">Wat mensen zeggen</p>
-							<div class="grid gap-4 sm:grid-cols-2">
-								{#each testimonials as testimonial}
-									<figure class="flex h-full flex-col justify-between gap-4 rounded-3xl border border-neutral-200 bg-white/95 p-6 text-sm leading-relaxed text-neutral-600 shadow-[0_16px_35px_rgba(15,23,42,0.08)] transition hover:border-rose-400/50">
-										<blockquote class="sm:text-base">
-											{testimonial.quote}
-										</blockquote>
-										<figcaption class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">
-											{testimonial.source}
-										</figcaption>
-									</figure>
-								{/each}
-							</div>
-						</div>
-					{/if}
 			</section>
 		</div>
+
+			{#if testimonials.length}
+				<section class="w-full max-w-6xl rounded-[3rem] border border-neutral-200/80 bg-white/95 p-10 shadow-[0_32px_80px_rgba(15,23,42,0.12)] sm:p-12">
+					<div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+						<div class="max-w-xl space-y-3">
+							{#if about.testimonialsLabel}
+								<p class="font-lifted text-[0.65rem] uppercase tracking-[0.34em] text-rose-500">
+									{about.testimonialsLabel}
+								</p>
+							{/if}
+							{#if about.testimonialsHeading}
+								<h2 class="font-display text-[clamp(1.6rem,1.6vw+1.4rem,2.2rem)] uppercase leading-tight text-neutral-900">
+									{about.testimonialsHeading}
+								</h2>
+							{/if}
+							{#if about.testimonialsDescription}
+								<p class="text-sm leading-relaxed text-neutral-500 sm:text-base">
+									{about.testimonialsDescription}
+								</p>
+							{/if}
+						</div>
+					</div>
+				<div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+					{#each testimonials as testimonial}
+						<figure class="flex h-full flex-col justify-between gap-4 rounded-3xl border border-neutral-200 bg-white/98 p-6 text-sm leading-relaxed text-neutral-600 shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition hover:border-rose-400/50 hover:shadow-[0_26px_65px_rgba(244,114,182,0.15)]">
+							<blockquote class="sm:text-base">
+								{testimonial.quote}
+							</blockquote>
+							<figcaption class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">
+								{testimonial.source}
+							</figcaption>
+						</figure>
+					{/each}
+				</div>
+			</section>
+		{/if}
 	</main>
 </div>

@@ -25,6 +25,22 @@ let content: SiteContent | null =
 	data.authenticated && data.content ? normalizeContent(structuredClone(data.content)) : null;
 let successMessage = formState?.success ? 'Wijzigingen opgeslagen.' : '';
 let errorMessage = formState?.error ?? '';
+let toastVisible = false;
+let toastMessage = '';
+let toastTone: 'info' | 'success' | 'error' = 'info';
+let toastTimeout: ReturnType<typeof setTimeout> | undefined;
+$: toastStyles =
+	toastTone === 'success'
+		? 'bg-emerald-600 text-white shadow-[0_20px_45px_rgba(16,185,129,0.35)]'
+		: toastTone === 'error'
+			? 'bg-red-500 text-white shadow-[0_20px_45px_rgba(239,68,68,0.35)]'
+			: 'bg-neutral-900 text-white shadow-[0_26px_65px_rgba(15,23,42,0.32)]';
+$: toastAccent =
+	toastTone === 'success'
+		? 'bg-emerald-300'
+		: toastTone === 'error'
+			? 'bg-red-300'
+			: 'bg-white/80';
 
 type DragSection = 'gallery' | 'testimonials';
 
@@ -120,6 +136,31 @@ const dropAtEnd = (section: DragSection) => {
 const isDragging = (section: DragSection, index: number) =>
 	dragging.section === section && dragging.index === index;
 
+const clearToastTimeout = () => {
+	if (toastTimeout) {
+		clearTimeout(toastTimeout);
+		toastTimeout = undefined;
+	}
+};
+
+const showToast = (
+	message: string,
+	tone: 'info' | 'success' | 'error',
+	autoHide = true,
+	duration = 2600
+) => {
+	toastMessage = message;
+	toastTone = tone;
+	toastVisible = true;
+	clearToastTimeout();
+	if (autoHide) {
+		toastTimeout = setTimeout(() => {
+			toastVisible = false;
+			toastTimeout = undefined;
+		}, duration);
+	}
+};
+
 const preparePayload = (event: Event) => {
 	if (!content) return;
 	const form = event.currentTarget as HTMLFormElement;
@@ -132,20 +173,30 @@ const handleSubmit = (event: Event) => {
 	successMessage = "";
 	errorMessage = "";
 	preparePayload(event);
+	showToast('Opslaan...', 'info', false);
 };
 
 const saveEnhancer: SubmitFunction = () => {
+	const startingScroll =
+		typeof window !== 'undefined' ? window.scrollY : 0;
 	return async ({ result, update }) => {
 		if (result.type === 'success') {
 			await update({ reset: false, invalidateAll: false });
 			successMessage = 'Wijzigingen opgeslagen.';
 			errorMessage = '';
+			showToast('Opgeslagen!', 'success');
 		} else if (result.type === 'failure') {
 			await update({ reset: false, invalidateAll: false });
 			successMessage = '';
 			errorMessage = typeof result.data?.error === 'string' ? result.data.error : 'Opslaan mislukt.';
+			showToast(errorMessage, 'error', false);
 		} else {
 			await update();
+		}
+		if (typeof window !== 'undefined') {
+			requestAnimationFrame(() => {
+				window.scrollTo({ top: startingScroll });
+			});
 		}
 	};
 };
@@ -450,14 +501,12 @@ const sectionNav = [
 					</button>
 				</form>
 			</div>
-
-			{#if successMessage}
-				<p class="mb-6 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{successMessage}</p>
-			{/if}
-
-				{#if errorMessage}
-					<p class="mb-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{errorMessage}</p>
-				{/if}
+			<div aria-live="polite" class="sr-only">
+				{#if successMessage}{successMessage}{/if}
+			</div>
+			<div aria-live="assertive" class="sr-only">
+				{#if errorMessage}{errorMessage}{/if}
+			</div>
 
 				<nav
 					class="mb-8 flex flex-wrap gap-3 rounded-full border border-neutral-300 bg-white/80 px-4 py-3 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-500 shadow-sm sm:justify-center sm:gap-4 sm:text-xs"
@@ -523,7 +572,8 @@ const sectionNav = [
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
 								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Hero afbeelding URL</span>
 								<input
-									type="url"
+									type="text"
+									inputmode="url"
 									bind:value={content.home.heroImage.src}
 									class="rounded-xl border border-neutral-200 bg-white px-4 py-3 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 								/>
@@ -714,7 +764,8 @@ const sectionNav = [
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
 							<input
-								type="url"
+								type="text"
+								inputmode="url"
 								bind:value={content.about.portrait.src}
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
@@ -732,7 +783,9 @@ const sectionNav = [
 
 					<div class="space-y-4">
 						<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-							<h3 class="font-display text-lg text-neutral-900">Wat mensen zeggen</h3>
+							<h3 class="font-display text-lg text-neutral-900">
+								{content.about.testimonialsLabel || 'Wat mensen zeggen'}
+							</h3>
 							<button
 								type="button"
 								onclick={addTestimonial}
@@ -741,6 +794,33 @@ const sectionNav = [
 								Nieuwe quote
 							</button>
 						</div>
+
+						<div class="grid gap-4 sm:grid-cols-2">
+							<label class="flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Sectielabel</span>
+								<input
+									type="text"
+									bind:value={content.about.testimonialsLabel}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								/>
+							</label>
+							<label class="flex flex-col gap-2 text-sm text-neutral-600">
+								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Sectietitel</span>
+								<input
+									type="text"
+									bind:value={content.about.testimonialsHeading}
+									class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+								/>
+							</label>
+						</div>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
+							<textarea
+								rows="2"
+								bind:value={content.about.testimonialsDescription}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							></textarea>
+						</label>
 
 						<div class="space-y-4" role="list">
 							{#each content.about.testimonials as testimonial, index}
@@ -929,7 +1009,8 @@ const sectionNav = [
 									<label class="mt-3 flex flex-col gap-2 text-sm text-neutral-600">
 										<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Afbeelding URL</span>
 										<input
-											type="url"
+											type="text"
+											inputmode="url"
 											bind:value={content.studio.photos[index].src}
 											class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 										/>
@@ -952,7 +1033,8 @@ const sectionNav = [
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Ruby afbeelding URL</span>
 							<input
-								type="url"
+								type="text"
+								inputmode="url"
 								bind:value={content.studio.rubyImage.src}
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
@@ -972,7 +1054,8 @@ const sectionNav = [
 						<label class="flex flex-col gap-2 text-sm text-neutral-600">
 							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Portret URL</span>
 							<input
-								type="url"
+								type="text"
+								inputmode="url"
 								bind:value={content.studio.portrait.src}
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
@@ -1034,6 +1117,14 @@ const sectionNav = [
 								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 							/>
 						</label>
+						<label class="flex flex-col gap-2 text-sm text-neutral-600">
+							<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
+							<textarea
+								rows="2"
+								bind:value={content.studio.scheduleIntro}
+								class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+							></textarea>
+						</label>
 						<div class="space-y-4">
 							{#each content.studio.schedule as item, index}
 								<div class="rounded-2xl border border-neutral-200 p-4">
@@ -1081,7 +1172,9 @@ const sectionNav = [
 			</section>
 			<section id="testimonials" class="rounded-3xl border border-neutral-200 bg-white/95 p-6 sm:p-8 scroll-mt-28">
 				<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-					<h2 class="font-display text-2xl text-neutral-900">Testimonials</h2>
+					<h2 class="font-display text-2xl text-neutral-900">
+						{content.about.testimonialsLabel || 'Testimonials'}
+					</h2>
 					<button
 						type="button"
 						onclick={addTestimonial}
@@ -1090,6 +1183,33 @@ const sectionNav = [
 						Nieuwe quote
 					</button>
 				</div>
+
+				<div class="mt-6 grid gap-4 sm:grid-cols-2">
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Sectielabel</span>
+						<input
+							type="text"
+							bind:value={content.about.testimonialsLabel}
+							class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
+					<label class="flex flex-col gap-2 text-sm text-neutral-600">
+						<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Sectietitel</span>
+						<input
+							type="text"
+							bind:value={content.about.testimonialsHeading}
+							class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+						/>
+					</label>
+				</div>
+				<label class="mt-4 flex flex-col gap-2 text-sm text-neutral-600">
+					<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Intro</span>
+					<textarea
+						rows="2"
+						bind:value={content.about.testimonialsDescription}
+						class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
+					></textarea>
+				</label>
 
 				<div class="mt-6 space-y-4" role="list">
 					{#each content.about.testimonials as testimonial, index}
@@ -1204,7 +1324,8 @@ const sectionNav = [
 											<label class="flex flex-col gap-2 text-sm text-neutral-600">
 												<span class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">Afbeelding URL</span>
 												<input
-													type="url"
+													type="text"
+													inputmode="url"
 													bind:value={content.portfolio.gallery[index].src}
 													class="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition focus:border-neutral-900 focus:ring-2 focus:ring-neutral-900/10"
 												/>
@@ -1392,3 +1513,14 @@ const sectionNav = [
 		{/if}
 	</div>
 </div>
+
+{#if toastVisible}
+	<div
+		class={`pointer-events-none fixed bottom-24 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 rounded-full px-5 py-3 text-sm font-medium sm:text-base ${toastStyles}`}
+		role="status"
+		aria-live="polite"
+	>
+		<span class={`h-2.5 w-2.5 rounded-full ${toastAccent}`}></span>
+		<span>{toastMessage}</span>
+	</div>
+{/if}

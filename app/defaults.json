@@ -5,8 +5,8 @@
     "subtitle": "Beau van der Schaaf",
     "description": "Ik ben Beau van der Schaaf, 18 jaar en gepassioneerd portretfotograaf. Mijn werk beweegt tussen zwart-wit en kleur, studio en buitenlocatie. Momenteel studeer ik fotografie in Amsterdam en werk ik graag samen aan creatieve beelden die karakter en emotie vastleggen.",
     "heroImage": {
-      "src": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1600&q=80",
-      "alt": "Intiem portret in studio-setting"
+      "src": "https://images.unsplash.com/photo-1521310192545-4a1121188589?auto=format&fit=crop&w=1600&q=80",
+      "alt": "Portret in zacht raamlicht"
     },
     "heroLabel": "Portretserie",
     "cta": [
@@ -51,9 +51,12 @@
     ],
     "projects": [],
     "portrait": {
-      "src": "https://images.unsplash.com/photo-1518674660708-0b84225f76cd?auto=format&fit=crop&w=1400&q=80",
-      "alt": "Beau Robijn aan het werk in de studio"
+      "src": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1400&q=80",
+      "alt": "Beau Robijn tijdens een shoot op locatie"
     },
+    "testimonialsLabel": "Wat mensen zeggen",
+    "testimonialsHeading": "Woorden van opdrachtgevers & docenten",
+    "testimonialsDescription": "Een selectie van reacties die het beste samenvatten hoe samenwerkingen met Beau aanvoelen.",
     "testimonials": [
       {
         "quote": "“Beau heeft een bijzondere gevoeligheid voor het kleine detail. Zelfs als student levert ze beelden af met een niveau van rust en intensiteit dat je normaal alleen bij ervaren freelancers ziet.”",
@@ -89,12 +92,16 @@
     "contactPrimaryLabel": "Plan via de contactpagina",
     "photos": [
       {
-        "src": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80",
-        "alt": "Daglicht hoek van de studio in Amsterdam"
+        "src": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1400&q=80",
+        "alt": "Daglichttafel met stylingmateriaal in de studio"
       },
       {
-        "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1400&q=80",
-        "alt": "Werktafel met camera's en moodboards"
+        "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1400&q=80",
+        "alt": "Werkplek met laptop en camera-apparatuur"
+      },
+      {
+        "src": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80",
+        "alt": "Creatief team aan het werk in een fotostudio"
       }
     ],
     "rubyImage": {
@@ -102,10 +109,11 @@
       "alt": "Gestileerde robijn"
     },
     "portrait": {
-      "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1400&q=80",
-      "alt": "Beau Robijn in de studio"
+      "src": "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1400&q=80",
+      "alt": "Beau Robijn in de studio met rood licht"
     },
     "scheduleLabel": "Aanwezigheid",
+    "scheduleIntro": "Plan je bezoek rondom het natuurlijke licht in de studio.",
     "schedule": [
       {
         "day": "Maandag",

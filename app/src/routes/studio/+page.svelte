@@ -2,6 +2,8 @@
 	import PageTagline from '$lib/components/PageTagline.svelte';
 	import { buildSrcSet, defaultSizes } from '$lib/utils/image';
 	import type { PageData } from './$types';
+	import { fade } from 'svelte/transition';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let data: PageData;
 	const { studio } = data;
@@ -12,12 +14,56 @@
 	const photoShapes = ['sm:aspect-[4/5]', 'sm:aspect-square', 'sm:aspect-[5/6]'];
 	const rubySrc = studio.rubyImage?.src?.trim() ?? '';
 	const rubyIsSvg = rubySrc.toLowerCase().endsWith('.svg');
+	const addressLines = Array.isArray(studio.address?.lines) ? studio.address.lines : [];
+	const primaryAddressLine = addressLines[0] ?? studio.address.label;
+	const secondaryAddressLines = addressLines.slice(1);
+	const getDayBadge = (day: string) => day.trim().charAt(0).toUpperCase();
 
 	const rubySrcSet =
 		rubySrc && !rubySrc.startsWith('data:') && !rubyIsSvg
 			? buildSrcSet(rubySrc, [320, 480, 640])
 			: null;
 	const rubySizes = '(min-width: 768px) 20vw, 40vw';
+	const heroSlides = [studio.portrait, ...photos].filter(
+		(slide, index, array) =>
+			slide &&
+			typeof slide.src === 'string' &&
+			array.findIndex((item) => item?.src === slide.src) === index
+	);
+	let heroIndex = 0;
+	let carouselInterval: ReturnType<typeof setInterval> | undefined;
+	$: currentHero = heroSlides[heroIndex] ?? studio.portrait;
+	const hasHeroCarousel = heroSlides.length > 1;
+	const goToHeroSlide = (index: number) => {
+		if (!heroSlides.length) return;
+		const total = heroSlides.length;
+		const nextIndex = (index + total) % total;
+		heroIndex = nextIndex;
+		if (hasHeroCarousel) {
+		stopCarousel();
+		startCarousel();
+	}
+};
+	const nextHeroSlide = () => goToHeroSlide(heroIndex + 1);
+	const prevHeroSlide = () => goToHeroSlide(heroIndex - 1);
+
+	const startCarousel = () => {
+		if (!hasHeroCarousel) return;
+		stopCarousel();
+		carouselInterval = setInterval(() => {
+			nextHeroSlide();
+		}, 6000);
+	};
+
+	const stopCarousel = () => {
+		if (carouselInterval) {
+			clearInterval(carouselInterval);
+			carouselInterval = undefined;
+		}
+	};
+
+	onMount(startCarousel);
+	onDestroy(stopCarousel);
 </script>
 
 <svelte:head>
@@ -39,67 +85,146 @@
 			<section class="relative grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
 				<div class="flex flex-col gap-8">
 					<PageTagline text={heroTagline} />
-					<h1 class="font-display text-[clamp(2.2rem,3.4vw+1.6rem,4rem)] uppercase leading-tight text-neutral-900">
-						{studio.title}
-					</h1>
-					<p class="max-w-xl text-base leading-relaxed text-neutral-600 sm:text-lg">{studio.subtitle}</p>
-
-						<div class="grid gap-4 sm:grid-cols-2">
-							<article class="rounded-3xl border border-neutral-200/80 bg-white/90 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-								<p class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">
+					<div>
+						<h1 class="font-display text-[clamp(2.2rem,3.4vw+1.6rem,4rem)] uppercase leading-tight text-neutral-900">
+							{studio.title}
+						</h1>
+						<p class="max-w-xl text-base leading-relaxed text-neutral-600 sm:text-lg">{studio.subtitle}</p>
+					</div>
+					<div class="mt-6">
+						<article class="rounded-[2.4rem] border border-rose-200/70 bg-rose-50/70 p-8 shadow-[0_24px_60px_rgba(190,24,93,0.18)] sm:p-10">
+							<div class="flex flex-col gap-4">
+								<p class="font-lifted text-[0.65rem] uppercase tracking-[0.38em] text-rose-500">
 									{studio.address.label}
-							</p>
-							<div class="mt-3 space-y-2 text-sm text-neutral-700 sm:text-base">
-								{#each studio.address.lines as line}
-									<p>{line}</p>
-								{/each}
-							</div>
-							{#if studio.address.mapUrl}
-								<a
-									class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-rose-700 transition hover:text-rose-800"
-									href={studio.address.mapUrl}
-									target="_blank"
-									rel="noreferrer"
-								>
-									Bekijk op kaart
-									<span aria-hidden="true">↗</span>
-								</a>
-							{/if}
-							</article>
-							<article class="rounded-3xl border border-neutral-200/80 bg-white/90 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur sm:col-span-2 lg:col-span-1">
-								<p class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">
-									{studio.scheduleLabel}
 								</p>
-								<ul class="mt-3 space-y-2 text-sm text-neutral-700 sm:text-base">
-									{#each studio.schedule as item}
-										<li class="flex items-baseline justify-between gap-4 rounded-2xl border border-neutral-200/70 bg-white/95 px-5 py-3 shadow-[0_10px_25px_rgba(15,23,42,0.05)]">
-											<span class="font-medium text-neutral-900">{item.day}</span>
-											<span>{item.hours}</span>
-										</li>
-									{/each}
-								</ul>
-							{#if studio.scheduleNote}
-								<p class="mt-3 text-sm text-neutral-500">{studio.scheduleNote}</p>
-							{/if}
+								<h2 class="font-display text-[clamp(1.6rem,2vw+1.2rem,2.4rem)] uppercase leading-tight text-rose-900">
+									{primaryAddressLine}
+								</h2>
+								{#if secondaryAddressLines.length}
+									<div class="space-y-2 text-sm leading-relaxed text-rose-900/80 sm:text-base">
+										{#each secondaryAddressLines as line}
+											<p>{line}</p>
+										{/each}
+									</div>
+								{/if}
+								{#if studio.address.mapUrl}
+									<a
+										class="mt-4 inline-flex w-full items-center justify-between rounded-full border border-rose-300 bg-white/80 px-6 py-3 text-sm font-medium text-rose-600 transition hover:border-rose-400 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400 sm:w-auto"
+										href={studio.address.mapUrl}
+										target="_blank"
+										rel="noreferrer"
+									>
+										Route bekijken
+										<span aria-hidden="true">↗</span>
+									</a>
+								{/if}
+							</div>
 						</article>
 					</div>
 				</div>
-
+				
 				<figure class="relative flex justify-end">
 					<div
-						class="overflow-hidden rounded-[2.5rem] border border-neutral-200/80 bg-white shadow-[0_35px_90px_rgba(15,23,42,0.16)]"
+						class="relative aspect-[3/4] w-full max-w-[520px] overflow-hidden rounded-[2.5rem] border border-neutral-200/80 bg-white shadow-[0_35px_90px_rgba(15,23,42,0.16)]"
+						role="group"
+						aria-roledescription="carousel"
+						aria-label="Studio beelden"
 					>
-						<img
-							src={studio.portrait.src}
-							srcset={buildSrcSet(studio.portrait.src)}
-							sizes="(min-width: 1024px) 32vw, (min-width: 640px) 55vw, 80vw"
-							alt={studio.portrait.alt}
-							class="h-full w-full object-cover object-center"
-							loading="lazy"
-							decoding="async"
-						/>
+						{#if currentHero}
+							{#key currentHero.src}
+								<img
+									src={currentHero.src}
+									srcset={buildSrcSet(currentHero.src)}
+									sizes="(min-width: 1024px) 32vw, (min-width: 640px) 55vw, 80vw"
+									alt={currentHero.alt ?? studio.portrait.alt}
+									class="h-full w-full object-cover object-center md:object-top"
+									loading="lazy"
+									decoding="async"
+									in:fade={{ duration: 450 }}
+									out:fade={{ duration: 300 }}
+								/>
+							{/key}
+						{/if}
+						{#if hasHeroCarousel}
+							<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20"></div>
+							<div class="absolute inset-x-0 bottom-6 flex items-center justify-center gap-3">
+								{#each heroSlides as slide, index}
+									<button
+										type="button"
+										class={`h-2 w-8 rounded-full transition ${index === heroIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/70'}`}
+										class:opacity-40={index !== heroIndex}
+										on:click={() => goToHeroSlide(index)}
+										aria-label={`Toon afbeelding ${index + 1}`}
+										aria-current={index === heroIndex}
+									></button>
+								{/each}
+							</div>
+							<div class="absolute inset-y-0 left-0 flex items-center">
+								<button
+									type="button"
+									class="m-4 hidden h-12 w-12 items-center justify-center rounded-full bg-rose-600/85 text-white shadow-[0_16px_40px_rgba(190,24,93,0.35)] transition hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 sm:flex"
+									on:click={prevHeroSlide}
+									aria-label="Vorige afbeelding"
+									on:mouseenter={stopCarousel}
+									on:mouseleave={startCarousel}
+								>
+									<span aria-hidden="true" class="text-lg font-semibold leading-none">‹</span>
+								</button>
+							</div>
+							<div class="absolute inset-y-0 right-0 flex items-center">
+								<button
+									type="button"
+									class="m-4 hidden h-12 w-12 items-center justify-center rounded-full bg-rose-600/85 text-white shadow-[0_16px_40px_rgba(190,24,93,0.35)] transition hover:bg-rose-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 sm:flex"
+									on:click={nextHeroSlide}
+									aria-label="Volgende afbeelding"
+									on:mouseenter={stopCarousel}
+									on:mouseleave={startCarousel}
+								>
+									<span aria-hidden="true" class="text-lg font-semibold leading-none">›</span>
+								</button>
+							</div>
+						{/if}
 					</div>
 				</figure>
+			</section>
+
+			<section class="rounded-[3rem] border border-neutral-200/70 bg-white/95 p-8 shadow-[0_28px_80px_rgba(15,23,42,0.18)] sm:p-10">
+				<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+					<div class="space-y-2">
+						<p class="font-lifted text-[0.65rem] uppercase tracking-[0.32em] text-neutral-400">
+							{studio.scheduleLabel}
+						</p>
+						{#if studio.scheduleIntro}
+							<p class="max-w-sm text-sm text-neutral-500 sm:text-base">
+								{studio.scheduleIntro}
+							</p>
+						{/if}
+					</div>
+					{#if studio.scheduleNote}
+						<p class="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-xs uppercase tracking-[0.28em] text-neutral-500">
+							{studio.scheduleNote}
+						</p>
+					{/if}
+				</div>
+				<ol class="relative mt-6 space-y-4 before:absolute before:left-[1.15rem] before:top-4 before:bottom-4 before:w-px before:bg-neutral-200/60 before:content-['']">
+					{#each studio.schedule as item}
+						<li class="relative pl-14">
+							<span
+								class="absolute left-6 top-[1.8rem] h-3 w-3 rounded-full bg-rose-500 shadow-[0_0_0_6px_rgba(244,114,182,0.16)]"
+								aria-hidden="true"
+							></span>
+							<div class="rounded-2xl border border-neutral-200/70 bg-white/95 px-6 py-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+								<div class="flex items-center justify-between gap-4">
+									<span class="text-xs uppercase tracking-[0.32em] text-neutral-400">{item.day}</span>
+									<span class="rounded-full bg-rose-50 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-rose-600">
+										{getDayBadge(item.day)}
+									</span>
+								</div>
+								<p class="mt-3 text-lg font-semibold text-neutral-900 sm:text-xl">{item.hours}</p>
+							</div>
+						</li>
+					{/each}
+				</ol>
 			</section>
 
 			{#if photos.length}

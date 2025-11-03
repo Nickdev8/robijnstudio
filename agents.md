@@ -6,11 +6,11 @@
 - **Tech stack**: SvelteKit 2 + Vite 7, Svelte 5, Tailwind CSS 4 utilities in `app/src/app.css`, Node 20 runtime, Nodemailer for transactional email, Dockerized deployment.
 
 ## 2. Content Model & Storage
-- Structured content lives in `app/content.json` and is typed by `app/src/lib/types/content.ts`.
-- `readContent`/`writeContent` (`app/src/lib/server/content.ts`) wrap file I/O and respect overrides:
-  - `CONTENT_FILE` → absolute JSON file, e.g. for secrets mounts.
-  - `CONTENT_DIR` → alternate directory; file becomes `<dir>/content.json`.
-- First write ensures the target file exists by copying the repo default.
+- Structured defaults live in `app/defaults.json` and are typed by `app/src/lib/types/content.ts`.
+- `readContent`/`writeContent` (`app/src/lib/server/content.ts`) merge immutable defaults with runtime overrides:
+  - `CONTENT_FILE` → absolute overrides JSON path, e.g. for secrets mounts.
+  - `CONTENT_DIR` → alternate directory; overrides persist as `<dir>/overrides.json`.
+- `writeContent` diffs against defaults so deploys can ship new sections without wiping user content. `overrides.json` only contains mutations.
 - Admin uploads use the same `CONTENT_DIR` to keep text and media together under `<content_dir>/uploads`.
 
 ## 3. Routing & Pages
@@ -66,7 +66,7 @@
   - `npm run check` for TypeScript + Svelte diagnostics.
   - `npm run test:e2e` uses Playwright; `npm run test:unit` uses Vitest.
 - **Docker workflow**:
-  - Multi-stage build compiles SvelteKit into `/work/build`, installs prod deps, copies `content.json`.
+  - Multi-stage build compiles SvelteKit into `/work/build`, installs prod deps, copies `defaults.json`.
   - Runtime sets `CONTENT_DIR=/app/storage` and exposes volume `content-data` in `docker-compose.yml`. Uploads persist across deploys because `/app/storage` is mounted.
 
 ## 8. Environment Setup Checklist
@@ -78,7 +78,7 @@
 4. Access admin: `http://localhost:5173/admin`, log in with configured password, update content, upload media.
 
 ## 9. Extending the Portfolio
-- To add new sections or fields, extend `SiteContent` types, update `content.json`, adjust admin form bindings, and expose the data on the relevant page.
+- To add new sections or fields, extend `SiteContent` types, update `defaults.json`, adjust admin form bindings, and expose the data on the relevant page.
 - For additional media types (e.g., video), update `ALLOWED_MIME_TYPES`, add player component in front-end, and amend admin upload validations.
 - Consider wiring analytics or SEO by expanding `<svelte:head>` metadata per route.
 

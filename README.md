@@ -11,7 +11,7 @@
 Beau Robijn’s photography portfolio and booking site, built with SvelteKit. The app highlights editorial work, supports simple lead capture, and ships with an admin console for managing copy and assets without redeploying.
 
 ## Features
-- Home, About, Portfolio, and Contact pages driven by structured content (`app/content.json`).
+- Home, About, Portfolio, and Contact pages driven by structured defaults (`app/defaults.json`) merged with runtime overrides (`overrides.json`).
 - Protected admin dashboard (`/admin`) with live editing, drag-and-drop ordering, and image uploads stored under `CONTENT_DIR/uploads`.
 - Responsive navigation with a collapsible mobile menu and softened typography/grids for smaller breakpoints.
 - Case study cards, multi-voice testimonials, and optional video embeds on the About page.
@@ -38,7 +38,7 @@ Copy `app/.env.example` (if present) or create `app/.env` with:
 | Variable | Purpose |
 | --- | --- |
 | `ADMIN_PASSWORD` | Password for `/admin` login (default: `robijnstudio`). |
-| `CONTENT_DIR` / `CONTENT_FILE` | Optional custom storage path/file for content JSON and uploads. |
+| `CONTENT_DIR` / `CONTENT_FILE` | Optional custom storage path/file for `overrides.json` and uploads. |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD` | Nodemailer transport configuration. |
 | `EMAIL_TRANSPORT` | Optional (`json`) to emit messages to stdout for tests or staging. |
 | `EMAIL_FROM`, `EMAIL_TO` | Override mail sender and recipient addresses. |
@@ -49,7 +49,7 @@ After configuring SMTP values, submit the contact form to verify mail delivery.
 ## Admin Console
 1. Visit `/admin`.
 2. Log in with the configured password.
-3. Adjust copy, add portfolio entries, or upload media. Changes persist to `content.json` (or the overridden path).
+3. Adjust copy, add portfolio entries, or upload media. Changes persist to `overrides.json` (stored wherever `CONTENT_DIR`/`CONTENT_FILE` point).
 
 Uploads are saved under `<CONTENT_DIR>/uploads` and exposed publicly via `/uploads/<filename>`, so avoid storing sensitive files there.
 

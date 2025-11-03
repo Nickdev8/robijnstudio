@@ -55,6 +55,9 @@ export type AboutContent = {
 	stats: StatItem[];
 	projects: AboutProject[];
 	testimonials: Testimonial[];
+	testimonialsLabel?: string;
+	testimonialsHeading?: string;
+	testimonialsDescription?: string;
 	portrait: { src: string; alt: string };
 };
 
@@ -76,6 +79,7 @@ export type StudioContent = {
 	rubyImage: StudioImage;
 	portrait: StudioImage;
 	scheduleLabel: string;
+	scheduleIntro?: string;
 	schedule: StudioScheduleItem[];
 	scheduleNote?: string;
 };
