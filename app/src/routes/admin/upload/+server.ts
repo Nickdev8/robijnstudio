@@ -1,4 +1,4 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit';
+import { json, type RequestHandler } from '@sveltejs/kit';
 import { mkdir, writeFile } from 'fs/promises';
 import { extname, join } from 'path';
 import { randomUUID } from 'crypto';
@@ -47,75 +47,86 @@ const resolveExtension = (file: File): string | null => {
 	return null;
 };
 
+const respond = (status: number, message: string) => json({ message }, { status });
+
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	if (!isAdminAuthenticated(cookies)) {
-		throw error(401, 'Niet geautoriseerd.');
+		return respond(401, 'Niet geautoriseerd.');
 	}
 
-	const formData = await request.formData();
-	const file = formData.get('file');
-
-	if (!(file instanceof File)) {
-		throw error(400, 'Geen bestand ontvangen.');
-	}
-
-	if (file.size === 0) {
-		throw error(400, 'Het bestand is leeg.');
-	}
-
-	if (file.size > MAX_UPLOAD_SIZE) {
-		throw error(413, 'Bestand is te groot (maximaal 25 MB).');
-	}
-
-	const extension = resolveExtension(file);
-	if (!extension) {
-		throw error(415, 'Alleen afbeeldingsbestanden zijn toegestaan (jpg, png, webp, gif, svg, avif).');
-	}
-
-	const uploadsDir = join(getContentDirectory(), 'uploads');
-	await mkdir(uploadsDir, { recursive: true });
-
-	let buffer: Buffer;
 	try {
-		buffer = Buffer.from(await file.arrayBuffer());
-	} catch {
-		throw error(500, 'Het bestand kon niet worden gelezen. Probeer het opnieuw.');
-	}
+		const formData = await request.formData();
+		const file = formData.get('file');
 
-	const baseIdentifier = `${Date.now()}-${randomUUID()}`;
-	let savedFilename: string | null = null;
-
-	for (let attempt = 0; attempt < 5; attempt += 1) {
-		const suffix = attempt === 0 ? '' : `-${attempt}`;
-		const candidateName = `${baseIdentifier}${suffix}${extension}`;
-		const destination = join(uploadsDir, candidateName);
-
-		try {
-			await writeFile(destination, buffer, { flag: 'wx' });
-			savedFilename = candidateName;
-			break;
-		} catch (err: unknown) {
-			if (err && typeof err === 'object' && 'code' in err) {
-				const code = (err as { code: string }).code;
-				if (code === 'EEXIST') {
-					continue;
-				}
-
-				if (code === 'EACCES' || code === 'EPERM') {
-					throw error(500, 'De server heeft onvoldoende rechten om het bestand op te slaan.');
-				}
-
-				if (code === 'ENOSPC') {
-					throw error(500, 'De server heeft onvoldoende schijfruimte om het bestand op te slaan.');
-				}
-			}
-			throw error(500, 'Opslaan van het bestand is mislukt. Probeer het opnieuw.');
+		if (!(file instanceof File)) {
+			return respond(400, 'Geen bestand ontvangen.');
 		}
-	}
 
-	if (!savedFilename) {
-		throw error(500, 'Opslaan van het bestand is mislukt. Probeer het later opnieuw.');
-	}
+		if (file.size === 0) {
+			return respond(400, 'Het bestand is leeg.');
+		}
 
-	return json({ url: `/uploads/${savedFilename}` });
+		if (file.size > MAX_UPLOAD_SIZE) {
+			return respond(413, 'Bestand is te groot (maximaal 25 MB).');
+		}
+
+		const extension = resolveExtension(file);
+		if (!extension) {
+			return respond(415, 'Alleen afbeeldingsbestanden zijn toegestaan (jpg, png, webp, gif, svg, avif).');
+		}
+
+		const uploadsDir = join(getContentDirectory(), 'uploads');
+		try {
+			await mkdir(uploadsDir, { recursive: true });
+		} catch {
+			return respond(500, 'De server kon de uploadmap niet aanmaken. Probeer het later opnieuw.');
+		}
+
+		let buffer: Buffer;
+		try {
+			buffer = Buffer.from(await file.arrayBuffer());
+		} catch {
+			return respond(500, 'Het bestand kon niet worden gelezen. Probeer het opnieuw.');
+		}
+
+		const baseIdentifier = `${Date.now()}-${randomUUID()}`;
+		let savedFilename: string | null = null;
+
+		for (let attempt = 0; attempt < 5; attempt += 1) {
+			const suffix = attempt === 0 ? '' : `-${attempt}`;
+			const candidateName = `${baseIdentifier}${suffix}${extension}`;
+			const destination = join(uploadsDir, candidateName);
+
+			try {
+				await writeFile(destination, buffer, { flag: 'wx' });
+				savedFilename = candidateName;
+				break;
+			} catch (err: unknown) {
+				if (err && typeof err === 'object' && 'code' in err) {
+					const code = (err as { code: string }).code;
+					if (code === 'EEXIST') {
+						continue;
+					}
+
+					if (code === 'EACCES' || code === 'EPERM') {
+						return respond(500, 'De server heeft onvoldoende rechten om het bestand op te slaan.');
+					}
+
+					if (code === 'ENOSPC') {
+						return respond(500, 'De server heeft onvoldoende schijfruimte om het bestand op te slaan.');
+					}
+				}
+				return respond(500, 'Opslaan van het bestand is mislukt. Probeer het opnieuw.');
+			}
+		}
+
+		if (!savedFilename) {
+			return respond(500, 'Opslaan van het bestand is mislukt. Probeer het later opnieuw.');
+		}
+
+		return json({ url: `/uploads/${savedFilename}` });
+	} catch (err) {
+		console.error('Onverwerkte uploadfout:', err);
+		return respond(500, 'Er trad een onverwachte fout op tijdens het uploaden. Probeer het later opnieuw.');
+	}
 };
