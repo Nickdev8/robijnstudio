@@ -1,15 +1,45 @@
 <script lang="ts">
 	import PageTagline from '$lib/components/PageTagline.svelte';
-	import { buildSrcSet, defaultSizes } from '$lib/utils/image';
-	import type { PageData } from './$types';
-	import { fade } from 'svelte/transition';
-	import { onDestroy, onMount } from 'svelte';
+import { buildSrcSet, defaultSizes } from '$lib/utils/image';
+import type { PageData } from './$types';
+import { fade } from 'svelte/transition';
+import { onDestroy, onMount } from 'svelte';
 
-	export let data: PageData;
+type StudioPhoto = {
+	src: string;
+	alt?: string | null;
+};
+
+const isStudioPhoto = (value: unknown): value is StudioPhoto =>
+	typeof value === 'object' &&
+	value !== null &&
+	typeof (value as { src?: unknown }).src === 'string';
+
+const hashString = (value: string) => {
+	let hash = 0;
+	for (let index = 0; index < value.length; index += 1) {
+		hash = (hash << 5) - hash + value.charCodeAt(index);
+		hash |= 0;
+	}
+	return hash >>> 0;
+};
+
+const deterministicShuffle = <T>(items: T[], seed: string) =>
+	items
+		.map((item, index) => {
+			const identifier =
+				typeof item === 'object' && item !== null ? JSON.stringify(item) : String(item);
+			const sortKey = hashString(`${seed}:${index}:${identifier}`);
+			return { item, sortKey };
+		})
+		.sort((a, b) => a.sortKey - b.sortKey)
+		.map(({ item }) => item);
+
+export let data: PageData;
 	const { studio } = data;
 	const emailHref = `mailto:${studio.contactEmail}`;
 	const contactHref = '/contact';
-	const photos = studio.photos ?? [];
+	const photos = Array.isArray(studio.photos) ? studio.photos.filter(isStudioPhoto) : [];
 	const heroTagline = studio.tagline ?? 'Eigen studio';
 	const photoShapes = ['sm:aspect-[4/5]', 'sm:aspect-square', 'sm:aspect-[5/6]'];
 	const rubySrc = studio.rubyImage?.src?.trim() ?? '';
@@ -19,12 +49,22 @@
 	const secondaryAddressLines = addressLines.slice(1);
 	const getDayBadge = (day: string) => day.trim().charAt(0).toUpperCase();
 
+	const photoSeed = photos.map((photo) => photo.src).join('|');
+	const shuffleSeedParts = [studio.title, studio.tagline, photoSeed || undefined].filter(Boolean);
+	const shuffleSeed = shuffleSeedParts.join('|') || 'studio';
+	const shuffledPhotos = deterministicShuffle(photos, shuffleSeed);
+
+	const getPhotoShapeClass = (photo: StudioPhoto, index: number) => {
+		const hashedIndex = hashString(`${shuffleSeed}:${index}:${photo.src}`);
+		return photoShapes[hashedIndex % photoShapes.length];
+	};
+
 	const rubySrcSet =
 		rubySrc && !rubySrc.startsWith('data:') && !rubyIsSvg
 			? buildSrcSet(rubySrc, [320, 480, 640])
 			: null;
 	const rubySizes = '(min-width: 768px) 20vw, 40vw';
-	const heroSlides = [studio.portrait, ...photos].filter(
+	const heroSlides = [studio.portrait, ...shuffledPhotos].filter(
 		(slide, index, array) =>
 			slide &&
 			typeof slide.src === 'string' &&
@@ -227,7 +267,7 @@
 				</ol>
 			</section>
 
-			{#if photos.length}
+			{#if shuffledPhotos.length}
 				<section class="space-y-6">
 					<div class="flex flex-col gap-2">
 						<p class="text-xs uppercase tracking-[0.32em] text-neutral-400">Kijk binnen</p>
@@ -236,9 +276,9 @@
 						</h2>
 					</div>
 					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{#each photos as photo, index}
+						{#each shuffledPhotos as photo, index}
 							<figure
-								class={`group overflow-hidden rounded-[2.2rem] border border-neutral-200/80 bg-white/90 shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition ${photoShapes[index % photoShapes.length]}`}
+								class={`group overflow-hidden rounded-[2.2rem] border border-neutral-200/80 bg-white/90 shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition ${getPhotoShapeClass(photo, index)}`}
 							>
 								<img
 									src={photo.src}

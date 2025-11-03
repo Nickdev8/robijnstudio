@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
-	const MAX_SIZE_BYTES = 5 * 1024 * 1024;
-	const MAX_SIZE_LABEL = '5 MB';
+	const MAX_SIZE_BYTES = 25 * 1024 * 1024;
+	const MAX_SIZE_LABEL = '25 MB';
+	const SUPPORTED_FORMAT_LABEL = 'JPG, PNG, WEBP, GIF, SVG, AVIF';
 
 	type UploadEvents = {
 		upload: { url: string };
@@ -12,13 +13,79 @@
 	export let url: string;
 	export let accept: string[] = [
 		'image/jpeg',
+		'image/jpg',
+		'image/pjpeg',
 		'image/png',
+		'image/x-png',
 		'image/webp',
 		'image/gif',
-		'image/svg+xml'
+		'image/svg+xml',
+		'image/avif'
 	];
 
 	const dispatch = createEventDispatcher<UploadEvents>();
+
+	const guidanceBase = `Controleer of je bestand kleiner is dan ${MAX_SIZE_LABEL} en een ondersteund formaat heeft (${SUPPORTED_FORMAT_LABEL}).`;
+	const guidanceFollowUp =
+		'Probeer het opnieuw. Blijft het fout gaan? Vernieuw de pagina of neem contact op met de beheerder.';
+
+	const sanitizeServerMessage = (message?: string) => {
+		if (!message) return undefined;
+		const trimmed = message.trim();
+		if (!trimmed) return undefined;
+		const normalized = trimmed.toLowerCase();
+		if (normalized === 'upload mislukt' || normalized === 'upload mislukt.' || normalized === 'failed to fetch') {
+			return undefined;
+		}
+		return trimmed;
+	};
+
+	const composeDetailedErrorMessage = (status: number | undefined, serverMessage?: string) => {
+		const detail = sanitizeServerMessage(serverMessage);
+		const parts: string[] = [];
+
+		if (status === 413) {
+			parts.push(`Dit bestand is groter dan toegestaan (maximaal ${MAX_SIZE_LABEL}).`);
+		} else if (status === 415) {
+			parts.push(
+				`Dit bestandstype wordt niet ondersteund. Gebruik een van de volgende formaten: ${SUPPORTED_FORMAT_LABEL}.`
+			);
+		} else if (status === 400) {
+			parts.push('We konden het bestand niet verwerken. Probeer het opnieuw.');
+		} else if (status === 401 || status === 403) {
+			parts.push('Je bent niet (meer) aangemeld als beheerder. Log opnieuw in en probeer het nogmaals.');
+		} else if (status && status >= 500) {
+			parts.push('Er ging iets mis op de server tijdens het uploaden.');
+		} else if (status === undefined || status === 0) {
+			if (detail) {
+				parts.push('Het uploaden is mislukt.');
+			} else {
+				parts.push('We konden geen verbinding maken met de server.');
+			}
+		} else {
+			parts.push('Het uploaden is mislukt.');
+		}
+
+		if (status !== 413 && status !== 415) {
+			parts.push(guidanceBase);
+		}
+
+		if (detail) {
+			parts.push(`Servermelding: ${detail}`);
+		}
+
+		parts.push(guidanceFollowUp);
+
+		return parts.join(' ');
+	};
+
+	const isDetailedErrorMessage = (message: string) =>
+		/Servermelding:/i.test(message) ||
+		message.includes('Dit bestandstype wordt niet ondersteund') ||
+		message.includes('Dit bestand is groter dan toegestaan') ||
+		message.includes('Log opnieuw in') ||
+		message.includes('We konden geen verbinding maken met de server') ||
+		message.includes('Probeer het opnieuw.');
 
 let status: 'idle' | 'uploading' | 'success' | 'error' = 'idle';
 let message = '';
@@ -59,24 +126,24 @@ let isDragging = false;
 			const contentType = response.headers.get('content-type') ?? '';
 
 			if (!response.ok) {
-				let errorMessage = 'Upload mislukt.';
+				let serverMessage: string | undefined;
 				if (contentType.includes('application/json')) {
 					try {
 						const data = (await response.json()) as { message?: string; error?: string };
-						errorMessage = data?.message ?? data?.error ?? errorMessage;
+						serverMessage = data?.message ?? data?.error ?? undefined;
 					} catch {
-						errorMessage = 'Upload mislukt.';
+						serverMessage = undefined;
 					}
 				} else {
 					try {
 						const text = await response.text();
-						errorMessage = text || errorMessage;
+						serverMessage = text || undefined;
 					} catch {
-						errorMessage = 'Upload mislukt.';
+						serverMessage = undefined;
 					}
 				}
 
-				throw new Error(errorMessage);
+				throw new Error(composeDetailedErrorMessage(response.status, serverMessage));
 			}
 
 			let uploadedUrl: string | undefined;
@@ -112,7 +179,19 @@ let isDragging = false;
 				}
 			}, 4000);
 		} catch (err) {
-			const errorMessage = err instanceof Error ? err.message : 'Upload mislukt.';
+			let errorMessage: string;
+			if (err instanceof Error) {
+				const trimmedMessage = err.message?.trim();
+				if (trimmedMessage && isDetailedErrorMessage(trimmedMessage)) {
+					errorMessage = trimmedMessage;
+				} else if (err instanceof TypeError || err.name === 'TypeError' || trimmedMessage === 'Failed to fetch') {
+					errorMessage = composeDetailedErrorMessage(undefined);
+				} else {
+					errorMessage = composeDetailedErrorMessage(undefined, trimmedMessage);
+				}
+			} else {
+				errorMessage = composeDetailedErrorMessage(undefined);
+			}
 			status = 'error';
 			message = errorMessage;
 			dispatch('error', { message: errorMessage });
@@ -176,7 +255,7 @@ let isDragging = false;
 			</button>
 			.
 		</p>
-		<p class="text-neutral-400">Ondersteund: JPG, PNG, WEBP, GIF, SVG. Maximaal {MAX_SIZE_LABEL}.</p>
+		<p class="text-neutral-400">Ondersteund: {SUPPORTED_FORMAT_LABEL}. Maximaal {MAX_SIZE_LABEL}.</p>
 		{#if status === 'uploading'}
 			<p class="text-neutral-500">Bezig met uploaden...</p>
 		{:else if status === 'success'}

@@ -5,13 +5,17 @@ import { randomUUID } from 'crypto';
 import { getContentDirectory } from '$lib/server/content';
 import { isAdminAuthenticated } from '$lib/server/admin';
 
-const MAX_UPLOAD_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_UPLOAD_SIZE = 25 * 1024 * 1024; // 25 MB
 const ALLOWED_MIME_TYPES: Record<string, string> = {
 	'image/jpeg': '.jpg',
+	'image/jpg': '.jpg',
+	'image/pjpeg': '.jpg',
 	'image/png': '.png',
+	'image/x-png': '.png',
 	'image/webp': '.webp',
 	'image/gif': '.gif',
-	'image/svg+xml': '.svg'
+	'image/svg+xml': '.svg',
+	'image/avif': '.avif'
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -31,12 +35,12 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	}
 
 	if (file.size > MAX_UPLOAD_SIZE) {
-		throw error(413, 'Bestand is te groot (maximaal 5 MB).');
+		throw error(413, 'Bestand is te groot (maximaal 25 MB).');
 	}
 
 	const extension = ALLOWED_MIME_TYPES[file.type];
 	if (!extension) {
-		throw error(415, 'Alleen afbeeldingsbestanden zijn toegestaan (jpg, png, webp, gif, svg).');
+		throw error(415, 'Alleen afbeeldingsbestanden zijn toegestaan (jpg, png, webp, gif, svg, avif).');
 	}
 
 	const uploadsDir = join(getContentDirectory(), 'uploads');
