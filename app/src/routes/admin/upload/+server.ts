@@ -127,6 +127,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json({ url: `/uploads/${savedFilename}` });
 	} catch (err) {
 		console.error('Onverwerkte uploadfout:', err);
-		return respond(500, 'Er trad een onverwachte fout op tijdens het uploaden. Probeer het later opnieuw.');
+		const detail = err instanceof Error ? err.message : 'onbekend';
+		return respond(
+			500,
+			`Er trad een onverwachte fout op tijdens het uploaden (${detail}). Probeer het later opnieuw.`
+		);
 	}
 };
