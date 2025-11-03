@@ -43,100 +43,6 @@ $: toastAccent =
 			? 'bg-red-300'
 			: 'bg-white/80';
 
-type DragSection = 'gallery' | 'testimonials';
-
-const reorderList = <T>(items: T[], from: number, to: number): T[] => {
-	const updated = [...items];
-	const [moved] = updated.splice(from, 1);
-	const targetIndex = from < to ? to - 1 : to;
-	updated.splice(targetIndex, 0, moved);
-	return updated;
-};
-
-let dragging: { section: DragSection | null; index: number | null } = { section: null, index: null };
-
-const startDrag = (section: DragSection, index: number) => {
-	dragging = { section, index };
-};
-
-const cancelDrag = () => {
-	dragging = { section: null, index: null };
-};
-
-const allowDrop = (event: DragEvent) => {
-	event.preventDefault();
-	if (event.dataTransfer) {
-		event.dataTransfer.dropEffect = 'move';
-	}
-};
-
-const dropOn = (section: DragSection, index: number) => {
-	if (!content || dragging.section !== section || dragging.index === null) return;
-	if (dragging.index === index) {
-		cancelDrag();
-		return;
-	}
-
-	if (section === 'gallery') {
-		content = {
-			...content,
-			portfolio: {
-				...content.portfolio,
-				gallery: reorderList(content.portfolio.gallery, dragging.index, Math.min(index, content.portfolio.gallery.length - 1))
-			}
-		};
-	}
-
-	if (section === 'testimonials') {
-		content = {
-			...content,
-			about: {
-				...content.about,
-				testimonials: reorderList(
-					content.about.testimonials,
-					dragging.index,
-					Math.min(index, content.about.testimonials.length - 1)
-				)
-			}
-		};
-	}
-
-	cancelDrag();
-};
-
-const dropAtEnd = (section: DragSection) => {
-	if (!content || dragging.section !== section || dragging.index === null) return;
-
-	if (section === 'gallery') {
-		content = {
-			...content,
-			portfolio: {
-				...content.portfolio,
-				gallery: reorderList(content.portfolio.gallery, dragging.index, content.portfolio.gallery.length)
-			}
-		};
-	}
-
-	if (section === 'testimonials') {
-		content = {
-			...content,
-			about: {
-				...content.about,
-				testimonials: reorderList(
-					content.about.testimonials,
-					dragging.index,
-					content.about.testimonials.length
-				)
-			}
-		};
-	}
-
-	cancelDrag();
-};
-
-const isDragging = (section: DragSection, index: number) =>
-	dragging.section === section && dragging.index === index;
-
 const clearToastTimeout = () => {
 	if (toastTimeout) {
 		clearTimeout(toastTimeout);
@@ -835,16 +741,7 @@ const sectionNav = [
 
 						<div class="space-y-4" role="list">
 							{#each content.about.testimonials as testimonial, index}
-								<div
-									class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('testimonials', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
-									draggable={true}
-									ondragstart={() => startDrag('testimonials', index)}
-									ondragover={allowDrop}
-									ondrop={() => dropOn('testimonials', index)}
-									ondragend={cancelDrag}
-									role="listitem"
-									aria-grabbed={isDragging('testimonials', index)}
-								>
+								<div class="rounded-2xl border border-neutral-200 p-4" role="listitem">
 									<div class="flex items-start justify-between gap-4">
 										<p class="font-display text-neutral-900">Quote {index + 1}</p>
 										<button
@@ -873,19 +770,6 @@ const sectionNav = [
 									</label>
 								</div>
 							{/each}
-
-							{#if content.about.testimonials.length > 1}
-								<div
-									class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
-									ondragover={allowDrop}
-									ondrop={() => dropAtEnd('testimonials')}
-									role="button"
-									tabindex="0"
-									aria-label="Plaats quote achteraan"
-								>
-									Plaats hier
-								</div>
-							{/if}
 						</div>
 					</div>
 				</div>
@@ -1239,16 +1123,7 @@ const sectionNav = [
 
 				<div class="mt-6 space-y-4" role="list">
 					{#each content.about.testimonials as testimonial, index}
-						<div
-							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('testimonials', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
-							draggable={true}
-							ondragstart={() => startDrag('testimonials', index)}
-							ondragover={allowDrop}
-							ondrop={() => dropOn('testimonials', index)}
-							ondragend={cancelDrag}
-							role="listitem"
-							aria-grabbed={isDragging('testimonials', index)}
-						>
+						<div class="rounded-2xl border border-neutral-200 p-4" role="listitem">
 							<div class="flex items-start justify-between gap-4">
 								<p class="font-display text-neutral-900">Testimonial {index + 1}</p>
 								<button
@@ -1277,19 +1152,6 @@ const sectionNav = [
 							</label>
 						</div>
 					{/each}
-
-					{#if content.about.testimonials.length > 1}
-						<div
-							class="flex h-10 items-center justify-center rounded-2xl border border-dashed border-neutral-300 text-[0.65rem] uppercase tracking-[0.28em] text-neutral-400"
-							ondragover={allowDrop}
-							ondrop={() => dropAtEnd('testimonials')}
-							role="button"
-							tabindex="0"
-							aria-label="Plaats testimonial achteraan"
-						>
-							Plaats hier
-						</div>
-					{/if}
 				</div>
 			</section>
 
@@ -1326,16 +1188,7 @@ const sectionNav = [
 							</div>
 				<div class="space-y-4" role="list">
 					{#each content.portfolio.gallery as image, index}
-						<div
-							class={`rounded-2xl border border-neutral-200 p-4 ${isDragging('gallery', index) ? 'border-rose-500/60 bg-rose-50/40' : ''}`}
-							draggable={true}
-							ondragstart={() => startDrag('gallery', index)}
-							ondragover={allowDrop}
-							ondrop={() => dropOn('gallery', index)}
-							ondragend={cancelDrag}
-							role="listitem"
-							aria-grabbed={isDragging('gallery', index)}
-						>
+						<div class="rounded-2xl border border-neutral-200 p-4" role="listitem">
 										<div class="flex items-start justify-between gap-4">
 											<p class="font-display text-neutral-900">Beeld {index + 1}</p>
 											<button
@@ -1390,12 +1243,6 @@ const sectionNav = [
 											type="button"
 											onclick={addGalleryItem}
 											class="rounded-full border border-neutral-300 px-4 py-1 text-xs uppercase tracking-[0.3em] text-neutral-500 transition hover:border-neutral-900 hover:text-neutral-900"
-											ondragover={allowDrop}
-											ondrop={(event) => {
-												event.preventDefault();
-												event.stopPropagation();
-												dropAtEnd('gallery');
-											}}
 											aria-label="Voeg een nieuw beeld toe"
 										>
 											Toevoegen
