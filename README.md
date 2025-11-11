@@ -1,79 +1,59 @@
-<div align="center">
-  <a href="https://moonshot.hackclub.com" target="_blank">
-    <img src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/35ad2be8c916670f3e1ac63c1df04d76a4b337d1_moonshot.png" 
-         alt="This project is part of Moonshot, a 4-day hackathon in Florida visiting Kennedy Space Center and Universal Studios!" 
-         style="width: 100%;">
-  </a>
-</div>
+# Robijn Fotografie
 
-# Robijn Fotografie Portfolio
+Ok so this repo is Beau Robijn’s photo portfolio + booking thing. I put it together with SvelteKit because it was fast and the colors looked decent out of the box. The site is mostly static but there’s a tiny admin room so Beau can shuffle copy, upload new sets, and not ping me every sunday night. My gramer notes are all over the place but the app itself is fine. Live version’s hanging out on https://robijnfotografie.nl if you want to poke at it first.
 
-Beau Robijn’s photography portfolio and booking site, built with SvelteKit. The app highlights editorial work, supports simple lead capture, and ships with an admin console for managing copy and assets without redeploying.
+## What's actually in here
+- Home / About / Portfolio / Contact pulled from `app/defaults.json`, then patched at runtime with whatever lives in `overrides.json`.
+- `/admin` dashboard that lets you edit text blocks, drag cards around, and push photos straight into `CONTENT_DIR/uploads`. Needs a plain password (default is `robijnstudio` unless you change it).
+- Contact form pipes through Nodemailer. For tests you can just set `EMAIL_TRANSPORT=json` and it spits emails to stdout.
+- Simple SEO bits: robots, sitemap, canonical tags so Google doesn’t freak out.
+- Docker stuff already wired (multi-stage build + `docker-compose.yml`) if you like shipping containers more than `npm run dev`.
 
-## Features
-- Home, About, Portfolio, and Contact pages driven by structured defaults (`app/defaults.json`) merged with runtime overrides (`overrides.json`).
-- Protected admin dashboard (`/admin`) with live editing, drag-and-drop ordering, and image uploads stored under `CONTENT_DIR/uploads`.
-- Responsive navigation with a collapsible mobile menu and softened typography/grids for smaller breakpoints.
-- Case study cards, multi-voice testimonials, and optional video embeds on the About page.
-- Nodemailer-powered contact form with configurable transports and Playwright/Vitest coverage.
-- XML sitemap (`/sitemap.xml`), tuned `robots.txt`, and canonical meta tags for basic SEO.
-- Docker multi-stage build for production and `docker-compose.yml` for local container runs.
+## Stack / tooling
+- SvelteKit 2, Vite 7, Svelte 5 runes, Tailwind 4 classes.
+- Node 20 everywhere so there’s no weird mismatch.
+- Vitest + Playwright are there. Optional but handy when you don’t want regressions.
 
-## Tech Stack
-- SvelteKit 2 + Vite 7, Svelte 5 runes API, Tailwind CSS 4 utilities.
-- Node 20 runtime (both dev and Docker image).
-- Playwright (e2e) and Vitest (unit) included but optional.
-- Nodemailer for transactional email delivery.
-
-## Getting Started
-```bash
-npm install          # installs root and app dependencies
-npm run dev          # launches the SvelteKit dev server on http://localhost:5173
+## Running it (local)
+```bashs
+npm install   # grabs deps for root + app
+npm run dev   # usually shows up at http://localhost:5173
 ```
-Use `npm run build` for a production build and `npm run preview` to inspect the output locally.
+Need a prod-ish build? `npm run build` then `npm run preview`. That’s it, nothing wild.
 
-### Environment Variables
-Copy `app/.env.example` (if present) or create `app/.env` with:
+### Env vars
+Copy `app/.env.example` to `app/.env` or roll your own. Things you probably care about:
+- `ADMIN_PASSWORD` – password for `/admin`.
+- `CONTENT_DIR` / `CONTENT_FILE` – where overrides + uploads live.
+- `SMTP_*`, `EMAIL_FROM`, `EMAIL_TO`, `EMAIL_TRANSPORT` – controls mail. Set `json` while testing unless you enjoy spaming clients.
+- `PUBLIC_SITE_URL` (or `SITE_URL`/`BASE_URL`) – used for canonical + sitemap. Set it or the links look goofy.
 
-| Variable | Purpose |
-| --- | --- |
-| `ADMIN_PASSWORD` | Password for `/admin` login (default: `robijnstudio`). |
-| `CONTENT_DIR` / `CONTENT_FILE` | Optional custom storage path/file for `overrides.json` and uploads. |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD` | Nodemailer transport configuration. |
-| `EMAIL_TRANSPORT` | Optional (`json`) to emit messages to stdout for tests or staging. |
-| `EMAIL_FROM`, `EMAIL_TO` | Override mail sender and recipient addresses. |
-| `PUBLIC_SITE_URL` (preferred) or `SITE_URL` / `BASE_URL` | Sets canonical URLs and sitemap origin. |
+After you drop SMTP creds, hit the contact form once to be sure the mail actually exists.
 
-After configuring SMTP values, submit the contact form to verify mail delivery.
+## Admin bits
+Go to `/admin`, log in, edit whatever. It writes to `overrides.json` under the dir you told it to use. Uploads land in `<CONTENT_DIR>/uploads` and get served publicly via `/uploads/foo.jpg`, so please don’t throw secret stuff in there. There’s a 5mb cap and a mime whitelist, but still.
 
-## Admin Console
-1. Visit `/admin`.
-2. Log in with the configured password.
-3. Adjust copy, add portfolio entries, or upload media. Changes persist to `overrides.json` (stored wherever `CONTENT_DIR`/`CONTENT_FILE` point).
+## SEO / meta
+- `app/static/robots.txt` blocks `/admin` and points at the sitemap.
+- `/sitemap.xml` gets generated on the server and cached for about an hour.
+- Layout injects OG + Twitter tags plus canonical. Nothing fancy, but does the job.
 
-Uploads are saved under `<CONTENT_DIR>/uploads` and exposed publicly via `/uploads/<filename>`, so avoid storing sensitive files there.
+## Tests
+- `npm run check` – type + Svelte diagnostics.
+- `npm run test:unit` – Vitest.
+- `npm run test:e2e` – Playwright (run `npx playwright install` once, and yeah set `EMAIL_TRANSPORT=json` first).
 
-## SEO & Meta
-- `app/static/robots.txt` blocks `/admin` and lists the sitemap.
-- `/sitemap.xml` is generated server-side and cached for one hour.
-- The root layout inserts canonical links, Open Graph defaults, a Twitter card, and theme color metadata.
+## Deploying
+- The `Dockerfile` builds the SvelteKit app, installs prod deps, then runs `node build`.
+- `docker-compose.yml` maps 3013→3000 locally and mounts `content-data` so uploaded files don’t vanish when the container restarts.
+- Whatever host you use still needs the env vars mentioned earlier. Especially the SMTP + PUBLIC_SITE_URL ones or you’ll chase phantom bugs.
 
-## Testing
-- `npm run check` for TypeScript + Svelte diagnostics.
-- `npm run test:unit` for Vitest suites.
-- `npm run test:e2e` to execute Playwright tests (set `EMAIL_TRANSPORT=json` and install browsers with `npx playwright install`).
-
-## Deployment
-- Production image `Dockerfile` builds SvelteKit, installs production dependencies, and runs `node build`.
-- `docker-compose.yml` maps port `3013 -> 3000` locally and mounts a volume (`content-data`) so content and uploads survive container restarts.
-- Ensure environment variables (especially SMTP and `PUBLIC_SITE_URL`) are provided in your hosting platform or Docker compose file.
-
-## Production Considerations
-- **Image optimisation**: The site currently serves images from their configured URLs as-is; SvelteKit does not optimise them automatically. For better performance, front the assets with an image CDN (Imgix, Cloudinary, Vercel’s Image Optimization API) or add a resize/compress step to your upload pipeline before storing files in `/uploads`.
-- **SSR & admin auth**: The admin area relies on SSR-only cookies (`robijnstudio_admin`). When customising authentication, keep the logic inside server routes/actions to avoid exposing secrets in the client bundle and confirm that endpoints are protected during SSR navigation.
-- **Dynamic SEO**: The sitemap and canonical tags use environment-provided hostnames and statically defined routes. If you later move portfolio data into a database or CMS, extend `app/src/routes/sitemap.xml/+server.ts` and per-page `load` functions to enumerate dynamic slugs so search engines discover them.
-- **Safe uploads**: Upload handlers already whitelist MIME types and cap files at 5 MB. For additional hardening, consider scanning uploads (e.g., via ClamAV), generating responsive derivatives, and serving files from an isolated CDN bucket to avoid executing user content on the app server.
-- **Automation & future-proofing**: Combine `npm run check`, Vitest, and Playwright in CI to guard against regressions. Containerise deployments (via the existing Dockerfile) so upgrades to Node or SvelteKit are explicit, and source control `.env.example` with any new settings you introduce to keep environments aligned.
+## Stuff to keep in mind
+- Images aren’t auto-optimized. Use Cloudinary / Imgix / whatever, or pre-resize before shoving them into `/uploads`.
+- Admin auth is cookie-based (`robijnstudio_admin`). Keep secret logic server-side so you’re not leaking anything in the client bundle.
+- If you ever move the portfolio into a CMS with slugs, extend `app/src/routes/sitemap.xml/+server.ts` so search engines learn about them.
+- Upload handler already sanity-checks mime + size, but feel free to add scanning/compression if you’re paranoid.
+- CI idea: run `npm run check`, Vitest, Playwright. Keeps me from hotfixing on a saturday.
 
 ## Contributing
-Pull requests are welcome. Please run `npm run check` before submitting changes and keep the content schema (`app/src/lib/types/content.ts`) in sync with any new fields exposed in the UI.
+Sure, PRs welcome. Please run `npm run check` before sending anything and keep `app/src/lib/types/content.ts` in sync if you add new fields, otherwise the admin UI cries.
