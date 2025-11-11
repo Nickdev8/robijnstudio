@@ -1,6 +1,6 @@
 # Robijn Fotografie
 
-Ok so this repo is you Robijn’s photo portfolio + booking thing. I put it together with SvelteKit because it was fast and the colors looked decent out of the box. The site is mostly static but there’s a tiny admin room so you can shuffle copy, upload new sets, and not ping me every sunday night. My gramer notes are all over the place but the app itself is fine. Live version’s hanging out on https://robijnfotografie.nl if you want to poke at it first.
+Ok so this repo is you Robijn’s photo portfolio + booking thing. I put it together with SvelteKit because it was fast and the colors looked decent out of the box. The site is mostly static but there’s a tiny admin room so you can shuffle copy, upload new sets, and not ping me every sunday night. Live/Production version’s hanging out on https://robijnfotografie.nl
 
 ## What's actually in here
 - Home / About / Portfolio / Contact pulled from `app/defaults.json`, then patched at runtime with whatever lives in `overrides.json`.
