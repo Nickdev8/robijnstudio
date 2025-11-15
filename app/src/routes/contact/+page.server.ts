@@ -12,6 +12,8 @@ export const load: PageServerLoad = async () => {
 };
 
 const DEFAULT_TO = 'nick.esselman@gmail.com';
+const RECAPTCHA_SECRET = env.RECAPTCHA_SECRET_KEY?.trim();
+let recaptchaWarningLogged = false;
 
 const resolveFromAddress = () => {
 	if (env.EMAIL_FROM?.trim()) {
@@ -50,12 +52,26 @@ const createTransport = () => {
 
 export const actions: Actions = {
 	default: async ({ request }) => {
+		const contentType = request.headers.get('content-type')?.toLowerCase() ?? '';
+		if (
+			!contentType.includes('application/x-www-form-urlencoded') &&
+			!contentType.includes('multipart/form-data')
+		) {
+			return fail(415, { error: 'Dit formulier ondersteunt alleen reguliere formulierverzoeken.' });
+		}
+
 		const formData = await request.formData();
+		const honeypot = formData.get('company');
+		if (typeof honeypot === 'string' && honeypot.trim() !== '') {
+			return fail(400, { error: 'Kan je verzoek niet verwerken. Neem direct contact op via e-mail.' });
+		}
+
 		const firstName = formData.get('firstName');
 		const lastName = formData.get('lastName');
 		const email = formData.get('email');
 		const packageId = formData.get('pakket');
 		const message = formData.get('message');
+		const recaptchaToken = formData.get('recaptchaToken');
 
 		if (
 			typeof firstName !== 'string' ||
@@ -65,6 +81,22 @@ export const actions: Actions = {
 			typeof message !== 'string'
 		) {
 			return fail(400, { error: 'Ongeldige invoer, controleer de velden en probeer opnieuw.' });
+		}
+
+		if (RECAPTCHA_SECRET) {
+			if (typeof recaptchaToken !== 'string' || recaptchaToken.trim() === '') {
+				return fail(400, { error: 'Bevestig dat je geen robot bent en probeer opnieuw.' });
+			}
+
+			const remoteIp =
+				request.headers.get('cf-connecting-ip') ||
+				request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+				null;
+
+			const captchaOk = await verifyRecaptcha(recaptchaToken, remoteIp);
+			if (!captchaOk) {
+				return fail(400, { error: 'De controle is mislukt. Probeer het nogmaals.' });
+			}
 		}
 
 		try {
@@ -100,3 +132,32 @@ export const actions: Actions = {
 		return { success: true };
 	}
 };
+
+async function verifyRecaptcha(token: string, remoteIp: string | null): Promise<boolean> {
+	if (!RECAPTCHA_SECRET) {
+		if (!recaptchaWarningLogged) {
+			console.warn('RECAPTCHA_SECRET_KEY is niet ingesteld; captcha wordt overgeslagen.');
+			recaptchaWarningLogged = true;
+		}
+		return true;
+	}
+
+	try {
+		const body = new URLSearchParams();
+		body.set('secret', RECAPTCHA_SECRET);
+		body.set('response', token);
+		if (remoteIp) {
+			body.set('remoteip', remoteIp);
+		}
+
+		const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+			method: 'POST',
+			body
+		});
+		const data = (await response.json()) as { success?: boolean };
+		return Boolean(data?.success);
+	} catch (error) {
+		console.error('Validatie van reCAPTCHA mislukt', error);
+		return false;
+	}
+}

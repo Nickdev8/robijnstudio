@@ -1,5 +1,8 @@
 <script lang="ts">
 	import PageTagline from '$lib/components/PageTagline.svelte';
+	import { ReCaptcha } from '@mac-barrett/svelte-recaptcha';
+	import { env as publicEnv } from '$env/dynamic/public';
+	import { browser } from '$app/environment';
 	import type { ActionData, PageData } from './$types';
 
 export let data: PageData;
@@ -8,9 +11,39 @@ export let form: ActionData | undefined;
 const { contact } = data;
 const packages = contact.packages;
 const contactEmail = contact.email;
+const recaptchaSiteKey = publicEnv.PUBLIC_RECAPTCHA_SITE_KEY?.trim() ?? '';
+const shouldRenderCaptcha = browser && Boolean(recaptchaSiteKey);
+let captcha: InstanceType<typeof ReCaptcha> | null = null;
+let captchaError = '';
 const shareImage = {
 	src: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1600&q=80',
 	alt: 'Contactmoment tijdens een fotoshoot in Amsterdam'
+};
+
+const handleSubmit = (event: SubmitEvent) => {
+	captchaError = '';
+	if (!shouldRenderCaptcha) {
+		return;
+	}
+
+	const formElement = event.currentTarget;
+	if (!(formElement instanceof HTMLFormElement)) {
+		return;
+	}
+
+	const tokenInput = formElement.elements.namedItem('recaptchaToken');
+	if (!(tokenInput instanceof HTMLInputElement)) {
+		return;
+	}
+
+	const token = captcha?.getRecaptchaResponse() ?? '';
+	if (!token) {
+		event.preventDefault();
+		captchaError = 'Bevestig dat je geen robot bent.';
+		return;
+	}
+
+	tokenInput.value = token;
 };
 </script>
 
@@ -92,7 +125,16 @@ const shareImage = {
 						</a>
 					</div>
 				{:else}
-					<form method="post" class="space-y-6 rounded-[2rem] border border-neutral-200 bg-white/85 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:rounded-[2.5rem] sm:p-8">
+					<form method="post" class="space-y-6 rounded-[2rem] border border-neutral-200 bg-white/85 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] sm:rounded-[2.5rem] sm:p-8" on:submit={handleSubmit}>
+						<input type="hidden" name="recaptchaToken" value="" />
+						<label
+							class="sr-only"
+							style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;"
+							aria-hidden="true"
+						>
+							<span>Laat dit veld leeg</span>
+							<input type="text" name="company" tabindex="-1" autocomplete="off" />
+						</label>
 						<div class="grid gap-6 sm:grid-cols-2">
 							<label class="flex flex-col gap-2 text-sm text-neutral-600">
 								<span class="font-lifted text-xs uppercase tracking-[0.32em] text-neutral-400">Voornaam</span>
@@ -169,6 +211,15 @@ const shareImage = {
 
 						{#if form?.error}
 							<p class="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600" role="alert">{form.error}</p>
+						{/if}
+						{#if captchaError}
+							<p class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-700" role="alert">{captchaError}</p>
+						{/if}
+
+						{#if shouldRenderCaptcha}
+							<div class="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+								<ReCaptcha bind:this={captcha} SITE_KEY={recaptchaSiteKey} captchaStyle={{ theme: 'light', size: 'normal' }} />
+							</div>
 						{/if}
 
 						<button
