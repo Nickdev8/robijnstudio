@@ -37,7 +37,7 @@
 		"vitest": "^4.0.4"
 	},
 	"dependencies": {
-		"@mac-barrett/svelte-recaptcha": "^1.2.1",
-		"nodemailer": "^6.10.1"
+		"nodemailer": "^6.10.1",
+		"svelte-captcha-enhance": "^1.2.3"
 	}
 }

@@ -28,7 +28,7 @@ Copy `app/.env.example` to `app/.env` or roll your own. Things you probably care
 - `SMTP_*`, `EMAIL_FROM`, `EMAIL_TO`, `EMAIL_TRANSPORT` – controls mail. Set `json` while testing unless you enjoy spaming clients.
 - `PUBLIC_SITE_URL` (or `SITE_URL`/`BASE_URL`) – used for canonical + sitemap. Set it or the links look goofy.
 - `NTFY_TOPIC_URL` (or `NTFY_TOPIC` + optional `NTFY_BASE_URL`) – optional. When set, admin saves + uploads ping that ntfy topic with a short summary. Add `NTFY_AUTH_TOKEN` if your topic needs auth. The notifications automatically use `/ruby.png` as their icon; override with `NTFY_ICON_URL` if needed.
-- `PUBLIC_RECAPTCHA_SITE_KEY` / `RECAPTCHA_SECRET_KEY` – optional. When both are set the contact form enforces Google reCAPTCHA in addition to a honeypot + stricter validation, which cuts down on spam bots.
+- `PUBLIC_RECAPTCHA_SITE_KEY` / `RECAPTCHA_SECRET_KEY` – optional. When both are set the contact form enforces Google reCAPTCHA v3 (via `svelte-captcha-enhance`) in addition to a honeypot + stricter validation, which cuts down on spam bots.
 
 After you drop SMTP creds, hit the contact form once to be sure the mail actually exists.
 

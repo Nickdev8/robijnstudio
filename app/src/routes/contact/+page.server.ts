@@ -71,7 +71,7 @@ export const actions: Actions = {
 		const email = formData.get('email');
 		const packageId = formData.get('pakket');
 		const message = formData.get('message');
-		const recaptchaToken = formData.get('recaptchaToken');
+		const recaptchaToken = formData.get('g-recaptcha-response');
 
 		if (
 			typeof firstName !== 'string' ||
