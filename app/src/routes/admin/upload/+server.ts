@@ -1,9 +1,10 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, writeFile, readdir } from 'fs/promises';
 import { extname, join } from 'path';
 import { randomUUID } from 'crypto';
 import { getContentDirectory } from '$lib/server/content';
 import { isAdminAuthenticated } from '$lib/server/admin';
+import { sendNtfyNotification, isNtfyConfigured } from '$lib/server/ntfy';
 
 const MAX_UPLOAD_SIZE = 25 * 1024 * 1024; // 25 MB
 const ALLOWED_MIME_TYPES: Record<string, string> = {
@@ -61,6 +62,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		if (!(file instanceof File)) {
 			return respond(400, 'Geen bestand ontvangen.');
 		}
+
+		const originalFilename = file.name || 'upload';
 
 		if (file.size === 0) {
 			return respond(400, 'Het bestand is leeg.');
@@ -124,6 +127,20 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			return respond(500, 'Opslaan van het bestand is mislukt. Probeer het later opnieuw.');
 		}
 
+		if (isNtfyConfigured) {
+			const totalUploads = await countUploads(uploadsDir);
+			await sendNtfyNotification({
+				title: 'Nieuwe upload opgeslagen',
+				message: [
+					`Bestand: ${originalFilename}`,
+					`Opgeslagen als: ${savedFilename}`,
+					`Grootte: ${formatFileSize(file.size)}`,
+					`Totaal uploads: ${totalUploads}`
+				].join('\n'),
+				tags: ['admin', 'upload']
+			});
+		}
+
 		return json({ url: `/uploads/${savedFilename}` });
 	} catch (err) {
 		console.error('Onverwerkte uploadfout:', err);
@@ -134,3 +151,25 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		);
 	}
 };
+
+async function countUploads(directory: string): Promise<number> {
+	try {
+		const entries = await readdir(directory);
+		return entries.length;
+	} catch (error) {
+		console.error('Kan uploads niet tellen:', error);
+		return 0;
+	}
+}
+
+function formatFileSize(bytes: number): string {
+	if (bytes >= 1024 * 1024) {
+		return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+	}
+
+	if (bytes >= 1024) {
+		return `${(bytes / 1024).toFixed(1)} kB`;
+	}
+
+	return `${bytes} bytes`;
+}

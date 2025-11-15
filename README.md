@@ -27,11 +27,14 @@ Copy `app/.env.example` to `app/.env` or roll your own. Things you probably care
 - `CONTENT_DIR` / `CONTENT_FILE` – where overrides + uploads live.
 - `SMTP_*`, `EMAIL_FROM`, `EMAIL_TO`, `EMAIL_TRANSPORT` – controls mail. Set `json` while testing unless you enjoy spaming clients.
 - `PUBLIC_SITE_URL` (or `SITE_URL`/`BASE_URL`) – used for canonical + sitemap. Set it or the links look goofy.
+- `NTFY_TOPIC_URL` (or `NTFY_TOPIC` + optional `NTFY_BASE_URL`) – optional. When set, admin saves + uploads ping that ntfy topic with a short summary. Add `NTFY_AUTH_TOKEN` if your topic needs auth. The notifications automatically use `/ruby.png` as their icon; override with `NTFY_ICON_URL` if needed.
 
 After you drop SMTP creds, hit the contact form once to be sure the mail actually exists.
 
 ## Admin bits
 Go to `/admin`, log in, edit whatever. It writes to `overrides.json` under the dir you told it to use. Uploads land in `<CONTENT_DIR>/uploads` and get served publicly via `/uploads/foo.jpg`, so please don’t throw secret stuff in there. There’s a 5mb cap and a mime whitelist, but still.
+
+If `NTFY_TOPIC_URL` (or `NTFY_TOPIC`) is configured, every successful save of the admin content + every finished upload sends a push to that ntfy topic. The payload lists which sections changed and, for uploads, the stored filename + total count so you can keep an eye on what moved without logging in.
 
 ## SEO / meta
 - `app/static/robots.txt` blocks `/admin` and points at the sitemap.
